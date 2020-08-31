@@ -10,6 +10,8 @@ import coinClasses.AlphaVantageApi;
 import coinClasses.CoinRankApi;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +45,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Button sendBtnT1;
     @FXML private TextArea txtAreaT1;
     
-    public void login (ActionEvent event) {
+    
+    //========== Action Handlers ==========
+    
+    @FXML public void login (ActionEvent event) {
         
         // If statement for testing purposes
         // TODO: add database
@@ -67,12 +72,20 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-    @FXML
-    public void handleSend (ActionEvent event) {
+    
+    // Testing this function
+    @FXML public void handleSend (ActionEvent event) {
         txtAreaT1.setText("Searching...");
         CoinRankApi cri = new CoinRankApi();
         System.out.println(cri.getLimit());
-        txtAreaT1.setText("limit: " + cri.getLimit());
+        
+        LinkedHashMap<String, String> lhm = cri.getNamePrice();
+        String text = "";
+        for (Map.Entry<String, String> entry : lhm.entrySet()) {
+            text = text + entry.getKey() + ": " + entry.getValue() + "\n";
+        }
+        txtAreaT1.setText(text);
+        
     }
     
     @FXML
