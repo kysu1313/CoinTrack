@@ -37,9 +37,9 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
         <items>
-          <Button fx:id="sendBtn" defaultButton="true" mnemonicParsing="false" text="Search" />
-            <TextField fx:id="searchFieldT2" />
-            <Button fx:id="serverBtn" mnemonicParsing="false" text="Attach" />
+          <Button fx:id="sendBtnT1" onAction="#handleSend" defaultButton="true" mnemonicParsing="false" text="Search" />
+            <TextField fx:id="searchFieldT1" />
+            <Button fx:id="serverBtnT1" mnemonicParsing="false" text="Attach" />
             <Button mnemonicParsing="false" text="Font" />
         </items>
       </ToolBar>
@@ -51,14 +51,14 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <Accordion prefHeight="519.0" prefWidth="142.0">
+                              <Accordion fx:id="accordianT1" prefHeight="519.0" prefWidth="142.0">
                                 <panes>
-                                  <TitledPane animated="false" text="untitled 1">
+                                  <TitledPane fx:id="savedCoinsT1" animated="false" text="Saved Coins">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                                     </content>
                                   </TitledPane>
-                                  <TitledPane animated="false" text="untitled 2">
+                                  <TitledPane fx:id="savedTradesT1" animated="false" text="Saved Trades">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                                     </content>

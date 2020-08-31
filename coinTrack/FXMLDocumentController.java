@@ -6,6 +6,8 @@
 
 package coinTrack;
 
+import coinClasses.AlphaVantageApi;
+import coinClasses.CoinRankApi;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,9 +21,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -35,6 +39,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
+    
+    @FXML private Button sendBtnT1;
+    @FXML private TextArea txtAreaT1;
     
     public void login (ActionEvent event) {
         
@@ -58,12 +65,24 @@ public class FXMLDocumentController implements Initializable {
         } else {
             lblStatus.setText("Login Failed");
         }
-        
+    }
+    
+    @FXML
+    public void handleSend (ActionEvent event) {
+        txtAreaT1.setText("Searching...");
+        CoinRankApi cri = new CoinRankApi();
+        System.out.println(cri.getLimit());
+        txtAreaT1.setText("limit: " + cri.getLimit());
+    }
+    
+    @FXML
+    private void handleClear(ActionEvent event) {
+        System.out.println("hello");
     }
     
     @Override
     public void initialize (URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
     
 }
