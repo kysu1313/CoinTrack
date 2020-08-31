@@ -38,7 +38,7 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="762.0">
         <items>
-            <Button fx:id="scanBtnT2" onAction="#handleScan" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" text="Scan" underline="true" />
+            <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
           <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" text="Search" />
             <TextField fx:id="searchFieldT2" />
             <Button fx:id="serverBtn" mnemonicParsing="false" text="Attach" />
@@ -77,10 +77,14 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView fx:id="tableViewT2" prefHeight="463.0" prefWidth="594.0">
+                              <TableView fx:id="tableViewT2" prefHeight="430.0" prefWidth="594.0">
                                 <columns>
-                                  <TableColumn fx:id="coinNameT2" prefWidth="75.0" text="C1" />
-                                  <TableColumn fx:id="coinPriceT2" prefWidth="75.0" text="C2" />
+                                  <TableColumn fx:id="coinSymbolT2" prefWidth="75.0" text="Symbol" />
+                                  <TableColumn fx:id="coinNameT2" prefWidth="75.0" text="Name" />
+                                    <TableColumn fx:id="coinPriceT2" prefWidth="75.0" text="Price" />
+                                    <TableColumn fx:id="coinRankT2" prefWidth="75.0" text="Rank" />
+                                    <TableColumn fx:id="coinChangeT2" prefWidth="75.0" text="Change" />
+                                    <TableColumn fx:id="coinVolumeT2" prefWidth="75.0" text="Volume" />
                                 </columns>
                               </TableView>
                            </children>

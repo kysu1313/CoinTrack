@@ -13,6 +13,29 @@ import org.json.JSONObject;
 public class SingleCoin implements SingleCoinInterface{
     
     private JSONObject coinList;
+    private int id;
+    private String uuid;
+    private String slug;
+    private String symbol;
+    private String name;
+    private String description;
+    private String color;
+    private String iconType;
+    private String iconUrl;
+    private String websiteUrl;
+    private boolean confirmedSupply;
+    private int numberOfMarkets;
+    private int numberOfExchanges;
+    private String type;
+    private int volume;
+    private int marketCap;
+    private String price;
+    private int circulatingSupply;
+    private int totalSupply;
+    private boolean approvedSupply;
+    private int firstSeen;
+    private double change;
+    private int rank;
 
     /**
      * Constructor
@@ -20,6 +43,21 @@ public class SingleCoin implements SingleCoinInterface{
      */
     public SingleCoin(JSONObject job) {
         coinList = job;
+        
+        id = coinList.getInt("id");
+        uuid = coinList.getString("uuid");
+        slug = coinList.getString("slug");
+        symbol = coinList.getString("symbol");
+        name = coinList.getString("name");
+//        description = coinList.getString("description");
+//        color = coinList.getString("color");
+//        iconType = coinList.getString("iconType");
+//        iconUrl = coinList.getString("iconUrl");
+        price = coinList.getString("price");
+        rank = coinList.getInt("rank");
+        change = coinList.getDouble("change");
+        volume = coinList.getInt("volume");
+        
     }
     
     @Override
