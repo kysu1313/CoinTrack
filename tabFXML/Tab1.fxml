@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -37,10 +38,12 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
         <items>
-          <Button fx:id="sendBtnT1" onAction="#handleSend" defaultButton="true" mnemonicParsing="false" text="Search" />
+            <Button fx:id="scanBtnT1" onAction="#handleScan" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" text="Scan" underline="true" />
+          <Button fx:id="sendBtnT1" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" onAction="#handleSend" text="Search" />
             <TextField fx:id="searchFieldT1" />
             <Button fx:id="serverBtnT1" mnemonicParsing="false" text="Attach" />
             <Button mnemonicParsing="false" text="Font" />
+            <ProgressBar fx:id="progBarT1" prefHeight="18.0" prefWidth="320.0" progress="0.0" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
@@ -51,7 +54,7 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <Accordion fx:id="accordianT1" prefHeight="519.0" prefWidth="142.0">
+                              <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0">
                                 <panes>
                                   <TitledPane fx:id="savedCoinsT1" animated="false" text="Saved Coins">
                                     <content>
@@ -74,10 +77,10 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView prefHeight="463.0" prefWidth="594.0">
+                              <TableView fx:id="tableViewT1" prefHeight="463.0" prefWidth="594.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                  <TableColumn fx:id="coinNameT1" prefWidth="75.0" text="C1" />
+                                  <TableColumn fx:id="coinPriceT1" prefWidth="75.0" text="C2" />
                                 </columns>
                               </TableView>
                            </children>
@@ -88,7 +91,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TextArea fx:id="txtAreaT1" prefHeight="58.0" prefWidth="785.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                  <TextArea fx:id="txtAreaT1" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         </items>

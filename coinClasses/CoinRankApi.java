@@ -20,15 +20,16 @@ import org.json.JSONObject;
  * as well as a LinkedList and LinkedHashMap methods
  * @author Kyle
  */
-public class CoinRankApi implements CoinRankInterface{
+public class CoinRankApi implements Runnable, CoinRankInterface{
     
-    HttpResponse<JsonNode> response;
-    JSONObject data;
-    JSONObject stats;
-    JSONObject base;
-    JSONArray coins;
-    LinkedList<SingleCoin> coinList;
-    LinkedHashMap<String, String> namePrice;
+    private Thread t;
+    private HttpResponse<JsonNode> response;
+    private JSONObject data;
+    private JSONObject stats;
+    private JSONObject base;
+    private JSONArray coins;
+    private LinkedList<SingleCoin> coinList;
+    private LinkedHashMap<String, String> namePrice;
 
     
     /**
@@ -37,6 +38,18 @@ public class CoinRankApi implements CoinRankInterface{
      * and parses the data into easily usable data;
      */
     public CoinRankApi() {
+        start();
+    }
+
+    /**
+     * TODO: fix?
+     * 
+     * Created a threaded version of this class.
+     * 
+     * idk if this is a good way to do this or not....
+     */
+    @Override
+    public void run() {
         try {
             this.response = Unirest.get("https://coinranking1.p.rapidapi.com/coins")
                     .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
@@ -53,6 +66,34 @@ public class CoinRankApi implements CoinRankInterface{
         } catch (UnirestException ex) {
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * Create a new thread if the thread
+     * is not already started.
+     */
+    public void start() {
+        System.out.println("Starting Thread");
+        if (t == null) {
+            t = new Thread(this);
+            t.start();
+        }
+    }
+    
+    /**
+     * Wait for the thread to complete before 
+     * calling the methods for data. 
+     */
+    public void join() {
+        try {
+            t.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean isAlive() {
+        return t.isAlive();
     }
     
     /**

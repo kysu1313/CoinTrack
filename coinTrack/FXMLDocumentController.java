@@ -6,17 +6,17 @@
 
 package coinTrack;
 
-import coinClasses.AlphaVantageApi;
 import coinClasses.CoinRankApi;
+import coinClasses.SingleCoin;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +26,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -37,13 +39,28 @@ import javafx.stage.Stage;
  */
 public class FXMLDocumentController implements Initializable {
     
+    private LinkedHashMap<String, String> coinNamePrice;
+    private LinkedList<SingleCoin> coinList;
+    private int count;
+    
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
     
+    // Bottom portion
     @FXML private Button sendBtnT1;
     @FXML private TextArea txtAreaT1;
+    @FXML private ProgressBar progBarT1;
+    @FXML private ProgressBar progBarT2;
+    
+    // Table View
+    @FXML private TableView<SingleCoin> tableViewT1;
+    @FXML private TableView<SingleCoin> tableViewT2;
+    @FXML private TableColumn<SingleCoin, String> coinNameT1;
+    @FXML private TableColumn<SingleCoin, String> coinNameT2;
+    @FXML private TableColumn<SingleCoin, Integer> coinPriceT1;
+    @FXML private TableColumn<SingleCoin, Integer> coinPriceT2;
     
     
     //========== Action Handlers ==========
@@ -66,7 +83,6 @@ public class FXMLDocumentController implements Initializable {
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         } else {
             lblStatus.setText("Login Failed");
         }
@@ -76,16 +92,14 @@ public class FXMLDocumentController implements Initializable {
     // Testing this function
     @FXML public void handleSend (ActionEvent event) {
         txtAreaT1.setText("Searching...");
-        CoinRankApi cri = new CoinRankApi();
-        System.out.println(cri.getLimit());
+        displayCoinText();
         
-        LinkedHashMap<String, String> lhm = cri.getNamePrice();
-        String text = "";
-        for (Map.Entry<String, String> entry : lhm.entrySet()) {
-            text = text + entry.getKey() + ": " + entry.getValue() + "\n";
-        }
-        txtAreaT1.setText(text);
-        
+    }
+    
+    @FXML
+    private void handleScan(ActionEvent event) {
+        System.out.println("Scanning");
+        displayCoinText();
     }
     
     @FXML
@@ -93,8 +107,33 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("hello");
     }
     
+    
+    // ========== HELPER METHODS ==========
+    
+    /**
+     * Display the api data to the screen. 
+     * 
+     * Currently this just posts it into the
+     * TextArea at the bottom of the page.
+     */
+    private void displayCoinText() {
+        CoinRankApi cri = new CoinRankApi();
+        cri.join();
+        System.out.println(cri.getLimit());
+        
+        coinNamePrice = cri.getNamePrice();
+        String text = "";
+        for (Map.Entry<String, String> entry : coinNamePrice.entrySet()) {
+            text = text + entry.getKey() + ": " + entry.getValue() + "\n";
+        }
+        txtAreaT1.setText(text);
+    }
+    
     @Override
     public void initialize (URL url, ResourceBundle rb) {
+        
+//        progBarT1.setProgress(0.0);
+//        progBarT2.setProgress(0.0);
         
     }    
     
