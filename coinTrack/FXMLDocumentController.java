@@ -8,33 +8,45 @@ package coinTrack;
 
 import coinClasses.CoinRankApi;
 import coinClasses.SingleCoin;
+import java.io.File;
+import javafx.scene.image.Image ;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 /**
@@ -47,6 +59,9 @@ public class FXMLDocumentController implements Initializable {
     private LinkedList<SingleCoin> coinList;
     private int count;
     private Task copyWorker;
+    private Image icon;
+//    final WebView webview = new WebView();
+    private WebEngine webEngine;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -54,10 +69,20 @@ public class FXMLDocumentController implements Initializable {
     @FXML protected Label lblStatus;
     
     // Bottom portion
-    @FXML private Button sendBtnT1;
+    @FXML private Button scanBtnT1;
+    @FXML private Button searchBtnT1;
     @FXML private TextArea txtAreaT1;
+    @FXML private WebView webViewT1;
+    @FXML private WebView webViewT2;
     @FXML private ProgressBar progBarT1;
     @FXML private ProgressBar progBarT2;
+    @FXML private CheckBox searchSymbolT1;
+    @FXML private CheckBox searchSymbolT2;
+    @FXML private CheckBox searchNameT1;
+    @FXML private CheckBox searchNameT2;
+    @FXML private SplitMenuButton splitMenuBtn;
+    @FXML private MenuItem searchCoins;
+    @FXML private MenuItem searchGlobalStats;
     
     // Table View
     @FXML private TableView<SingleCoin> tableViewT1;
@@ -103,10 +128,14 @@ public class FXMLDocumentController implements Initializable {
     
     
     // Testing this function
-    @FXML public void handleSend (ActionEvent event) {
+    @FXML public void handleSearch (ActionEvent event) {
         txtAreaT1.setText("Searching...");
+        if (searchSymbolT1.isSelected()) {
+            System.out.println("search by symbol");
+        } else {
+            System.out.println("search by name");
+        }
         displayCoinText();
-        
     }
     
     @FXML
@@ -118,6 +147,33 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleClear(ActionEvent event) {
         System.out.println("hello");
+    }
+    
+    @FXML
+    private void handleSymbolSearch(ActionEvent event) {
+        searchNameT1.setSelected(false);
+        searchSymbolT1.setSelected(true);
+    }
+    
+    @FXML
+    private void handleNameSearch(ActionEvent event) {
+        searchNameT1.setSelected(true);
+        searchSymbolT1.setSelected(false);
+    }
+    
+    @FXML
+    private void handleSplitMenu(ActionEvent event) {
+        System.out.println("split menu clicked");
+    }
+    
+    @FXML
+    private void handleSearchCoins(ActionEvent event) {
+        splitMenuBtn.setText("Search Coins");
+    }
+    
+    @FXML
+    private void handleGlobalStats(ActionEvent event) {
+        splitMenuBtn.setText("Search Globals");
     }
     
     
@@ -157,28 +213,56 @@ public class FXMLDocumentController implements Initializable {
      * Display coin data to the table
      */
     private void displayTableView() {
-//        tableViewT1 = new TableView<SingleCoin>();
+        
+        // READ THIS ************
+        /**
+         * The column data factories for tab2 are
+         * commented out. 
+         * Need to implement functionality that determines
+         * what tab the user is currently viewing.
+         */
+        
         coinSymbolT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("symbol"));
-//        coinSymbolT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("symbol"));
         coinNameT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("name"));
-//        coinNameT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("name"));
         coinPriceT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("price"));
-//        coinPriceT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("price"));
         coinRankT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("rank"));
-//        coinRankT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("rank"));
         coinChangeT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Double>("change"));
-//        coinChangeT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, Double>("change"));
         coinVolumeT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("volume"));
-//        coinVolumeT2.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("volume"));
         
         ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
         tableViewT1.setItems(obvList);
-//        for (Iterator i = coinList.iterator(); i.hasNext();) {
-//            
-//        }
-        
+        // Allows user to double click a table row and display info in textArea
+        tableViewT1.setRowFactory(tv -> {
+            TableRow<SingleCoin> row = new TableRow<>();
+            row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                        SingleCoin rowData = row.getItem();
+                        System.out.println(rowData);
+                        txtAreaT1.setText(rowData.getIconUrl());
+                        String imgPath = rowData.getIconUrl();
+                        Image img = new Image("https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg");
+
+                        // Attempting to resize the coin logo image.
+                        webViewT1.setPrefHeight(56);
+                        webViewT1.setPrefWidth(56);
+                        webViewT1.getEngine().load(imgPath);
+                    }
+                }
+            });
+            return row;
+        });
     }
     
+    private String getHtml(String content) {
+        return "<html><body>"
+                + "<div id=\"mydiv\">" + content + "</div>"
+                + "</body></html>";
+    }
+    
+  
+
     // This is probably temporary.
     // Attempting to fix progress bar thread.
     public Task createWorker() {
@@ -199,10 +283,9 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize (URL url, ResourceBundle rb) {
+     
         
-//        progBarT1.setProgress(0.0);
-//        progBarT2.setProgress(0.0);
-        
-    }    
-    
+
+    }
+
 }

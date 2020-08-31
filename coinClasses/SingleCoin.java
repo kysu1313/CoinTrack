@@ -49,10 +49,10 @@ public class SingleCoin implements SingleCoinInterface{
         slug = coinList.getString("slug");
         symbol = coinList.getString("symbol");
         name = coinList.getString("name");
-//        description = coinList.getString("description");
+//        description = coinList.getString("description");  // TODO: Fix This
 //        color = coinList.getString("color");
-//        iconType = coinList.getString("iconType");
-//        iconUrl = coinList.getString("iconUrl");
+        iconType = coinList.getString("iconType");
+        iconUrl = coinList.getString("iconUrl");
         price = coinList.getString("price");
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");

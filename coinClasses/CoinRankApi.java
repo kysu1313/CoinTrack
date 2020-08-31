@@ -62,7 +62,6 @@ public class CoinRankApi implements Runnable, CoinRankInterface{
             stats = data.getJSONObject("stats");
             coins = data.getJSONArray("coins");
             coinList = getCoinList();
-//            System.out.println(stats.getInt("total"));
         } catch (UnirestException ex) {
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
         }
