@@ -73,17 +73,16 @@ public class FXMLDocumentController implements Initializable {
     }
     
     
-    
+    // Testing this function
     @FXML public void handleSend (ActionEvent event) {
         txtAreaT1.setText("Searching...");
         CoinRankApi cri = new CoinRankApi();
         System.out.println(cri.getLimit());
-//        txtAreaT1.setText("limit: " + cri.getLimit());
         
         LinkedHashMap<String, String> lhm = cri.getNamePrice();
         String text = "";
         for (Map.Entry<String, String> entry : lhm.entrySet()) {
-            text = text + entry.getKey() + ": " + entry.getValue();
+            text = text + entry.getKey() + ": " + entry.getValue() + "\n";
         }
         txtAreaT1.setText(text);
         

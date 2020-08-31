@@ -1,4 +1,3 @@
-
 package coinClasses;
 
 import interfaces.CoinRankInterface;
@@ -15,7 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * This is a general class that embodies a call to 
+ * the Coinrank api. It parses the JSON and has 
+ * getter methods for individual coin information
+ * as well as a LinkedList and LinkedHashMap methods
  * @author Kyle
  */
 public class CoinRankApi implements CoinRankInterface{
