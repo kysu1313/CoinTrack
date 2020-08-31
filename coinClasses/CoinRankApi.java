@@ -46,7 +46,7 @@ public class CoinRankApi implements CoinRankInterface{
             data = coinRank.getJSONObject("data");
             stats = data.getJSONObject("stats");
             coins = data.getJSONArray("coins");
-            
+            coinList = getCoinList();
 //            System.out.println(stats.getInt("total"));
         } catch (UnirestException ex) {
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,22 +56,23 @@ public class CoinRankApi implements CoinRankInterface{
     /**
      * Creates a LinkedList of each coin in the 
      * "coins" json array.
-     * @param jar
      * @return 
      */
-    public LinkedList<SingleCoin> getCoinList(JSONArray jar){
-        
-        
-        for (int i = 0; i < jar.length(); i++) {
-            coinList.add(new SingleCoin(jar.getJSONObject(i)));
+    public LinkedList<SingleCoin> getCoinList(){
+        LinkedList<SingleCoin> tmpList = new LinkedList<>();
+        for (int i = 0; i < coins.length(); i++) {
+            JSONObject obj = coins.getJSONObject(i);
+            SingleCoin coin = new SingleCoin(obj);
+            tmpList.add(coin);
         }
      
-        return coinList;
+        return tmpList;
     }
     
     public LinkedHashMap<String, String> getNamePrice() {
         
-        for (int i = 0; i < coinList.size(); i++) {
+        namePrice = new LinkedHashMap<>();
+        for (int i = 0; i < 45; i++) {  // coinList.size()
             String name = coinList.get(i).getName();
             String price = coinList.get(i).getPrice();
             namePrice.put(name, price);
