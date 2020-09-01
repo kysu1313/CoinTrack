@@ -41,10 +41,10 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
         <items>
-            <SplitMenuButton fx:id="splitMenuBtn" onAction="#handleSplitMenu" mnemonicParsing="false" text="Select">
+            <SplitMenuButton fx:id="splitMenuBtn" mnemonicParsing="false" onAction="#handleSplitMenu" text="Select">
               <items>
-                <MenuItem fx:id="searchCoins" onAction="#handleSearchCoins" mnemonicParsing="false" text="Search Coins" />
-                <MenuItem fx:id="searchGlobalStats" onAction="#handleGlobalStats" mnemonicParsing="false" text="Global Stats" />
+                <MenuItem fx:id="searchCoins" mnemonicParsing="false" onAction="#handleSearchCoins" text="Search Coins" />
+                <MenuItem fx:id="searchGlobalStats" mnemonicParsing="false" onAction="#handleGlobalStats" text="Global Stats" />
               </items>
             </SplitMenuButton>
             <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
@@ -53,6 +53,7 @@
             <CheckBox fx:id="searchSymbolT1" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
             <CheckBox fx:id="searchNameT1" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
             <ProgressIndicator fx:id="progIndT1" accessibleHelp="Loading Results" progress="0.0" />
+            <Button fx:id="testBtn" mnemonicParsing="false" text="Test" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">

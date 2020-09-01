@@ -11,6 +11,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -44,12 +45,18 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="762.0">
         <items>
+            <SplitMenuButton fx:id="splitMenuT2" mnemonicParsing="false" text="Select">
+              <items>
+                <MenuItem fx:id="searchAllCoins" mnemonicParsing="false" text="All Coins" />
+                <MenuItem fx:id="searchSingleCoins" mnemonicParsing="false" text="Single Coin" />
+              </items>
+            </SplitMenuButton>
             <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
-          <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" text="Search" />
             <TextField fx:id="searchFieldT2" />
+          <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" text="Search" />
             <CheckBox fx:id="searchSymbolT2" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
             <CheckBox fx:id="searchNameT2" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
-            <ProgressBar fx:id="progBarT2" prefHeight="18.0" prefWidth="214.0" progress="0.0" />
+            <ProgressBar fx:id="progBarT2" prefHeight="18.0" prefWidth="150.0" progress="0.0" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
@@ -105,7 +112,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <PieChart fx:id="pieChart" layoutY="1.0" prefHeight="400.0" prefWidth="614.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                                                <PieChart fx:id="pieChart" layoutY="1.0" prefHeight="400.0" prefWidth="614.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                     </content>
