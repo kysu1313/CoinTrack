@@ -2,9 +2,12 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -13,6 +16,7 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
     <children>
@@ -37,10 +41,19 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
         <items>
-          <Button fx:id="sendBtnT1" onAction="#handleSend" defaultButton="true" mnemonicParsing="false" text="Search" />
+            <SplitMenuButton fx:id="splitMenuBtn" mnemonicParsing="false" onAction="#handleSplitMenu" text="Select">
+              <items>
+                <MenuItem fx:id="searchCoins" mnemonicParsing="false" onAction="#handleSearchCoins" text="Search Coins" />
+                <MenuItem fx:id="searchGlobalStats" mnemonicParsing="false" onAction="#handleGlobalStats" text="Global Stats" />
+              </items>
+            </SplitMenuButton>
+            <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
+          <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
             <TextField fx:id="searchFieldT1" />
-            <Button fx:id="serverBtnT1" mnemonicParsing="false" text="Attach" />
-            <Button mnemonicParsing="false" text="Font" />
+            <CheckBox fx:id="searchSymbolT1" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
+            <CheckBox fx:id="searchNameT1" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
+            <ProgressIndicator fx:id="progIndT1" accessibleHelp="Loading Results" progress="0.0" />
+            <Button fx:id="testBtn" mnemonicParsing="false" text="Test" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
@@ -51,7 +64,7 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <Accordion fx:id="accordianT1" prefHeight="519.0" prefWidth="142.0">
+                              <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0">
                                 <panes>
                                   <TitledPane fx:id="savedCoinsT1" animated="false" text="Saved Coins">
                                     <content>
@@ -74,10 +87,14 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView prefHeight="463.0" prefWidth="594.0">
+                              <TableView fx:id="tableViewT1" prefHeight="430.0" prefWidth="594.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                  <TableColumn fx:id="coinSymbolT1" prefWidth="75.0" text="Symbol" />
+                                  <TableColumn fx:id="coinNameT1" prefWidth="75.0" text="Name" />
+                                    <TableColumn fx:id="coinPriceT1" prefWidth="75.0" text="Price" />
+                                    <TableColumn fx:id="coinRankT1" prefWidth="75.0" text="Rank" />
+                                    <TableColumn fx:id="coinChangeT1" prefWidth="75.0" text="Change" />
+                                    <TableColumn fx:id="coinVolumeT1" prefWidth="75.0" text="Volume" />
                                 </columns>
                               </TableView>
                            </children>
@@ -88,7 +105,20 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TextArea fx:id="txtAreaT1" prefHeight="58.0" prefWidth="785.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+                  <SplitPane dividerPositions="0.210727969348659" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <WebView fx:id="webViewT1" prefHeight="56.0" prefWidth="162.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                           <children>
+                              <TextArea fx:id="txtAreaT1" prefHeight="58.0" prefWidth="614.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
                </children>
             </AnchorPane>
         </items>
