@@ -25,10 +25,10 @@ public class SingleCoinHistory {
      * Constructor.
      * @param job 
      */
-    public SingleCoinHistory(JSONArray jar) {
+    public SingleCoinHistory(JSONArray jar, int id) {
         object = jar;
         JSONObject tmp = object.getJSONObject(0);
-        coinId = tmp.getInt("id");
+        coinId = id;
         
         for (int i = 0; i < object.length(); i++) {
             JSONObject cn = object.getJSONObject(i);
