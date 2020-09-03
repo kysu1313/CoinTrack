@@ -5,29 +5,46 @@
  */
 package coinClasses;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  *
  * @author Kyle
  */
-public class SingleCoinHistory implements SingleCoinHistoryInterface{
+public class SingleCoinHistory {
     
+    private JSONArray object;
+    private int coinId;
+    private LinkedHashMap<Double, Date> coinList;
 
-    public SingleCoinHistory(JSONObject job) {
+    /**
+     * Constructor.
+     * @param job 
+     */
+    public SingleCoinHistory(JSONArray jar) {
+        object = jar;
+        JSONObject tmp = object.getJSONObject(0);
+        coinId = tmp.getInt("id");
         
+        for (int i = 0; i < object.length(); i++) {
+            JSONObject cn = object.getJSONObject(i);
+            double price = Double.parseDouble(cn.getString("price"));
+            Date date = new Date(cn.getInt("timestamp"));
+            coinList.put(price, date);
+        }
     }
-
-    @Override
-    public String getPrice() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public LinkedHashMap<Double, Date> getCoinList() {
+        return this.coinList;
     }
-
-    @Override
-    public int getTimeStamp() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    
+    public int getCoinId() {
+        return this.coinId;
     }
     
 }

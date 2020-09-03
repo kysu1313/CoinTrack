@@ -21,16 +21,21 @@ import org.json.JSONObject;
  *
  * @author Kyle
  */
-public class CoinHistory implements CoinHistoryInterface{
+public class CoinHistory implements Runnable, CoinHistoryInterface{
     
     private LinkedList<SingleCoinHistory> history;
     private LinkedHashMap<String, Integer> historyMap;
     private double change;
+    private Thread t;
 
     public CoinHistory() {
-
+        start();
+    }
+    
+    @Override
+    public void run() {
         // Increment the coin "id" for each call. Not sure how many coins there are though.
-        for (int i = 0; i < 70; i++) {
+        for (int i = 1; i < 70; i++) {
             try {
                 String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
                 HttpResponse<JsonNode> response = Unirest.get(url)
@@ -48,10 +53,10 @@ public class CoinHistory implements CoinHistoryInterface{
                 
                 // This creates the individual SingleCoinHistory objects
                 // And creates a LinkedHashMap for coin prices and dates.
-                makeSingleCoins(histArr);
+                SingleCoinHistory single = new SingleCoinHistory(histArr);
                 
                 try {
-                    TimeUnit.SECONDS.sleep((long) 0.05);
+                    TimeUnit.SECONDS.sleep((long) 0.03);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -63,14 +68,41 @@ public class CoinHistory implements CoinHistoryInterface{
         }
     }
     
-    private void makeSingleCoins(JSONArray jar) {
-        
-        for (int i = 0; i < jar.length(); i++) {
-            SingleCoinHistory single = new SingleCoinHistory(jar.getJSONObject(i));
-            this.history.add(single);
-            this.historyMap.put(single.getPrice(), single.getTimeStamp());
+    /**
+     * Create a new thread if the thread
+     * is not already started.
+     */
+    public void start() {
+        System.out.println("Starting Thread");
+        if (t == null) {
+            t = new Thread(this);
+            t.start();
         }
     }
+    
+    /**
+     * Wait for the thread to complete before 
+     * calling the methods for data. 
+     */
+    public void join() {
+        try {
+            t.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    // ========== GETTERS ==========
+    
+    /**
+     * Check if the thread is alive
+     * @return 
+     */
+    public boolean isAlive() {
+        return t.isAlive();
+    }
+    
 
     @Override
     public LinkedHashMap<String, Integer> getPriceDate() {
@@ -86,6 +118,8 @@ public class CoinHistory implements CoinHistoryInterface{
     public LinkedList<SingleCoinHistory> getHistory() {
         return this.history;
     }
+
+    
 
 
 }
