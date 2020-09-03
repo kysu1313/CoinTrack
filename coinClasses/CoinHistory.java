@@ -53,7 +53,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
                 
                 // This creates the individual SingleCoinHistory objects
                 // And creates a LinkedHashMap for coin prices and dates.
-                SingleCoinHistory single = new SingleCoinHistory(histArr);
+                SingleCoinHistory single = new SingleCoinHistory(histArr, i);
                 
                 try {
                     TimeUnit.SECONDS.sleep((long) 0.03);
