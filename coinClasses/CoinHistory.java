@@ -92,6 +92,9 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
         }
     }
     
+    
+    // ========== GETTERS ==========
+    
     /**
      * Check if the thread is alive
      * @return 
@@ -99,7 +102,6 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     public boolean isAlive() {
         return t.isAlive();
     }
-    
     
 
     @Override

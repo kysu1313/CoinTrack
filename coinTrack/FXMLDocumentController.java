@@ -6,9 +6,11 @@
 
 package coinTrack;
 
+import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
+import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
-import java.io.File;
+import coinClasses.SingleCoinHistory;
 import javafx.scene.image.Image ;
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +20,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -27,15 +28,19 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -43,7 +48,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -60,45 +64,57 @@ public class FXMLDocumentController implements Initializable {
     private int count;
     private Task copyWorker;
     private Image icon;
-//    final WebView webview = new WebView();
     private WebEngine webEngine;
+    private CoinHistory coinHistory;
+    private LinkedList<SingleCoinHistory> history;
+    private LinkedHashMap<String, Integer> historyMap;
+    private int coinsToGraph = 25;
+    private boolean isSingleCoinScan;
+    private GlobalCoinStats globalStats;
+    private CoinRankApi cri;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
     
-    // Bottom portion
+    // Bottom portion (button bar)
     @FXML private Button scanBtnT1;
     @FXML private Button searchBtnT1;
     @FXML private TextArea txtAreaT1;
     @FXML private WebView webViewT1;
-    @FXML private WebView webViewT2;
     @FXML private ProgressBar progBarT1;
-    @FXML private ProgressBar progBarT2;
     @FXML private CheckBox searchSymbolT1;
-    @FXML private CheckBox searchSymbolT2;
     @FXML private CheckBox searchNameT1;
-    @FXML private CheckBox searchNameT2;
     @FXML private SplitMenuButton splitMenuBtn;
     @FXML private MenuItem searchCoins;
     @FXML private MenuItem searchGlobalStats;
     
+    // Bottom portion Tab 2
+    @FXML private SplitMenuButton splitMenuT2;
+    @FXML private Button searchBtnT2;
+    @FXML private MenuItem searchAllCoins;
+    @FXML private MenuItem searchSingleCoin;
+    @FXML private WebView webViewT2;
+    @FXML private ProgressBar progBarT2;
+    @FXML private CheckBox searchSymbolT2;
+    @FXML private CheckBox searchNameT2;
+    @FXML private SplitMenuButton numCoins;
+    @FXML private MenuItem numCoins5;
+    @FXML private MenuItem numCoins10;
+    @FXML private MenuItem numCoins25;
+    @FXML private MenuItem numCoinsAll;
+    
+    // Bar Chart
+    @FXML private BarChart barChart;
+    @FXML private CategoryAxis xAxis;
+    @FXML private NumberAxis yAxis;
+    private XYChart.Series series1;
+    private BarChart.Series<String, Number> series2;
+    private ObservableList<XYChart.Series<String, Number>> barChartData;
+    
     // Table View
     @FXML private TableView<SingleCoin> tableViewT1;
-    @FXML private TableView<SingleCoin> tableViewT2;
-    @FXML private TableColumn<SingleCoin, String> coinSymbolT1;
-    @FXML private TableColumn<SingleCoin, String> coinSymbolT2;
-    @FXML private TableColumn<SingleCoin, String> coinNameT1;
-    @FXML private TableColumn<SingleCoin, String> coinNameT2;
-    @FXML private TableColumn<SingleCoin, Integer> coinPriceT1;
-    @FXML private TableColumn<SingleCoin, Integer> coinPriceT2;
-    @FXML private TableColumn<SingleCoin, Integer> coinRankT1;
-    @FXML private TableColumn<SingleCoin, Integer> coinRankT2;
-    @FXML private TableColumn<SingleCoin, Double> coinChangeT1;
-    @FXML private TableColumn<SingleCoin, Double> coinChangeT2;
-    @FXML private TableColumn<SingleCoin, Integer> coinVolumeT1;
-    @FXML private TableColumn<SingleCoin, Integer> coinVolumeT2;
     
     
     //========== Action Handlers ==========
@@ -128,20 +144,40 @@ public class FXMLDocumentController implements Initializable {
     
     
     // Testing this function
-    @FXML public void handleSearch (ActionEvent event) {
+    @FXML public void handleSearch(ActionEvent event) {
         txtAreaT1.setText("Searching...");
-        if (searchSymbolT1.isSelected()) {
-            System.out.println("search by symbol");
+        if (coinHistory != null) {
+            if (searchSymbolT1.isSelected()) {
+                System.out.println("search by symbol");
+
+            } else {
+                System.out.println("search by name");
+                
+            }
         } else {
-            System.out.println("search by name");
+            coinHistory = new CoinHistory();
+
+            if (searchSymbolT1.isSelected()) {
+                System.out.println("search by symbol");
+
+            } else {
+                System.out.println("search by name");
+            }
         }
-        displayCoinText();
+
+//        displayCoinText();
     }
     
     @FXML
     private void handleScan(ActionEvent event) {
         System.out.println("Scanning");
         displayCoinText();
+//        if (searchGlobalStats.isVisible()){
+//            displayGlobalStats();
+//        } else {
+//            displayCoinText();
+//        }
+        
     }
     
     @FXML
@@ -176,6 +212,74 @@ public class FXMLDocumentController implements Initializable {
         splitMenuBtn.setText("Search Globals");
     }
     
+    @FXML
+    private void handleTest(ActionEvent event) {
+        System.out.println("testing");
+    }
+    
+    
+    // ========== Tab 2 ==========
+    
+    
+    /**
+     * TODO Fix Graphing, not displaying correct
+     * number of coins. 
+     *  
+     */
+    
+    @FXML
+    private void handleScanT2(ActionEvent event) {
+        coinHistory = new CoinHistory();
+        if (isSingleCoinScan) {
+            displaySingleCoinGraph();
+        } else {
+            displayMultiCoinGraph();
+        }
+    }
+    
+    @FXML
+    private void handle5Coins(ActionEvent event) {
+        coinsToGraph = 5;
+        numCoins.setText("5");
+    }
+    
+    @FXML
+    private void handle10Coins(ActionEvent event) {
+        coinsToGraph = 10;
+        numCoins.setText("10");
+    }
+    
+    @FXML
+    private void handle25Coins(ActionEvent event) {
+        coinsToGraph = 25;
+        numCoins.setText("25");
+    }
+    
+    @FXML
+    private void handleTotalCoins(ActionEvent event) {
+        coinsToGraph = 30;
+        numCoins.setText("All");
+    }
+    
+    @FXML
+    private void handleAllCoins(ActionEvent event) {
+        isSingleCoinScan = false;
+        splitMenuT2.setText("All Coins");
+    }
+    
+    @FXML
+    private void handleSingleCoin(ActionEvent event) {
+        isSingleCoinScan = true;
+        splitMenuT2.setText("Single Coin");
+    }
+    
+    @FXML
+    private void handleClearT1(ActionEvent event) {
+        tableViewT1.getItems().clear();
+        txtAreaT1.setText("");
+    }
+    
+    
     
     // ========== HELPER METHODS ==========
     
@@ -186,7 +290,7 @@ public class FXMLDocumentController implements Initializable {
      * TextArea at the bottom of the page.
      */
     private void displayCoinText() {
-        CoinRankApi cri = new CoinRankApi();
+        cri = new CoinRankApi();
         
         cri.join();
         count = 50;
@@ -200,19 +304,27 @@ public class FXMLDocumentController implements Initializable {
 //        new Thread(copyWorker).start();
         coinNamePrice = cri.getNamePrice();
         coinList = cri.getCoinList();
-        displayTableView();
+        displayMultiCoinView();
         
+    }
+    
+    private void displayGlobalStats() {
+        globalStats = new GlobalCoinStats();
         String text = "";
-        for (Map.Entry<String, String> entry : coinNamePrice.entrySet()) {
-            text = text + entry.getKey() + ": " + entry.getValue() + "\n";
-        }
+        text += "Total Coins: " + globalStats.getTotalCoins() + "\n";
+        text += "Total Markets: " + globalStats.getTotalMarkets() + "\n";
+        text += "Total Exchanges: " + globalStats.getTotalExchanges() + "\n";
+        text += "Market Cap: " + globalStats.getTotalMarketCap() + "\n";
+        text += "Total 24h Volume: " + globalStats.getTotal24hVolume() + "\n";
+        
         txtAreaT1.setText(text);
     }
+    
     
     /**
      * Display coin data to the table
      */
-    private void displayTableView() {
+    private void displayMultiCoinView() {
         
         // READ THIS ************
         /**
@@ -221,16 +333,24 @@ public class FXMLDocumentController implements Initializable {
          * Need to implement functionality that determines
          * what tab the user is currently viewing.
          */
+        TableColumn col1 = new TableColumn("Symbol");
+        TableColumn col2 = new TableColumn("Name");
+        TableColumn col3 = new TableColumn("Price");
+        TableColumn col4 = new TableColumn("Rank");
+        TableColumn col5 = new TableColumn("Change");
+        TableColumn col6 = new TableColumn("Volume");
         
-        coinSymbolT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("symbol"));
-        coinNameT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("name"));
-        coinPriceT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("price"));
-        coinRankT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("rank"));
-        coinChangeT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Double>("change"));
-        coinVolumeT1.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("volume"));
+        col1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("symbol"));
+        col2.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("name"));
+        col3.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("price"));
+        col4.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("rank"));
+        col5.setCellValueFactory(new PropertyValueFactory<SingleCoin, Double>("change"));
+        col6.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("volume"));
+        tableViewT1.getColumns().addAll(col1,col2,col3,col4,col5,col6);
         
         ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
         tableViewT1.setItems(obvList);
+        tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Allows user to double click a table row and display info in textArea
         tableViewT1.setRowFactory(tv -> {
             TableRow<SingleCoin> row = new TableRow<>();
@@ -240,9 +360,8 @@ public class FXMLDocumentController implements Initializable {
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         SingleCoin rowData = row.getItem();
                         System.out.println(rowData);
-                        txtAreaT1.setText(rowData.getIconUrl());
+//                        txtAreaT1.setText(rowData.getIconUrl());
                         String imgPath = rowData.getIconUrl();
-                        Image img = new Image("https://cdn.coinranking.com/bOabBYkcX/bitcoin_btc.svg");
 
                         // Attempting to resize the coin logo image.
                         webViewT1.setPrefHeight(56);
@@ -255,13 +374,40 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
-    private String getHtml(String content) {
-        return "<html><body>"
-                + "<div id=\"mydiv\">" + content + "</div>"
-                + "</body></html>";
+
+    /**
+     * Display historical data for a single coin
+     */
+    public void displaySingleCoinGraph() {
+        System.out.println("displaying graph");
+        coinHistory.join();
+        historyMap = coinHistory.getPriceDate();
+        
+        for (Map.Entry<String, Integer> entry : historyMap.entrySet()) {
+            series1.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
+        }
+        barChartData.add(series1);
+        barChart.setData(barChartData);
     }
     
-  
+    /**
+     * Display / Rank all coin prices
+     */
+    public void displayMultiCoinGraph() {
+        System.out.println("displaying graph");
+        coinHistory.join();
+        historyMap = coinHistory.getPriceDate();
+        int count = 0;
+        for (Map.Entry<String, Integer> entry : historyMap.entrySet()) {
+//            count++;
+//            if (coinsToGraph < 25 && count < coinsToGraph) {
+//                break;
+//            }
+            series1.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
+        }
+        barChartData.add(series1);
+        barChart.setData(barChartData);
+    }
 
     // This is probably temporary.
     // Attempting to fix progress bar thread.
@@ -284,7 +430,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize (URL url, ResourceBundle rb) {
      
-        
+        barChartData = FXCollections.observableArrayList();
+        series1 = new BarChart.Series<String, Number>();
+        series1.setName("Data");
 
     }
 

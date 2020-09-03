@@ -42,6 +42,7 @@ public class SingleCoinHistory {
         return this.coinList;
     }
     
+    
     public int getCoinId() {
         return this.coinId;
     }

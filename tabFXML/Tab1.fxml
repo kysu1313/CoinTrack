@@ -9,7 +9,6 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -47,13 +46,13 @@
                 <MenuItem fx:id="searchGlobalStats" mnemonicParsing="false" onAction="#handleGlobalStats" text="Global Stats" />
               </items>
             </SplitMenuButton>
-            <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
-          <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
+            <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
+            <Button fx:id="clearBtnT1" accessibleHelp="Clear table" mnemonicParsing="false" onAction="#handleClearT1" text="Clear" />
+          <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
             <TextField fx:id="searchFieldT1" />
             <CheckBox fx:id="searchSymbolT1" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
             <CheckBox fx:id="searchNameT1" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
             <ProgressIndicator fx:id="progIndT1" accessibleHelp="Loading Results" progress="0.0" />
-            <Button fx:id="testBtn" mnemonicParsing="false" text="Test" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
@@ -88,14 +87,14 @@
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
                               <TableView fx:id="tableViewT1" prefHeight="430.0" prefWidth="594.0">
-                                <columns>
+<!--                                <columns>
                                   <TableColumn fx:id="coinSymbolT1" prefWidth="75.0" text="Symbol" />
                                   <TableColumn fx:id="coinNameT1" prefWidth="75.0" text="Name" />
                                     <TableColumn fx:id="coinPriceT1" prefWidth="75.0" text="Price" />
                                     <TableColumn fx:id="coinRankT1" prefWidth="75.0" text="Rank" />
                                     <TableColumn fx:id="coinChangeT1" prefWidth="75.0" text="Change" />
                                     <TableColumn fx:id="coinVolumeT1" prefWidth="75.0" text="Volume" />
-                                </columns>
+                                </columns>-->
                               </TableView>
                            </children>
                         </AnchorPane>

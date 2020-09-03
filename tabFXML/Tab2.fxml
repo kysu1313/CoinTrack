@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.BubbleChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -47,16 +48,25 @@
         <items>
             <SplitMenuButton fx:id="splitMenuT2" mnemonicParsing="false" text="Select">
               <items>
-                <MenuItem fx:id="searchAllCoins" mnemonicParsing="false" text="All Coins" />
-                <MenuItem fx:id="searchSingleCoins" mnemonicParsing="false" text="Single Coin" />
+                <MenuItem fx:id="searchAllCoins" mnemonicParsing="false" onAction="#handleAllCoins" text="All Coins" />
+                <MenuItem fx:id="searchSingleCoins" mnemonicParsing="false" onAction="#handleSingleCoin" text="Single Coin" />
               </items>
             </SplitMenuButton>
-            <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
+            <SplitMenuButton fx:id="numCoins" mnemonicParsing="false" text="Amount">
+              <items>
+                <MenuItem fx:id="numCoins5" mnemonicParsing="false" onAction="#handle5Coins" text="5" />
+                <MenuItem fx:id="numCoins10" mnemonicParsing="false" onAction="#handle10Coins" text="10" />
+                  <MenuItem fx:id="numCoins25" mnemonicParsing="false" onAction="#handle25Coins" text="25 (default)" />
+                  <MenuItem fx:id="numCoinsAll" mnemonicParsing="false" onAction="#handleTotalCoins" text="All" />
+              </items>
+            </SplitMenuButton>
+            <Spinner />
+            <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScanT2" text="Scan" underline="true" />
+            <Button fx:id="clearBtnT2" mnemonicParsing="false" text="Clear" />
             <TextField fx:id="searchFieldT2" />
-          <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" defaultButton="true" mnemonicParsing="false" text="Search" />
+          <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" text="Search" />
             <CheckBox fx:id="searchSymbolT2" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
             <CheckBox fx:id="searchNameT2" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
-            <ProgressBar fx:id="progBarT2" prefHeight="18.0" prefWidth="150.0" progress="0.0" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
@@ -117,6 +127,22 @@
                                           </AnchorPane>
                                     </content>
                                   </Tab>
+                                    <Tab text="Bubble Chart">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <BubbleChart fx:id="bubbleChart" layoutY="1.0" prefHeight="400.0" prefWidth="614.0">
+                                                  <xAxis>
+                                                    <NumberAxis side="BOTTOM" />
+                                                  </xAxis>
+                                                  <yAxis>
+                                                    <NumberAxis side="LEFT" />
+                                                  </yAxis>
+                                                </BubbleChart>
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </Tab>
                                 </tabs>
                               </TabPane>
                            </children>
