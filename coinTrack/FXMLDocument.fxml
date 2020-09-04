@@ -11,13 +11,13 @@
 <AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <TabPane prefHeight="647.0" prefWidth="787.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="mainTabPane" prefHeight="647.0" prefWidth="787.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Tab1">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="../tabFXML/Tab1.fxml" />
+                        <fx:include source="../tabControllers/Tab1.fxml" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -25,7 +25,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="../tabFXML/Tab2.fxml" />
+                        <fx:include source="../tabControllers/Tab2.fxml" />
                      </children>
                   </AnchorPane>
               </content>
