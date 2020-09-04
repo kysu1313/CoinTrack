@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
     <children>
       <MenuBar prefHeight="28.0" prefWidth="787.0">
         <menus>
@@ -39,14 +39,12 @@
       </MenuBar>
       <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
         <items>
-            <CheckBox fx:id="searchGlobalStats" onAction="#handleSearchCoins" mnemonicParsing="false" text="Global Stats" />
-            <CheckBox fx:id="searchCoins" onAction="#handleGlobalStats" mnemonicParsing="false" text="All Coins" />
+            <CheckBox fx:id="searchGlobalStats" mnemonicParsing="false" text="Global Stats" />
+            <CheckBox fx:id="searchCoins" mnemonicParsing="false" text="All Coins" />
             <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true" />
             <Button fx:id="clearBtnT1" accessibleHelp="Clear table" mnemonicParsing="false" onAction="#handleClearT1" text="Clear" />
             <TextField fx:id="searchFieldT1" />
           <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-            <CheckBox fx:id="searchSymbolT1" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
-            <CheckBox fx:id="searchNameT1" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
             <ProgressIndicator fx:id="progIndT1" accessibleHelp="Loading Results" progress="0.0" />
         </items>
       </ToolBar>
