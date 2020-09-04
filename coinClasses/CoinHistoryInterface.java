@@ -15,7 +15,7 @@ import java.util.LinkedList;
 interface CoinHistoryInterface {
     
     public LinkedHashMap<String, Integer> getPriceDate();
-    public LinkedList<SingleCoinHistory> getHistory();
+    public LinkedList<SingleCoin> getHistory();
     public double getChange();
     
 }

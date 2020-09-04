@@ -162,7 +162,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     }
 
     public LinkedHashMap<String, String> getNamePrice() {
-
+        
         namePrice = new LinkedHashMap<>();
         for (int i = 0; i < 45; i++) {  // coinList.size()
             String name = coinList.get(i).getName();

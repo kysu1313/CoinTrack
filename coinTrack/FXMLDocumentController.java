@@ -14,6 +14,7 @@ import coinClasses.SingleCoinHistory;
 import javafx.scene.image.Image ;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -49,9 +50,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.apache.commons.codec.binary.StringUtils;
 
 /**
  *
@@ -68,6 +71,7 @@ public class FXMLDocumentController implements Initializable {
     private CoinHistory coinHistory;
     private LinkedList<SingleCoinHistory> history;
     private LinkedHashMap<String, Integer> historyMap;
+    private LinkedHashMap<Double, String> singleHistoryMap;
     private int coinsToGraph = 25;
     private boolean isSingleCoinScan;
     private GlobalCoinStats globalStats;
@@ -87,8 +91,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML private CheckBox searchSymbolT1;
     @FXML private CheckBox searchNameT1;
     @FXML private SplitMenuButton splitMenuBtn;
-    @FXML private MenuItem searchCoins;
-    @FXML private MenuItem searchGlobalStats;
+    @FXML private CheckBox searchCoins;
+    @FXML private CheckBox searchGlobalStats;
     
     // Bottom portion Tab 2
     @FXML private SplitMenuButton splitMenuT2;
@@ -99,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private ProgressBar progBarT2;
     @FXML private CheckBox searchSymbolT2;
     @FXML private CheckBox searchNameT2;
+    @FXML private TextField searchFieldT2;
     @FXML private SplitMenuButton numCoins;
     @FXML private MenuItem numCoins5;
     @FXML private MenuItem numCoins10;
@@ -110,8 +115,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML private CategoryAxis xAxis;
     @FXML private NumberAxis yAxis;
     private XYChart.Series series1;
-    private BarChart.Series<String, Number> series2;
+    private XYChart.Series series4;
     private ObservableList<XYChart.Series<String, Number>> barChartData;
+    private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
     // Table View
     @FXML private TableView<SingleCoin> tableViewT1;
@@ -171,12 +177,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleScan(ActionEvent event) {
         System.out.println("Scanning");
-        displayCoinText();
-//        if (searchGlobalStats.isVisible()){
-//            displayGlobalStats();
-//        } else {
-//            displayCoinText();
-//        }
+        tableViewT1.getItems().clear();
+//        displayCoinText();
+        if (searchGlobalStats.isArmed()){
+            displayGlobalStats();
+        } else {
+            displayCoinText();
+        }
         
     }
     
@@ -205,11 +212,21 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleSearchCoins(ActionEvent event) {
         splitMenuBtn.setText("Search Coins");
+        searchGlobalStats.setSelected(false);
+        searchCoins.setSelected(true);
     }
     
     @FXML
     private void handleGlobalStats(ActionEvent event) {
         splitMenuBtn.setText("Search Globals");
+        searchGlobalStats.setSelected(true);
+        searchCoins.setSelected(false);
+    }
+    
+    @FXML
+    private void handleClearT1(ActionEvent event) {
+        tableViewT1.getItems().clear();
+        txtAreaT1.setText("");
     }
     
     @FXML
@@ -229,11 +246,23 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void handleScanT2(ActionEvent event) {
+        barChart.getData().clear();
+        barChart.layout();
         coinHistory = new CoinHistory();
         if (isSingleCoinScan) {
-            displaySingleCoinGraph();
+            System.out.println("Sorry, havn't added this yet");
+            
         } else {
             displayMultiCoinGraph();
+        }
+    }
+    
+    @FXML
+    private void handleSearchT2(ActionEvent event) {
+        barChart.getData().clear();
+        barChart.layout();
+        if (coinHistory == null) {
+            displaySingleCoinGraph();
         }
     }
     
@@ -274,9 +303,10 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
-    private void handleClearT1(ActionEvent event) {
-        tableViewT1.getItems().clear();
-        txtAreaT1.setText("");
+    private void handleClearT2(ActionEvent event) {
+        barChart.getData().clear();
+        barChart.layout();
+        searchFieldT2.setText("");
     }
     
     
@@ -328,8 +358,6 @@ public class FXMLDocumentController implements Initializable {
         
         // READ THIS ************
         /**
-         * The column data factories for tab2 are
-         * commented out. 
          * Need to implement functionality that determines
          * what tab the user is currently viewing.
          */
@@ -340,14 +368,14 @@ public class FXMLDocumentController implements Initializable {
         TableColumn col5 = new TableColumn("Change");
         TableColumn col6 = new TableColumn("Volume");
         
-        col1.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("symbol"));
-        col2.setCellValueFactory(new PropertyValueFactory<SingleCoin, String>("name"));
-        col3.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("price"));
-        col4.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("rank"));
-        col5.setCellValueFactory(new PropertyValueFactory<SingleCoin, Double>("change"));
-        col6.setCellValueFactory(new PropertyValueFactory<SingleCoin, Integer>("volume"));
-        tableViewT1.getColumns().addAll(col1,col2,col3,col4,col5,col6);
+        col1.setCellValueFactory(new PropertyValueFactory<>("symbol"));
+        col2.setCellValueFactory(new PropertyValueFactory<>("name"));
+        col3.setCellValueFactory(new PropertyValueFactory<>("price"));
+        col4.setCellValueFactory(new PropertyValueFactory<>("rank"));
+        col5.setCellValueFactory(new PropertyValueFactory<>("change"));
+        col6.setCellValueFactory(new PropertyValueFactory<>("volume"));
         
+        tableViewT1.getColumns().addAll(col1,col2,col3,col4,col5,col6);
         ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
         tableViewT1.setItems(obvList);
         tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -380,14 +408,60 @@ public class FXMLDocumentController implements Initializable {
      */
     public void displaySingleCoinGraph() {
         System.out.println("displaying graph");
-        coinHistory.join();
-        historyMap = coinHistory.getPriceDate();
-        
-        for (Map.Entry<String, Integer> entry : historyMap.entrySet()) {
-            series1.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
+        // Get the string/int from the text field.
+        if (searchFieldT2.getText().isEmpty()){
+            searchFieldT2.setText("Coin name or id");
+        } else if (Character.isDigit(searchFieldT2.getText().charAt(0))) {
+            // Create a CoinHistory object and pass it the id.
+            CoinHistory coinHist = new CoinHistory(Integer.parseInt(
+                    searchFieldT2.getText()));
+            // Save the data to a HashMap variable
+            singleHistoryMap = coinHist.getSingleHistory();
+        } else {
+            // TODO:
+            // Here we should add the ability to check for a name entry
+            searchFieldT2.setText("no string compatability yet");
         }
-        barChartData.add(series1);
-        barChart.setData(barChartData);
+        // Add entries from singleHistoryMap into series1
+        for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
+            series4.getData().add(new XYChart.Data(
+                    entry.getValue(), entry.getKey()));
+        }
+        // Add series1 to the barChartData, then add that to the barChart
+        barChartData2.add(series4);
+        barChart.setData(barChartData2);
+        
+        /**
+         * THIS IS FOR TESTING.
+         * THIS IS NOT MY CODE.
+         * 
+         * Implements scrolling using the mouse wheel on the graph.
+         */
+        final double SCALE_DELTA = 1.1;
+        barChart.setOnScroll(new EventHandler<ScrollEvent>() {
+            public void handle(ScrollEvent event) {
+                event.consume();
+
+                if (event.getDeltaY() == 0) {
+                    return;
+                }
+
+                double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
+
+                barChart.setScaleX(barChart.getScaleX() * scaleFactor);
+                barChart.setScaleY(barChart.getScaleY() * scaleFactor);
+            }
+        });
+
+        barChart.setOnMousePressed(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    barChart.setScaleX(1.0);
+                    barChart.setScaleY(1.0);
+                }
+            }
+        });
+        
     }
     
     /**
@@ -395,7 +469,7 @@ public class FXMLDocumentController implements Initializable {
      */
     public void displayMultiCoinGraph() {
         System.out.println("displaying graph");
-        coinHistory.join();
+//        coinHistory.join();
         historyMap = coinHistory.getPriceDate();
         int count = 0;
         for (Map.Entry<String, Integer> entry : historyMap.entrySet()) {
@@ -403,36 +477,22 @@ public class FXMLDocumentController implements Initializable {
 //            if (coinsToGraph < 25 && count < coinsToGraph) {
 //                break;
 //            }
-            series1.getData().add(new XYChart.Data(entry.getKey(), entry.getValue()));
+            series1.getData().add(new XYChart.Data(
+                    entry.getKey(), entry.getValue()));
         }
         barChartData.add(series1);
         barChart.setData(barChartData);
-    }
-
-    // This is probably temporary.
-    // Attempting to fix progress bar thread.
-    public Task createWorker() {
-        return new Task() {
-            @Override
-            protected Object call() throws Exception {
-                    System.out.println("count: " + count);
-                for (int i = 0; i < (count/2); i++) {
-                    Thread.sleep(1000);
-//                    updateMessage("2000 milliseconds");
-                    updateProgress(i + 1, count/2);
-                    System.out.println(i);
-                }
-                return true;
-            }
-        };
     }
     
     @Override
     public void initialize (URL url, ResourceBundle rb) {
      
         barChartData = FXCollections.observableArrayList();
-        series1 = new BarChart.Series<String, Number>();
+        barChartData2 = FXCollections.observableArrayList();
+        series1 = new BarChart.Series<>();
+        series4 = new BarChart.Series<>();
         series1.setName("Data");
+        series4.setName("Prices");
 
     }
 
