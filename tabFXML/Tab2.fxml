@@ -11,7 +11,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
@@ -60,11 +59,10 @@
                   <MenuItem fx:id="numCoinsAll" mnemonicParsing="false" onAction="#handleTotalCoins" text="All" />
               </items>
             </SplitMenuButton>
-            <Spinner />
             <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScanT2" text="Scan" underline="true" />
-            <Button fx:id="clearBtnT2" mnemonicParsing="false" text="Clear" />
+            <Button fx:id="clearBtnT2" onAction="#handleClearT2" mnemonicParsing="false" text="Clear" />
             <TextField fx:id="searchFieldT2" />
-          <Button fx:id="sendBtn" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" text="Search" />
+          <Button fx:id="searchBtnT2" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearchT2" text="Search" />
             <CheckBox fx:id="searchSymbolT2" mnemonicParsing="false" onAction="#handleSymbolSearch" text="Symbol" />
             <CheckBox fx:id="searchNameT2" mnemonicParsing="false" onAction="#handleNameSearch" selected="true" text="Name" />
         </items>

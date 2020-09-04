@@ -1,6 +1,7 @@
 package coinClasses;
 
 import interfaces.SingleCoinInterface;
+import java.util.LinkedHashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,9 +37,14 @@ public class SingleCoin implements SingleCoinInterface{
     private int firstSeen;
     private double change;
     private int rank;
+    
+    private JSONArray object;
+    private int coinId;
+    private LinkedHashMap<Double, String> coinList2;
 
     /**
-     * Constructor
+     * Constructor for JSONObject.
+     * Used in CoinRankApi class
      * @param job 
      */
     public SingleCoin(JSONObject job) {
@@ -57,7 +63,37 @@ public class SingleCoin implements SingleCoinInterface{
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
-        
+    }
+    
+    /**
+     * Constructor for JSONArray.
+     * Used in CoinHistory class to pull data
+     * for a coin using its id.
+     * @param jar 
+     */
+    public SingleCoin (JSONArray _jar, int _id) {
+        this.object = _jar;
+        this.coinId = _id;
+        if (coinList2 == null) {
+            coinList2 = new LinkedHashMap<>();
+        }
+        // Loop that adds historical data to appropriate data vields
+        // this.object.length(), commented out b/c too long
+        for (int i = 0; i < this.object.length(); i++) {
+            JSONObject cn = this.object.getJSONObject(i);
+            double price = Double.parseDouble(cn.getString("price"));
+            String date = Integer.toString(cn.getInt("timestamp"));
+//            Date date = new Date((long)cn.getInt("timestamp") * 1000);
+//            System.out.println(date);
+            this.coinList2.put(price, date);
+        }
+    }
+    
+    
+    // ========== GETTERS ==========
+    
+    public LinkedHashMap<Double, String> getCoinHistory() {
+        return this.coinList2;
     }
     
     @Override
