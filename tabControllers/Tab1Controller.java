@@ -10,6 +10,7 @@ import coinClasses.CoinRankApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
+import java.awt.Color;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -22,21 +23,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -47,6 +38,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 
 
 
@@ -105,21 +97,24 @@ public class Tab1Controller implements Initializable{
     /**
      * This method handles both scanning for all coins
      * and all markets / exchanges. 
-     * Simple logic determines the selected checkBoxes, then
-     * calls the appropriate classes and displays data. 
+     * Simple logic determines the selected checkBoxes, 
+     * clears existing data, then calls the appropriate 
+     * classes and displays data. 
      * @param event 
      */
     @FXML
     private void handleScan(ActionEvent event) {
         System.out.println("Scanning");
-        tableViewT1.getItems().clear();
-        txtAreaT1.setText("");
         if (searchGlobalStats.isSelected() && searchCoins.isSelected()){
+            tableViewT1.getItems().clear();
+            txtAreaT1.setText("");
             displayGlobalStats();
             displayCoinText();
         } else if (searchGlobalStats.isSelected()){
+            txtAreaT1.setText("");
             displayGlobalStats();
         } else if (searchCoins.isSelected()) {
+            tableViewT1.getItems().clear();
             displayCoinText();
         }
     }
@@ -147,7 +142,7 @@ public class Tab1Controller implements Initializable{
 //        new Thread(copyWorker).start();
         coinNamePrice = cri.getNamePrice();
         coinList = cri.getCoinList();
-        displayMultiCoinView();
+        displayMultiCoinTable();
         
     }
     
@@ -167,29 +162,43 @@ public class Tab1Controller implements Initializable{
     /**
      * Display coin data to the table
      */
-    private void displayMultiCoinView() {
-        
-        // READ THIS ************
-        /**
-         * Need to implement functionality that determines
-         * what tab the user is currently viewing.
-         */
+    private void displayMultiCoinTable() {
+        // Create columns
         TableColumn col1 = new TableColumn("Symbol");
         TableColumn col2 = new TableColumn("Name");
         TableColumn col3 = new TableColumn("Price (USD)");
         TableColumn col4 = new TableColumn("Rank");
         TableColumn col5 = new TableColumn("Change");
         TableColumn col6 = new TableColumn("Volume");
-        
+        // Link columns to properties in SingleCoin class
         col1.setCellValueFactory(new PropertyValueFactory<>("symbol"));
         col2.setCellValueFactory(new PropertyValueFactory<>("name"));
         col3.setCellValueFactory(new PropertyValueFactory<>("price"));
         col4.setCellValueFactory(new PropertyValueFactory<>("rank"));
-        col5.setCellValueFactory(new PropertyValueFactory<>("change"));
+        col5.setCellValueFactory(new PropertyValueFactory<>("stringChange"));
         col6.setCellValueFactory(new PropertyValueFactory<>("volume"));
-        
+        // Add columns to tableView
         tableViewT1.getColumns().addAll(col1,col2,col3,col4,col5,col6);
         ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
+        // Change text color of "change" column if positive or negative change.
+        col5.setCellFactory(new Callback<TableColumn, TableCell>() {
+        public TableCell call(TableColumn param) {
+            return new TableCell<SingleCoin, String>() {
+
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!isEmpty()) {
+                        this.setStyle("-fx-text-fill: green");
+                        // Get fancy and change color based on data
+                        if(item.contains("-")) 
+                            this.setStyle("-fx-text-fill: red");
+                        setText(item);
+                    }
+                }
+            };
+        }
+    });
         tableViewT1.setItems(obvList);
         tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Allows user to double click a table row and display info in textArea

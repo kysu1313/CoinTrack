@@ -70,8 +70,12 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
      * the provided coin id. 
      * @param _id 
      */
-    public CoinHistory(int _id) {
+    public CoinHistory(int _id, String _name) {
         singleHistoryMap = new LinkedHashMap<>();
+        if (!_name.equals("")){
+            ParseCoinName newName = new ParseCoinName(_name);
+            int id = newName.getId();
+        }
         try {
             String url = "https://coinranking1.p.rapidapi.com/coin/" + _id + "/history/7d";
             HttpResponse<JsonNode> response = Unirest.get(url)
@@ -88,13 +92,11 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
             // Pass the JSONArray and the id of the coin.
             single = new SingleCoin(histArr, _id);
             
-            //histArr.length()
             for (int i = 0; i < histArr.length(); i++) {
                 JSONObject temp = histArr.getJSONObject(i);
                 Double price = temp.getDouble("price");
                 String date = "" + temp.getInt("timestamp");
                 singleHistoryMap.put(price, date);
-                
             }
 
         } catch (UnirestException ex) {
@@ -102,39 +104,47 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
         }
     }
     
-    @Override
-    public void run() {
-//        history = new LinkedList<>();
-//        // Increment the coin "id" for each call. Not sure how many coins there are though.
-//        for (int i = 1; i < 70; i++) {
-//            try {
-//                String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
-//                HttpResponse<JsonNode> response = Unirest.get(url)
-//                        .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-//                        .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
-//                        .asJson();
-//                // For each response, extract body, data, and change
-//                JSONObject resp = new JSONObject(response.getBody().toString());
-//                JSONObject data = resp.getJSONObject("data");
-//                change = data.getDouble("change");
-//                // JSONArray containing price history for the particular coin.
-//                JSONArray histArr = data.getJSONArray("history");
-//                // This creates the individual SingleCoinHistory objects
-//                // Pass the JSONArray and the id of the coin.
-//                SingleCoinHistory single = new SingleCoinHistory(histArr, i);
-//                // Pause api calls to prevent timeouts.
-//                history.add(single);
-//                try {
-//                    TimeUnit.SECONDS.sleep((long) 0.03);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                
-//            } catch (UnirestException ex) {
-//                Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
+    /**
+     * This constructor calls ParseCoinName to 
+     * convert the name to an id. Then makes a single 
+     * api call using the provided coin id. 
+     * @param _name
+     */
+//    public CoinHistory(String _name) {
+//        ParseCoinName newName = new ParseCoinName(_name);
+//        int id = newName.getId();
+//        singleHistoryMap = new LinkedHashMap<>();
+//        try {
+//            String url = "https://coinranking1.p.rapidapi.com/coin/" + id + "/history/7d";
+//            HttpResponse<JsonNode> response = Unirest.get(url)
+//                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
+//                    .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
+//                    .asJson();
+//            // Extract body, data, and change
+//            JSONObject resp = new JSONObject(response.getBody().toString());
+//            JSONObject data = resp.getJSONObject("data");
+//            change = data.getDouble("change");
+//            // JSONArray containing price history for the particular coin.
+//            JSONArray histArr = data.getJSONArray("history");
+//            // Create the individual SingleCoinHistory object
+//            // Pass the JSONArray and the id of the coin.
+//            single = new SingleCoin(histArr, id);
+//            
+//            for (int i = 0; i < histArr.length(); i++) {
+//                JSONObject temp = histArr.getJSONObject(i);
+//                Double price = temp.getDouble("price");
+//                String date = "" + temp.getInt("timestamp");
+//                singleHistoryMap.put(price, date);
 //            }
 //
+//        } catch (UnirestException ex) {
+//            Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+//    }
+    
+    @Override
+    public void run() {
+        
     }
     
     /**
@@ -171,18 +181,6 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     public boolean isAlive() {
         return t.isAlive();
     }
-    
-//    public LinkedHashMap<Double, String> getSingleCoin(int _id) {
-//        System.out.println("testing here");
-//        System.out.println(history.size());
-//        System.out.println(history.get(_id));
-//        if (history.isEmpty()) {
-//            SingleCoin temp = singleCoinCall(_id);
-//            return temp.getCoinHistory();
-//        } else {
-//            return history.get(_id).getCoinHistory();
-//        }
-//    }
     
     public LinkedHashMap<Double, String> getSingleHistory() {
         return this.singleHistoryMap;
