@@ -22,8 +22,6 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.web.WebView?>
-<?import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory?>
-<?import javafx.scene.control.* ?>
 
 <AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab2Controller">
     <children>
@@ -62,6 +60,7 @@
             <TextField fx:id="searchFieldT2" />
           <Button fx:id="searchBtnT2" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearchT2" text="Search" />
             <ProgressIndicator fx:id="progIndT2" progress="0.0" />
+            <Button fx:id="testBtn" onAction="#handleTest" mnemonicParsing="false" text="Test" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">

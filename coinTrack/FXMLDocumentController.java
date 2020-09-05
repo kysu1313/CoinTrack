@@ -11,6 +11,7 @@ import coinClasses.CoinRankApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
+import java.io.File;
 import javafx.scene.image.Image ;
 import java.io.IOException;
 import java.net.URL;
@@ -173,6 +174,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize (URL url, ResourceBundle rb) {
      
+        
         
     }
 
