@@ -37,6 +37,7 @@ public class SingleCoin implements SingleCoinInterface{
     private int firstSeen;
     private double change;
     private int rank;
+    private String stringChange;
     
     private JSONArray object;
     private int coinId;
@@ -63,6 +64,8 @@ public class SingleCoin implements SingleCoinInterface{
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
+        
+        stringChange = "" + change;
     }
     
     /**
@@ -214,6 +217,10 @@ public class SingleCoin implements SingleCoinInterface{
     @Override
     public int getRank() {
         return coinList.getInt("rank");
+    }
+    
+    public String getStringChange() {
+        return this.stringChange;
     }
 
     

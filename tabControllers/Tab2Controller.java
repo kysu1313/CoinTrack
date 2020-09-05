@@ -165,7 +165,7 @@ public class Tab2Controller implements Initializable{
         } else if (Character.isDigit(searchFieldT2.getText().charAt(0))) {
             // Create a CoinHistory object and pass it the id.
             CoinHistory coinHist = new CoinHistory(Integer.parseInt(
-                    searchFieldT2.getText()));
+                    searchFieldT2.getText()), "");
             // Save the data to a HashMap variable
             singleHistoryMap = coinHist.getSingleHistory();
         } else {
