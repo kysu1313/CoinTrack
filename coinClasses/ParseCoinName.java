@@ -19,16 +19,16 @@ public class ParseCoinName {
     
     private int coinId;
     private String coinName;
-    private final File COINS;
+    private File coinFile;
     
     // ========== CONSTRUCTORS ==========
     
     public ParseCoinName(String _str) {
-        COINS = new File("coinNamesIds.txt");
+        coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
         String first = _str.split(" ")[0];
         // Make sure we can read the file with a try/catch block
         try {
-            Scanner scanner = new Scanner(COINS);
+            Scanner scanner = new Scanner(coinFile);
             // Scan the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -45,10 +45,10 @@ public class ParseCoinName {
     }
     
     public ParseCoinName(int _id) {
-        COINS = new File("coinNamesIds.txt");
+        coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
         // Make sure we can read the file with a try/catch block
         try {
-            Scanner scanner = new Scanner(COINS);
+            Scanner scanner = new Scanner(coinFile);
             // Scan the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
