@@ -107,6 +107,7 @@ public class Tab1Controller implements Initializable{
         System.out.println("Scanning");
         if (searchGlobalStats.isSelected() && searchCoins.isSelected()){
             tableViewT1.getItems().clear();
+            tableViewT1.getColumns().clear();
             txtAreaT1.setText("");
             displayGlobalStats();
             displayCoinText();
@@ -115,6 +116,7 @@ public class Tab1Controller implements Initializable{
             displayGlobalStats();
         } else if (searchCoins.isSelected()) {
             tableViewT1.getItems().clear();
+            tableViewT1.getColumns().clear();
             displayCoinText();
         }
     }

@@ -32,6 +32,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     private SingleCoin single;
     private int coinId;
     private HashMap<Integer, LinkedHashMap<Double, String>> allCoins;
+    private String time;
 
     public CoinHistory() {
         start();
@@ -42,15 +43,16 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
      * the provided coin id. 
      * @param _id 
      */
-    public CoinHistory(int _id, String _name) {
+    public CoinHistory(int _id, String _name, String _timeFrame) {
         singleHistoryMap = new LinkedHashMap<>();
         coinId = _id;
+        time = _timeFrame;
         if (!_name.equals("")){
             ParseCoinName newName = new ParseCoinName(_name);
             coinId = newName.getId();
         }
         try {
-            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/7d";
+            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
             HttpResponse<JsonNode> response = Unirest.get(url)
                     .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
                     .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
