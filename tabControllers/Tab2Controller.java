@@ -30,6 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
@@ -39,8 +40,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import static javafx.scene.input.KeyCode.T;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.util.StringConverter;
 
 /**
  *
@@ -53,6 +56,10 @@ public class Tab2Controller implements Initializable{
     private int coinsToGraph = 25;
     private boolean isSingleCoinScan;
     private CoinRankApi coinList;
+    private final ObservableList<String> TIMES = FXCollections.
+            observableArrayList("24h", "7d", "30d", "1y", "5y");
+    private String timeSelection;
+    private int tabSelection;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -67,7 +74,8 @@ public class Tab2Controller implements Initializable{
     @FXML private TextField searchFieldT2;
     @FXML private SplitMenuButton numCoins;
     @FXML private TextArea txtAreaT2;
-    @FXML private Spinner<Integer> spinnerT2;
+    @FXML private Spinner<String> spinnerT2;
+    @FXML private ComboBox comboBox;
     
     // Bar Chart
     @FXML private BarChart barChart;
@@ -82,21 +90,18 @@ public class Tab2Controller implements Initializable{
     protected ObservableList<PieChart.Data> pieChartData;
     
     
-    // ========== Tab 2 ==========
-    
-    
-    /**
-     * TODO Fix Graphing, not displaying correct
-     * number of coins. 
-     *  
-     */
-    
     @FXML
     private void handleScanT2(ActionEvent event) {
         if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
             System.out.println("bar chart selected");
             barChart.getData().clear();
             barChart.layout();
+            // timeSelection
+            if (comboBox.getValue() != "Timeframe") {
+                timeSelection = (String)comboBox.getValue();
+            } else {
+                timeSelection = "7d";
+            }
             coinHistory = new CoinHistory();
             if (isSingleCoinScan) {
                 System.out.println("Sorry, havn't added this yet");
@@ -121,6 +126,12 @@ public class Tab2Controller implements Initializable{
             System.out.println("bar chart selected");
             barChart.getData().clear();
             barChart.layout();
+            // timeSelection
+            if (comboBox.getValue() != "Timeframe") {
+                timeSelection = (String)comboBox.getValue();
+            } else {
+                timeSelection = "7d";
+            }
             if (coinHistory == null) {
                 displaySingleCoinGraph();
             }
@@ -130,36 +141,6 @@ public class Tab2Controller implements Initializable{
         } else {
             System.out.println("bubble chart selected");
         }
-    }
-    
-    @FXML
-    private void handle5Coins(ActionEvent event) {
-        coinsToGraph = 5;
-        numCoins.setText("5");
-    }
-    
-    @FXML
-    private void handle10Coins(ActionEvent event) {
-        coinsToGraph = 10;
-        numCoins.setText("10");
-    }
-    
-    @FXML
-    private void handle25Coins(ActionEvent event) {
-        coinsToGraph = 25;
-        numCoins.setText("25");
-    }
-    
-    @FXML
-    private void handleTotalCoins(ActionEvent event) {
-        coinsToGraph = 30;
-        numCoins.setText("All");
-    }
-    
-    @FXML
-    private void handleAllCoins(ActionEvent event) {
-        isSingleCoinScan = false;
-        splitMenuT2.setText("All Coins");
     }
     
     @FXML
@@ -195,6 +176,13 @@ public class Tab2Controller implements Initializable{
         }
     }
     
+    @FXML
+    private void handleComboBox(ActionEvent event) {
+        String[] times = {"24h", "7d", "30d", "1y", "5y"};
+        
+        comboBox = new ComboBox(FXCollections.observableArrayList(times));
+    }
+    
     /**
      * Display historical data for a single coin
      */
@@ -206,11 +194,11 @@ public class Tab2Controller implements Initializable{
         } else {
             char ch = searchFieldT2.getText().charAt(0);
             if (Character.isAlphabetic(ch)){
-                CoinHistory coinHist = new CoinHistory(0, searchFieldT2.getText());
+                CoinHistory coinHist = new CoinHistory(0, searchFieldT2.getText(), timeSelection);
                 singleHistoryMap = coinHist.getSingleHistory();
             } else {
                 int temp = Integer.parseInt(searchFieldT2.getText());
-                CoinHistory coinHist = new CoinHistory(temp, "");
+                CoinHistory coinHist = new CoinHistory(temp, "", timeSelection);
                 singleHistoryMap = coinHist.getSingleHistory();
             }
         }
@@ -220,6 +208,7 @@ public class Tab2Controller implements Initializable{
                     entry.getValue(), entry.getKey()));
         }
         // Add series1 to the barChartData, then add that to the barChart
+        barChart.setTitle("Viewing the past " + timeSelection);
         barChartData2.add(series4);
         barChart.setData(barChartData2);
         
@@ -299,11 +288,9 @@ public class Tab2Controller implements Initializable{
         series4 = new BarChart.Series<>();
         series1.setName("Data");
         series4.setName("Prices");
-        
-        final int initialVal = 10;
-        spinnerT2 = new Spinner<>();
-        SpinnerValueFactory<Integer> valFact = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, initialVal);
-        spinnerT2.setValueFactory(valFact);
+//        
+        comboBox.setValue("Timeframe");
+        comboBox.setItems(TIMES);
         
         
     }

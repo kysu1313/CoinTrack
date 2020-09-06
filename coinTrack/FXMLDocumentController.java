@@ -11,22 +11,17 @@ import coinClasses.CoinRankApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
-import java.io.File;
 import javafx.scene.image.Image ;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,24 +37,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import org.apache.commons.codec.binary.StringUtils;
 
 /**
  *
@@ -130,8 +117,6 @@ public class FXMLDocumentController implements Initializable {
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
-    // Table View
-    @FXML private TableView<SingleCoin> tableViewT1;
     
     
     //========== Action Handlers ==========
@@ -144,12 +129,10 @@ public class FXMLDocumentController implements Initializable {
      * @param event 
      */
     @FXML public void login (ActionEvent event) {
-        
         // If statement for testing purposes
         // TODO: add database
         if (usernamePhone.getText().equals("user") && txtPassword.getText().equals("pass")) {
             lblStatus.setText("Login Success");
-            
             // After login is successful, you are taken to the main page
             Parent root;
             try { 
@@ -165,8 +148,6 @@ public class FXMLDocumentController implements Initializable {
             lblStatus.setText("Login Failed");
         }
     }
-    
-    
     
     
     
