@@ -12,7 +12,9 @@ import coinClasses.SingleCoin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -20,6 +22,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -56,10 +61,15 @@ public class Tab2Controller implements Initializable{
     private int coinsToGraph = 25;
     private boolean isSingleCoinScan;
     private CoinRankApi coinList;
-    private final ObservableList<String> TIMES = FXCollections.
-            observableArrayList("24h", "7d", "30d", "1y", "5y");
     private String timeSelection;
     private int tabSelection;
+    private int pieChartCoins;
+    private final ObservableList<String> TIMES = FXCollections.
+            observableArrayList("24h", "7d", "30d", "1y", "5y");
+    private final ObservableList<String> NUMCOINS = FXCollections.
+            observableArrayList("3", "5", "7", "15", "25", "35", "50");
+    private final ObservableList<String> BUBBLES = FXCollections.
+            observableArrayList("24h", "7d", "30d", "1y", "5y");
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -75,7 +85,9 @@ public class Tab2Controller implements Initializable{
     @FXML private SplitMenuButton numCoins;
     @FXML private TextArea txtAreaT2;
     @FXML private Spinner<String> spinnerT2;
-    @FXML private ComboBox comboBox;
+    @FXML private ComboBox<String> comboBox;
+    @FXML private Button scanBtnT2;
+    @FXML private Button searchBtnT2;
     
     // Bar Chart
     @FXML private BarChart barChart;
@@ -89,19 +101,26 @@ public class Tab2Controller implements Initializable{
     protected PieChart pieChart;
     protected ObservableList<PieChart.Data> pieChartData;
     
-    
+    /**
+     * This handles the scan button on tab 2.
+     * It first determines which graphTab is selected
+     * then clears the existing data if any.
+     * @param event
+     */
     @FXML
     private void handleScanT2(ActionEvent event) {
         if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
             System.out.println("bar chart selected");
             barChart.getData().clear();
             barChart.layout();
-            // timeSelection
-            if (comboBox.getValue() != "Timeframe") {
+            // Get the comboBox entry
+            boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
+            if (!isComboBoxEmpty) {
                 timeSelection = (String)comboBox.getValue();
             } else {
                 timeSelection = "7d";
             }
+            // Make a CoinHistory api call
             coinHistory = new CoinHistory();
             if (isSingleCoinScan) {
                 System.out.println("Sorry, havn't added this yet");
@@ -111,6 +130,8 @@ public class Tab2Controller implements Initializable{
             }
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             System.out.println("pie chart selected");
+            pieChart.getData().clear();
+            pieChart.layout();
             coinList = new CoinRankApi();
             coinList.run();
             displayPieChart();
@@ -120,24 +141,31 @@ public class Tab2Controller implements Initializable{
 
     }
     
+    /**
+     * Handles the search button on tab 2.
+     * This button is not applicable on the pieChartTab
+     * @param event 
+     */
     @FXML
     private void handleSearchT2(ActionEvent event) {
         if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
             System.out.println("bar chart selected");
             barChart.getData().clear();
             barChart.layout();
+            barChartData.clear();
+            series1.getData().clear();
             // timeSelection
-            if (comboBox.getValue() != "Timeframe") {
-                timeSelection = (String)comboBox.getValue();
-            } else {
+            boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
+            if (isComboBoxEmpty) {
                 timeSelection = "7d";
+            } else {
+                timeSelection = (String)comboBox.getValue();
             }
-            if (coinHistory == null) {
-                displaySingleCoinGraph();
-            }
+//            if (coinHistory == null) {
+            displaySingleCoinGraph();
+//            }
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             System.out.println("pie chart selected");
-            
         } else {
             System.out.println("bubble chart selected");
         }
@@ -153,6 +181,8 @@ public class Tab2Controller implements Initializable{
     private void handleClearT2(ActionEvent event) {
         barChart.getData().clear();
         barChart.layout();
+        pieChart.getData().clear();
+        pieChart.layout();
         searchFieldT2.setText("");
     }
     
@@ -168,7 +198,6 @@ public class Tab2Controller implements Initializable{
                 String line = scanner.nextLine();
                 String[] parts = line.split(" ");
                 lines += line + "\n";
-                
             }
             txtAreaT2.setText(lines);
         } catch (FileNotFoundException ex) {
@@ -178,9 +207,10 @@ public class Tab2Controller implements Initializable{
     
     @FXML
     private void handleComboBox(ActionEvent event) {
-        String[] times = {"24h", "7d", "30d", "1y", "5y"};
-        
-        comboBox = new ComboBox(FXCollections.observableArrayList(times));
+//        String[] times = {"24h", "7d", "30d", "1y", "5y"};
+//        comboBox = new ComboBox(FXCollections.observableArrayList(times));
+        timeSelection = comboBox.getValue();
+    
     }
     
     /**
@@ -202,10 +232,16 @@ public class Tab2Controller implements Initializable{
                 singleHistoryMap = coinHist.getSingleHistory();
             }
         }
+        // Prevent old data from showing back up
+        barChartData2.clear();
         // Add entries from singleHistoryMap into series1
         for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
+            long tempLong = Long.parseLong(entry.getValue());
+//            Timestamp timeStamp = new Timestamp(tempLong);
+            Date d = new Date(tempLong);
+            String date = "" + d;
             series4.getData().add(new XYChart.Data(
-                    entry.getValue(), entry.getKey()));
+                    date, entry.getKey()));
         }
         // Add series1 to the barChartData, then add that to the barChart
         barChart.setTitle("Viewing the past " + timeSelection);
@@ -263,14 +299,19 @@ public class Tab2Controller implements Initializable{
         barChart.setData(barChartData);
     }
     
+    /**
+     * Creates a LinkedList of SingleCoins
+     */
     private void displayPieChart() {
+        // Make sure the thread is finished
         coinList.join();
-        LinkedList<SingleCoin> temp = coinList.getCoinList();
-        // temp.size()
-        for (int i = 0; i < 10; i++) {
+        LinkedList<SingleCoin> temp = coinList.getSortedCoinList();
+        pieChartCoins = Integer.parseInt(comboBox.getValue());
+        // Loops over SingleCoin list and adds data to pieChart
+        for (int i = 0; i <= pieChartCoins-1; i++) {
             SingleCoin coin = temp.get(i);
-            DecimalFormat df = new DecimalFormat("#.#####");
             double price = Double.parseDouble(coin.getPrice());
+            // Allow 5 decimal places
             double rounded = (double)Math.round(price * 100000d) / 100000d;
             pieChartData.add(new PieChart.Data(coin.getName(), rounded));
         }
@@ -280,19 +321,43 @@ public class Tab2Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Initialize the barChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();
         pieChartData = FXCollections.observableArrayList();
-        pieChart.setTitle("Top 10 coins");
+        pieChart.setTitle("Coin Prices");
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
         series1.setName("Data");
         series4.setName("Prices");
-//        
+        // Tab listener. Detects which graph tab is selected
+        graphTabPane.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldTab, Tab currentTab) {
+                System.out.println("Tab Change");
+                if (currentTab == barChartTab) {
+                    comboBox.setValue("Timeframe");
+                    tabSelection = 1;
+                    scanBtnT2.setDisable(true);
+                    searchBtnT2.setDisable(false);
+                    comboBox.setItems(TIMES);
+                } else if (currentTab == pieChartTab) {
+                    comboBox.setValue("Number of coins");
+                    tabSelection = 2;
+                    searchBtnT2.setDisable(true);
+                    scanBtnT2.setDisable(false);
+                    comboBox.setItems(NUMCOINS);
+                } else {
+                    comboBox.setValue("Bubbles");
+                    tabSelection = 3;
+                    comboBox.setItems(BUBBLES);
+                }
+            }
+        });
+        // Set the default comboBox values
         comboBox.setValue("Timeframe");
         comboBox.setItems(TIMES);
-        
-        
+        scanBtnT2.setDisable(true);
     }
-    
 }

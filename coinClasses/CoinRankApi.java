@@ -6,6 +6,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -92,6 +94,9 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
         return t.isAlive();
     }
 
+    
+    // ========== GETTERS ==========
+    
     /**
      * Creates a LinkedList of each coin in the "coins" json array.
      *
@@ -99,70 +104,88 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      */
     public LinkedList<SingleCoin> getCoinList() {
         LinkedList<SingleCoin> tmpList = new LinkedList<>();
-        for (int i = 0; i < coins.length(); i++) {
-            JSONObject obj = coins.getJSONObject(i);
+        for (int i = 0; i < this.coins.length(); i++) {
+            JSONObject obj = this.coins.getJSONObject(i);
             SingleCoin coin = new SingleCoin(obj);
             tmpList.add(coin);
         }
-
         return tmpList;
     }
-
-    public LinkedHashMap<String, String> getNamePrice() {
-        
-        namePrice = new LinkedHashMap<>();
-        for (int i = 0; i < 45; i++) {  // coinList.size()
-            String name = coinList.get(i).getName();
-            String price = coinList.get(i).getPrice();
-            namePrice.put(name, price);
-        }
-        return namePrice;
+    
+    public LinkedList<SingleCoin> getSortedCoinList() {
+        LinkedList<SingleCoin> temp = this.getCoinList();
+        Collections.sort(temp, (SingleCoin o1, SingleCoin o2) -> {
+            double p1 = Double.parseDouble(o1.getPrice());
+            double p2 = Double.parseDouble(o2.getPrice());
+            if (p1 < p2) {
+                return -1;
+            }
+            if (p1 > p2) {
+                return 1;
+            }
+            return 0;
+        });
+        return temp;
     }
 
-    // ========== GETTERS ==========
+    /**
+     * Creates a LinkedHashMap of coin names and
+     * their prices.
+     * @return 
+     */
+    public LinkedHashMap<String, String> getNamePrice() {
+        this.namePrice = new LinkedHashMap<>();
+        for (int i = 0; i < 45; i++) {  // coinList.size()
+            String name = this.coinList.get(i).getName();
+            String price = this.coinList.get(i).getPrice();
+            this.namePrice.put(name, price);
+        }
+        return this.namePrice;
+    }
+
     @Override
     public int getTotal() {
-        return stats.getInt("total");
+        return this.stats.getInt("total");
     }
 
     @Override
     public int getOffset() {
-        return stats.getInt("offset");
+        return this.stats.getInt("offset");
     }
 
     @Override
     public int getLimit() {
-        return stats.getInt("limit");
+        return this.stats.getInt("limit");
     }
 
     @Override
     public String getOrder() {
-        return stats.getString("order");
+        return this.stats.getString("order");
     }
 
     @Override
     public String getBase() {
-        return stats.getString("base");
+        return this.stats.getString("base");
     }
 
     @Override
     public int getTotalMarkets() {
-        return stats.getInt("totalMarkets");
+        return this.stats.getInt("totalMarkets");
     }
 
     @Override
     public int getTotalExchanges() {
-        return stats.getInt("totalExchanges");
+        return this.stats.getInt("totalExchanges");
     }
 
     @Override
     public int getTotalMarketCap() {
-        return stats.getInt("totalMarketCap");
+        return this.stats.getInt("totalMarketCap");
     }
 
     @Override
     public int getTotal24hVolume() {
-        return stats.getInt("total24hVolume");
+        return this.stats.getInt("total24hVolume");
     }
 
 }

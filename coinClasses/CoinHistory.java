@@ -66,7 +66,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
             // Create the individual SingleCoinHistory object
             // Pass the JSONArray and the id of the coin.
             single = new SingleCoin(histArr, _id);
-            
+            // Loop through the response adding data to a hashMap
             for (int i = 0; i < histArr.length(); i++) {
                 JSONObject temp = histArr.getJSONObject(i);
                 Double price = temp.getDouble("price");

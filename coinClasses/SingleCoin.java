@@ -95,6 +95,8 @@ public class SingleCoin implements SingleCoinInterface{
     
     // ========== GETTERS ==========
     
+//    public
+    
     public LinkedHashMap<Double, String> getCoinHistory() {
         return this.coinList2;
     }

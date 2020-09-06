@@ -91,6 +91,9 @@ public class Tab1Controller implements Initializable{
     @FXML 
     public void handleSearch(ActionEvent event) {
         txtAreaT1.setText("Searching...");
+        if (searchCoins.getText() != "") {
+//            coinHistory = new CoinHistory()
+        }
         coinHistory = new CoinHistory();
     }
     
