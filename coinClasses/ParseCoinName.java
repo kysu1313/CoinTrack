@@ -24,17 +24,17 @@ public class ParseCoinName {
     // ========== CONSTRUCTORS ==========
     
     public ParseCoinName(String _str) {
-        coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
-        String first = _str.split(" ")[0];
+        coinFile = new File("src\\coinClasses\\coinNameSymbolId.txt");
+        String first = _str.split(",")[0];
         // Make sure we can read the file with a try/catch block
         try {
             Scanner scanner = new Scanner(coinFile);
             // Scan the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] parts = line.split(" ");
+                String[] parts = line.split(",");
                 // Search for given name
-                if (parts[0].equalsIgnoreCase(first)){
+                if (parts[0].equalsIgnoreCase(first) || parts[1].equalsIgnoreCase(first)){
                     coinId = Integer.parseInt(parts[parts.length - 1]);
                     coinName = parts[0];
                 }
