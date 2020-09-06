@@ -144,7 +144,7 @@ public class Tab2Controller implements Initializable{
     /**
      * Handles the search button on tab 2.
      * This button is not applicable on the pieChartTab
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleSearchT2(ActionEvent event) {
