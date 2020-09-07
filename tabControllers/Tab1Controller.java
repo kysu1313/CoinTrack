@@ -7,11 +7,13 @@ package tabControllers;
 
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
+import coinClasses.ConnectToDatabase;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
 import java.awt.Color;
 import java.net.URL;
+import java.sql.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -134,17 +136,28 @@ public class Tab1Controller implements Initializable{
      */
     private void displayCoinText() {
         cri = new CoinRankApi();
-        
         cri.join();
+        ConnectToDatabase dbConn;
+        
+        LinkedList<SingleCoin> temp = cri.getCoinList();
+        for (int i = 0; i < temp.size(); i++) {
+            SingleCoin cn = temp.get(i);
+            String uuid = cn.getUuid();
+            String symbol = cn.getSymbol();
+            String name = cn.getName();
+            String price = cn.getPrice();
+            long millis=System.currentTimeMillis();  
+            Date date = new Date(millis);  
+            /**
+             * Testing database
+             */
+//            dbConn = new ConnectToDatabase(uuid, symbol, name, price, date);
+
+        }
+
+
         count = 50;
         System.out.println(cri.getLimit());
-        
-        // TODO: fix progress bar...
-        
-//        progBarT1.setProgress(0.0);
-//        progBarT1.progressProperty().unbind();
-//        progBarT1.progressProperty().bind(copyWorker.progressProperty());
-//        new Thread(copyWorker).start();
         coinNamePrice = cri.getNamePrice();
         coinList = cri.getCoinList();
         displayMultiCoinTable();
