@@ -5,6 +5,10 @@
  */
 package coinClasses;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
 /**
  *
  * @author Kyle
@@ -12,7 +16,18 @@ package coinClasses;
 public class ConnectToDatabase {
     
     public ConnectToDatabase() {
-        
+        try {
+            
+            /**
+             * This works
+             */
+            
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/coins", "root", "nfjf340");
+            Statement st = con.createStatement();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
 }
