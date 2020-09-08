@@ -177,7 +177,6 @@ public class Tab1Controller implements Initializable{
         txtAreaT1.setText(text);
     }
     
-    
     /**
      * Display coin data to the table
      */
