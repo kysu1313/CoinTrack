@@ -1,16 +1,16 @@
 package coinClasses;
 
-import interfaces.SingleCoinInterface;
-import java.util.LinkedHashMap;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 /**
  * This class represents a single coin. It has
  * all of the relevant information associated
  * with a specific cryptocurrency.
  * @author Kyle
  */
+import interfaces.SingleCoinInterface;
+import java.util.LinkedHashMap;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class SingleCoin implements SingleCoinInterface{
     
     private JSONObject coinList;

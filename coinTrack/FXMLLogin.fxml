@@ -9,22 +9,27 @@
 
 <AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
-      <Button defaultButton="true" layoutX="116.0" layoutY="219.0" mnemonicParsing="false" onAction="#login" text="Login">
+      <Button defaultButton="true" layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onAction="#login" text="Login">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <TextField fx:id="usernamePhone" layoutX="28.0" layoutY="90.0" prefHeight="39.0" prefWidth="246.0" promptText="username / phone number">
+      <TextField fx:id="username" layoutX="28.0" layoutY="61.0" prefHeight="39.0" prefWidth="246.0" promptText="username">
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <PasswordField fx:id="txtPassword" layoutX="29.0" layoutY="150.0" prefHeight="39.0" prefWidth="246.0" promptText="password">
+      <PasswordField fx:id="txtPassword" layoutX="28.0" layoutY="122.0" prefHeight="39.0" prefWidth="246.0" promptText="password">
          <font>
             <Font size="18.0" />
          </font></PasswordField>
-      <Label fx:id="lblStatus" layoutX="128.0" layoutY="38.0" text="Login">
+      <Label fx:id="lblStatus" layoutX="128.0" layoutY="20.0" text="Login">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+      <Button fx:id="registerBtn" layoutX="115.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleRegister" text="Register">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

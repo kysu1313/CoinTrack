@@ -1,10 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tabControllers;
-
+/**
+ * This is the document controller for Tab 1.
+ * Main function is to handle scans, table view
+ * and the side accordion.
+ * 
+ * - Kyle
+ */
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
@@ -81,16 +82,16 @@ public class Tab1Controller implements Initializable{
     
     
     /**
-     * Search for a specific coin. 
-     * 
+     * Search for a specific coin.
+     *
      * This needs work.
-     * 
+     *
      * Determine if the entered text is a string
      * or an integer. Then call the coin api, and
      * display the information for that coin.
-     * @param event 
+     * @param event
      */
-    @FXML 
+    @FXML
     public void handleSearch(ActionEvent event) {
         txtAreaT1.setText("Searching...");
         if (searchCoins.getText() != "") {
@@ -101,11 +102,11 @@ public class Tab1Controller implements Initializable{
     
     /**
      * This method handles both scanning for all coins
-     * and all markets / exchanges. 
-     * Simple logic determines the selected checkBoxes, 
-     * clears existing data, then calls the appropriate 
-     * classes and displays data. 
-     * @param event 
+     * and all markets / exchanges.
+     * Simple logic determines the selected checkBoxes,
+     * clears existing data, then calls the appropriate
+     * classes and displays data.
+     * @param event
      */
     @FXML
     private void handleScan(ActionEvent event) {
@@ -129,8 +130,8 @@ public class Tab1Controller implements Initializable{
     // ========== HELPER METHODS ==========
     
     /**
-     * Display the api data to the screen. 
-     * 
+     * Display the api data to the screen.
+     *
      * Currently this just posts it into the
      * TextArea at the bottom of the page.
      */
@@ -146,16 +147,14 @@ public class Tab1Controller implements Initializable{
             String symbol = cn.getSymbol();
             String name = cn.getName();
             String price = cn.getPrice();
-            long millis=System.currentTimeMillis();  
-            Date date = new Date(millis);  
+            long millis=System.currentTimeMillis();
+            Date date = new Date(millis);
             /**
              * Testing database
              */
-//            dbConn = new ConnectToDatabase(uuid, symbol, name, price, date);
-
+//            dbConn = new ConnectToDatabase();
+//            dbConn.coinDatabase(uuid, symbol, name, price, date);
         }
-
-
         count = 50;
         System.out.println(cri.getLimit());
         coinNamePrice = cri.getNamePrice();
