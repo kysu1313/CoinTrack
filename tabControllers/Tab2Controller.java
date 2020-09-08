@@ -45,6 +45,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -84,6 +85,7 @@ public class Tab2Controller implements Initializable{
     @FXML private ComboBox<String> comboBox;
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
+    @FXML private Text messageText;
     
     // Bar Chart
     @FXML private BarChart barChart;
@@ -317,6 +319,8 @@ public class Tab2Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        String uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
         // Initialize the barChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();

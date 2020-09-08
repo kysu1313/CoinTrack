@@ -163,6 +163,16 @@ public class ConnectToDatabase {
     }
     
     /**
+     * Use this to get user info inside the app.
+     * @param _userName
+     * @param _userPass
+     * @return 
+     */
+    public boolean getUserInfo(String _userName, String _userPass) {
+        return false;
+    }
+    
+    /**
      * This method generates a SHA-256 hash from
      * a given string input.
      * 

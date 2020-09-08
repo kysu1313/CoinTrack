@@ -34,6 +34,7 @@ import javafx.stage.Stage;
  */
 public class FXMLDocumentController implements Initializable {
     
+    public static String uname;
     protected Scene scene;
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
@@ -65,6 +66,7 @@ public class FXMLDocumentController implements Initializable {
         // If statement for testing purposes
         if (conn.validateLogin(username.getText(), txtPassword.getText())) {
             lblStatus.setText("Login Success");
+            uname = username.getText();
             // After login is successful, you are taken to the main page
             Parent root;
             try {
@@ -140,6 +142,8 @@ public class FXMLDocumentController implements Initializable {
                 // If all good, submit info to DB
                 conn.userDatabase(email, uname, pass);
                 conn.close();
+                // Save username so it can be displayed in the application
+                this.uname = uname;
                 // After login is successful, you are taken to the main page
                 registerInfo.setFill(Color.GREEN);
                 registerInfo.setText("SUCCESS!");

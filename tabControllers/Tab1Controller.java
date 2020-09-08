@@ -39,6 +39,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
@@ -76,6 +77,7 @@ public class Tab1Controller implements Initializable{
     @FXML private WebView webViewT1;
     @FXML private CheckBox searchCoins;
     @FXML private CheckBox searchGlobalStats;
+    @FXML private Text messageText;
     
     // Table View
     @FXML private TableView<SingleCoin> tableViewT1;
@@ -258,6 +260,9 @@ public class Tab1Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        
+        String uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
         
     }
     
