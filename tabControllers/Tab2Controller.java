@@ -1,9 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tabControllers;
+
+/**
+ * Tab 2 document controller.
+ * Handles actions on inputs. Main functions
+ * are displaying graphs, searches, accordion.
+ */
 
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
@@ -12,8 +13,6 @@ import coinClasses.SingleCoin;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -39,16 +38,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.T;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.util.StringConverter;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -88,6 +85,7 @@ public class Tab2Controller implements Initializable{
     @FXML private ComboBox<String> comboBox;
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
+    @FXML private Text messageText;
     
     // Bar Chart
     @FXML private BarChart barChart;
@@ -144,7 +142,7 @@ public class Tab2Controller implements Initializable{
     /**
      * Handles the search button on tab 2.
      * This button is not applicable on the pieChartTab
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleSearchT2(ActionEvent event) {
@@ -321,6 +319,8 @@ public class Tab2Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        String uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
         // Initialize the barChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();
