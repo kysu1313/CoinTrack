@@ -30,12 +30,12 @@
       <TextField fx:id="usernameEntry" layoutX="156.0" layoutY="123.0" />
       <PasswordField fx:id="passwordEntry" layoutX="156.0" layoutY="184.0" />
       <PasswordField fx:id="passwordRepeatEntry" layoutX="156.0" layoutY="235.0" />
-      <Button fx:id="registerSubmitBtn" layoutX="190.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleRegisterSubmit" text="Submit">
+      <Button fx:id="registerSubmitBtn" defaultButton="true" layoutX="190.0" layoutY="324.0" mnemonicParsing="false" onAction="#handleRegisterSubmit" text="Submit">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Text fx:id="registerInfo" layoutX="65.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Give us your data" textAlignment="CENTER" wrappingWidth="332.05078125">
+      <Text fx:id="registerInfo" layoutX="65.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We 'definitely' won't sell your data" textAlignment="CENTER" wrappingWidth="332.05078125">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

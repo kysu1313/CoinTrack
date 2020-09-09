@@ -254,6 +254,12 @@ public class Tab1Controller implements Initializable{
         txtAreaT1.setText("");
     }
     
+    @FXML
+    private void handleLogOutT1(ActionEvent event) {
+        System.out.println("logging out");
+        coinTrack.FXMLDocumentController.getMainStage().close();
+    }
+    
     
     
 

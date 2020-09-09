@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="311.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
       <Button defaultButton="true" layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onAction="#login" text="Login">
          <font>
@@ -26,7 +26,12 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="registerBtn" layoutX="115.0" layoutY="247.0" mnemonicParsing="false" onAction="#handleRegister" text="Register">
+      <Button fx:id="registerBtn" layoutX="116.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleRegister" text="Register">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="forgotPassword" disable="false" layoutX="89.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleForgotPassword" text="Forgot Password">
          <font>
             <Font size="14.0" />
          </font>
