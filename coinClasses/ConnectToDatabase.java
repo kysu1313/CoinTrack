@@ -1,4 +1,4 @@
-package coinClasses;
+ package coinClasses;
 /**
  * Database connection class.
  * The database is hosted on freemysqlhosting.net
