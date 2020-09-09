@@ -102,7 +102,7 @@ public class ConnectToDatabase {
             preparedStmt.setString(3, hashedPass);
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Login Success");
+            System.out.println("Registration Success");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -164,6 +164,97 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
         return isValid;
+    }
+    
+    /**
+     * Checks if the given email exists in the database.
+     * @param _userEmail
+     * @return 
+     */
+    public boolean emailExists(String _userEmail) {
+        boolean isValid = false;
+        try {
+            // Insert statement, using prepared statements
+            String query = "select * from users where userEmail = '" + _userEmail + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+//            preparedStmt.setString(1, _userName);
+//            preparedStmt.execute();
+            ResultSet result = preparedStmt.executeQuery(query);
+            return result.next();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return isValid;
+    }
+    
+    /**
+     * Return the email associated with the given username
+     * @param _username
+     * @return 
+     */
+    public String getEmailFromUsername(String _username) {
+        boolean isValid = true;
+        String email = "";
+        try {
+            // Insert statement, using prepared statements
+            String query = "select * from users where username = '" + _username + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+//            preparedStmt.setString(1, _userName);
+//            preparedStmt.execute();
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                email = result.getString("userEmail");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return email;
+    }
+    
+    /**
+     * Finds the username associated with the given email address.
+     * @param _email
+     * @return 
+     */
+    public String getUsernameFromEmail(String _email) {
+        boolean isValid = true;
+        String username = "";
+        try {
+            // Insert statement, using prepared statements
+            String query = "select * from users where userEmail = '" + _email + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+//            preparedStmt.setString(1, _userName);
+//            preparedStmt.execute();
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                username = result.getString("username");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return username;
+    }
+    
+    public void changePassword(String _uname, String _newPassword) {
+        try {
+            String hashedPass = getSHA256(_newPassword);
+            // Update row value
+            String query = " UPDATE users SET userPassword = " + "'" + hashedPass + "'" 
+                    + " WHERE username = " + "'" + _uname + "'";
+
+            
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            // execute the preparedstatement
+            preparedStmt.execute();
+            System.out.println("Password reset success");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     /**

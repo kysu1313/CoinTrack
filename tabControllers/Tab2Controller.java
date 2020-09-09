@@ -205,12 +205,14 @@ public class Tab2Controller implements Initializable{
     
     @FXML
     private void handleComboBox(ActionEvent event) {
-//        String[] times = {"24h", "7d", "30d", "1y", "5y"};
-//        comboBox = new ComboBox(FXCollections.observableArrayList(times));
         timeSelection = comboBox.getValue();
-    
     }
     
+    @FXML
+    private void handleLogOutT2(ActionEvent event) {
+        System.out.println("logging out");
+        coinTrack.FXMLDocumentController.getMainStage().close();
+    }
     /**
      * Display historical data for a single coin
      */

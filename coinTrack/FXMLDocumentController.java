@@ -8,8 +8,12 @@ package coinTrack;
  */
 
 import coinClasses.ConnectToDatabase;
+import coinClasses.RecoveryEmail;
+import com.mysql.cj.xdevapi.Session;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Properties;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +40,8 @@ public class FXMLDocumentController implements Initializable {
     
     public static String uname;
     protected Scene scene;
+    private static String tempUsernameStorage;
+    private String code;
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -44,11 +50,20 @@ public class FXMLDocumentController implements Initializable {
     @FXML private TextField usernameEntry;
     @FXML private PasswordField passwordEntry;
     @FXML private PasswordField passwordRepeatEntry;
-    @FXML Button registerSubmitBtn;
-    @FXML Stage mainStage;
-    @FXML Stage loginStage;
-    @FXML Stage registerStage;
-    @FXML Text registerInfo;
+    @FXML private Button registerSubmitBtn;
+    @FXML public static Stage mainStage;           // Need to make getters for public stuff
+    @FXML private static Stage forgotPassStage;
+    @FXML private static Stage resetPassStage;
+    @FXML private static Stage loginStage;
+    @FXML private static Stage registerStage;
+    @FXML private Text registerInfo;
+    @FXML private TextField recoveryEmail;
+    @FXML private TextField recoveryCode;
+    @FXML private Button recoveryEmailBtn;
+    @FXML private Text forgotPasswordWarning;
+    @FXML private PasswordField resetPassword;
+    @FXML private PasswordField resetPasswordRepeat;
+    @FXML private Text passwordResetWarning;
     
     
     //========== Action Handlers ==========
@@ -64,22 +79,23 @@ public class FXMLDocumentController implements Initializable {
 //        loginStage = CoinTrack.newStage;
         ConnectToDatabase conn = new ConnectToDatabase();
         // If statement for testing purposes
-        if (conn.validateLogin(username.getText(), txtPassword.getText())) {
-            lblStatus.setText("Login Success");
-            uname = username.getText();
+        if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
+            this.lblStatus.setText("Login Success");
+            this.uname = this.username.getText();
             // After login is successful, you are taken to the main page
             Parent root;
             try {
-                mainStage = new Stage();
+                this.mainStage = new Stage();
                 root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-                scene = new Scene(root);
-                mainStage.setScene(scene);
-                mainStage.show();
+                this.scene = new Scene(root);
+                this.mainStage.setScene(scene);
+                this.mainStage.show();
+                coinTrack.CoinTrack.newStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            lblStatus.setText("Login Failed");
+            this.lblStatus.setText("Login Failed");
         }
     }
     
@@ -88,15 +104,16 @@ public class FXMLDocumentController implements Initializable {
      * @param event 
      */
     @FXML public void handleRegister(ActionEvent event) {
-        lblStatus.setText("Register User");
+        this.lblStatus.setText("Register User");
         // After login is successful, you are taken to the main page
         Parent root;
         try {
-            registerStage = new Stage();
+            this.registerStage = new Stage();
             root = FXMLLoader.load(getClass().getResource("RegisterUserFXML.fxml"));
-            scene = new Scene(root);
-            registerStage.setScene(scene);
-            registerStage.show();
+            this.scene = new Scene(root);
+            this.registerStage.setScene(scene);
+            this.registerStage.show();
+            coinTrack.CoinTrack.newStage.close();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,61 +127,190 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRegisterSubmit(ActionEvent event) {
         System.out.println("register");
-        if (emailEntry.getText().isEmpty()){
-            emailEntry.setPromptText("Enter an email address");
-            registerInfo.setFill(Color.RED);
-            registerInfo.setText("Enter an email address");
+        if (this.emailEntry.getText().isEmpty()){
+            this.emailEntry.setPromptText("Enter an email address");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Enter an email address");
         } else if (usernameEntry.getText().isEmpty()) {
-            usernameEntry.setPromptText("Enter a username");
-            registerInfo.setFill(Color.RED);
-            registerInfo.setText("Enter a username");
-        } else if (passwordEntry.getText().isEmpty()) {
-            passwordEntry.setPromptText("Enter a password");
-            registerInfo.setFill(Color.RED);
-            registerInfo.setText("Enter a password");
-        } else if (passwordRepeatEntry.getText().isEmpty()) {
-            passwordRepeatEntry.setPromptText("Repeat your password");
-            registerInfo.setFill(Color.RED);
-            registerInfo.setText("Repeat your password");
-        } else if (!passwordEntry.getText().equals(passwordRepeatEntry.getText())) {
-            passwordEntry.setPromptText("Passwords must match");
-            passwordRepeatEntry.setPromptText("Passwords must match");
-            registerInfo.setFill(Color.RED);
-            registerInfo.setText("Passwords must match");
+            this.usernameEntry.setPromptText("Enter a username");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Enter a username");
+        } else if (this.passwordEntry.getText().isEmpty()) {
+            this.passwordEntry.setPromptText("Enter a password");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Enter a password");
+        } else if (this.passwordRepeatEntry.getText().isEmpty()) {
+            this.passwordRepeatEntry.setPromptText("Repeat your password");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Repeat your password");
+        } else if (!this.passwordEntry.getText().equals(this.passwordRepeatEntry.getText())) {
+            this.passwordEntry.setPromptText("Passwords must match");
+            this.passwordRepeatEntry.setPromptText("Passwords must match");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Passwords must match");
         } else {
             // Call DB connection class
             ConnectToDatabase conn = new ConnectToDatabase();
             // Check is username exists in DB
-            if (!conn.usernameExists(usernameEntry.getText())) { // TODO: invert  boolean ???
-                String email = emailEntry.getText();
-                String uname = usernameEntry.getText();
-                String pass = passwordEntry.getText();
+            if (!conn.usernameExists(this.usernameEntry.getText())) { // TODO: invert  boolean ???
+                String email = this.emailEntry.getText();
+                String uname = this.usernameEntry.getText();
+                String pass = this.passwordEntry.getText();
                 // If all good, submit info to DB
                 conn.userDatabase(email, uname, pass);
                 conn.close();
                 // Save username so it can be displayed in the application
                 this.uname = uname;
                 // After login is successful, you are taken to the main page
-                registerInfo.setFill(Color.GREEN);
-                registerInfo.setText("SUCCESS!");
+                this.registerInfo.setFill(Color.GREEN);
+                this.registerInfo.setText("SUCCESS!");
                 Parent root;
                 try {
                     Stage stage = new Stage();
                     root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-                    scene = new Scene(root);
-                    stage.setScene(scene);
+                    this.scene = new Scene(root);
+                    stage.setScene(this.scene);
                     stage.show();
 //                    registerStage.close();
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                registerInfo.setFill(Color.RED);
-                registerInfo.setText("username taken");
+                this.registerInfo.setFill(Color.RED);
+                this.registerInfo.setText("username taken");
             }
-
         }
+    }
+    
+    /**
+     * Change to the password recovery stage if the forgot password
+     * button is clicked.
+     * @param event 
+     */
+    @FXML
+    private void handleForgotPassword(ActionEvent event) {
+        System.out.println("Forgot your password already..");
+        Parent root;
+        try {
+            this.forgotPassStage = new Stage();
+            root = FXMLLoader.load(getClass().getResource("ForgotPasswordFXML.fxml"));
+            this.scene = new Scene(root);
+            this.forgotPassStage.setScene(this.scene);
+            this.forgotPassStage.show();
+            coinTrack.CoinTrack.newStage.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * Handles action of clicking the forgot password button.
+     * @param event 
+     */
+    @FXML
+    private void handleRecoveryEmail(ActionEvent event) {
+        String toEmail = this.recoveryEmail.getText();
+        ConnectToDatabase conn = new ConnectToDatabase();
+        if (conn.emailExists(toEmail)) {
+            tempUsernameStorage = conn.getUsernameFromEmail(toEmail);
+            System.out.println(tempUsernameStorage);
+            conn.close();
+            this.code = generateRecoveryCode();
+            RecoveryEmail sendMail = new RecoveryEmail(toEmail, this.tempUsernameStorage, this.code);
+        } else {
+            this.forgotPasswordWarning.setText("hmm, can't find that email");
+            this.forgotPasswordWarning.setFill(Color.RED);
+        }
+    }
+    
+    /**
+     * Send an email containing a code that the user will type
+     * into the box to confirm their identity.
+     * @param event 
+     */
+    @FXML
+    private void handleRecoveryCode(ActionEvent event) {
+        if (this.recoveryCode.getText().equals(this.code)) {
+//            this.forgotPassStage.close();
+            Parent root;
+            try {
+                this.resetPassStage = new Stage();
+                root = FXMLLoader.load(getClass().getResource("PasswordResetFXML.fxml"));
+                this.scene = new Scene(root);
+                this.resetPassStage.setScene(this.scene);
+                this.resetPassStage.show();
+                this.forgotPassStage.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.forgotPasswordWarning.setText("Incorrect Code");
+            this.forgotPasswordWarning.setFill(Color.RED);
+        }
+    }
+    
+    /**
+     * When the user presses the "reset password" button on 
+     * PasswordResetFXML.fxml page a connection to the database 
+     * is made submitting the updated password;
+     * @param event 
+     */
+    @FXML
+    private void handleResetPassword(ActionEvent event) {
+        System.out.println("register");
+        System.out.println(tempUsernameStorage);
+        // Make sure new password is not empty
+        if (this.resetPassword.getText().isEmpty()){
+            this.resetPassword.setPromptText("Enter new password");
+            this.passwordResetWarning.setFill(Color.RED);
+            this.passwordResetWarning.setText("Password field can't be empty");
+        // Make sure the two passwords match
+        } else if (this.resetPassword.getText().equals(this.resetPasswordRepeat.getText())) {
+            ConnectToDatabase conn = new ConnectToDatabase();
+            String newPass = this.resetPassword.getText();
+            // Submit changed passwords to the database
+            
+            conn.changePassword(tempUsernameStorage, newPass);
+            // Close the connection
+            conn.close();
+            this.passwordResetWarning.setText("Success");
+            this.passwordResetWarning.setFill(Color.GREEN);
+            // Then change the stage back to the login screen
+            Parent root;
+            try {
+                this.mainStage = new Stage();
+                root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
+                this.scene = new Scene(root);
+                this.mainStage.setScene(this.scene);
+                this.mainStage.show();
+                this.resetPassStage.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.resetPassword.setPromptText("Passwords must match");
+            this.passwordResetWarning.setFill(Color.RED);
+        }
+    }
 
+    /**
+     * Generate simple random string of numbers.
+     * @return 
+     */
+    private String generateRecoveryCode() {
+        String newCode = "";
+        Random rand = new Random();
+        int digits = rand.nextInt(1000);
+        newCode += digits;
+        return newCode;
+    }
+    
+    /**
+     * Gets the main stage so it can be closed from other stages.
+     * @return 
+     */
+    public static Stage getMainStage() {
+        return FXMLDocumentController.mainStage;
     }
     
     @Override

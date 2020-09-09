@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  */
 public class CoinTrack extends Application {
     
-    protected Stage newStage;
+    public static Stage newStage;
     protected Scene scene;
     
     @Override
