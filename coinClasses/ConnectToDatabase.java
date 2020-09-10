@@ -188,6 +188,21 @@ public class ConnectToDatabase {
         }
         return isValid;
     }
+     public boolean passwordExist(String _userPassword) {
+        boolean isValid = true;
+        try {
+            // Insert statement, using prepared statements
+            String query = "select * from users where userPassword = '" + _userPassword + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            return result.next();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return isValid;
+    }
     
     /**
      * Return the email associated with the given username
