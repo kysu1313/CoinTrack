@@ -13,7 +13,7 @@
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
       <TabPane fx:id="mainTabPane" prefHeight="647.0" prefWidth="787.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Tab1">
+          <Tab text="Tables">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -21,7 +21,7 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Tab2">
+            <Tab text="Graphs">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

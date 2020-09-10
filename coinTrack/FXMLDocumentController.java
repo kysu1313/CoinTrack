@@ -56,6 +56,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private static Stage resetPassStage;
     @FXML private static Stage loginStage;
     @FXML private static Stage registerStage;
+    @FXML private static Stage currentStage;
     @FXML private Text registerInfo;
     @FXML private TextField recoveryEmail;
     @FXML private TextField recoveryCode;
@@ -81,11 +82,15 @@ public class FXMLDocumentController implements Initializable {
         // If statement for testing purposes
         if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
             this.lblStatus.setText("Login Success");
+            conn.setUserOnlineStatus(this.username.getText(), 1);
+            conn.close();
             this.uname = this.username.getText();
             // After login is successful, you are taken to the main page
             Parent root;
             try {
+//                getCurrentStage().close();
                 this.mainStage = new Stage();
+                FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
                 root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
                 this.scene = new Scene(root);
                 this.mainStage.setScene(scene);
@@ -108,12 +113,18 @@ public class FXMLDocumentController implements Initializable {
         // After login is successful, you are taken to the main page
         Parent root;
         try {
+            // Hacky way to find last stage and close it, doesn't really work
+            if (getCurrentStage() != null) {getCurrentStage().close();}
+            if (coinTrack.CoinTrack.newStage != null) {coinTrack.CoinTrack.newStage.close();}
+            if (coinTrack.FXMLDocumentController.getCurrentStage() != null) {coinTrack.FXMLDocumentController.getCurrentStage().close();}
+            // Create registration stage
             this.registerStage = new Stage();
+            FXMLDocumentController.currentStage = FXMLDocumentController.registerStage;
             root = FXMLLoader.load(getClass().getResource("RegisterUserFXML.fxml"));
             this.scene = new Scene(root);
             this.registerStage.setScene(scene);
             this.registerStage.show();
-            coinTrack.CoinTrack.newStage.close();
+            
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -127,6 +138,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRegisterSubmit(ActionEvent event) {
         System.out.println("register");
+        // Ugly if else to check for bad inputs.
         if (this.emailEntry.getText().isEmpty()){
             this.emailEntry.setPromptText("Enter an email address");
             this.registerInfo.setFill(Color.RED);
@@ -166,12 +178,14 @@ public class FXMLDocumentController implements Initializable {
                 this.registerInfo.setText("SUCCESS!");
                 Parent root;
                 try {
+                    getCurrentStage().close();
                     Stage stage = new Stage();
-                    root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                    FXMLDocumentController.currentStage = stage;
+                    root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
                     this.scene = new Scene(root);
                     stage.setScene(this.scene);
                     stage.show();
-//                    registerStage.close();
+//                    FXMLDocumentController.registerStage.close();
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -192,12 +206,14 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("Forgot your password already..");
         Parent root;
         try {
+            getCurrentStage().close();
             this.forgotPassStage = new Stage();
+            FXMLDocumentController.currentStage = FXMLDocumentController.forgotPassStage;
             root = FXMLLoader.load(getClass().getResource("ForgotPasswordFXML.fxml"));
             this.scene = new Scene(root);
             this.forgotPassStage.setScene(this.scene);
             this.forgotPassStage.show();
-            coinTrack.CoinTrack.newStage.close();
+//            coinTrack.CoinTrack.newStage.close();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -234,12 +250,14 @@ public class FXMLDocumentController implements Initializable {
 //            this.forgotPassStage.close();
             Parent root;
             try {
+                getCurrentStage().close();
                 this.resetPassStage = new Stage();
+                FXMLDocumentController.currentStage = FXMLDocumentController.resetPassStage;
                 root = FXMLLoader.load(getClass().getResource("PasswordResetFXML.fxml"));
                 this.scene = new Scene(root);
                 this.resetPassStage.setScene(this.scene);
                 this.resetPassStage.show();
-                this.forgotPassStage.close();
+//                this.forgotPassStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -269,7 +287,6 @@ public class FXMLDocumentController implements Initializable {
             ConnectToDatabase conn = new ConnectToDatabase();
             String newPass = this.resetPassword.getText();
             // Submit changed passwords to the database
-            
             conn.changePassword(tempUsernameStorage, newPass);
             // Close the connection
             conn.close();
@@ -278,12 +295,14 @@ public class FXMLDocumentController implements Initializable {
             // Then change the stage back to the login screen
             Parent root;
             try {
+                getCurrentStage().close();
                 this.mainStage = new Stage();
+                FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
                 root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
                 this.scene = new Scene(root);
                 this.mainStage.setScene(this.scene);
                 this.mainStage.show();
-                this.resetPassStage.close();
+//                this.resetPassStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -311,6 +330,10 @@ public class FXMLDocumentController implements Initializable {
      */
     public static Stage getMainStage() {
         return FXMLDocumentController.mainStage;
+    }
+    
+    public static Stage getCurrentStage() {
+        return FXMLDocumentController.currentStage;
     }
     
     @Override

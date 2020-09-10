@@ -3,6 +3,11 @@ package coinClasses;
  * Database connection class.
  * The database is hosted on freemysqlhosting.net
  * 
+ * Constructor just opens a connection.
+ * The methods allow interaction with specific tables.
+ * 
+ * If you open it. You MUST close it!
+ * 
  * - Kyle
  */
 
@@ -10,23 +15,16 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.util.LinkedList;
 
-/**
- *
- * @author Kyle
- */
 public class ConnectToDatabase {
     
     Connection con;
@@ -55,14 +53,11 @@ public class ConnectToDatabase {
      */
     public void coinDatabase(String _uuid, String _symbol, String _name, String _price, Date _date) {
         try {
-            /**
-             * This works
-             */
+            // Parse price to a float because DB requires it.
             float newPrice = Float.parseFloat(_price);
             // Insert statement, using prepared statements
             String query = " insert into coins (uuid, symbol, name, price, date)"
                     + " values (?, ?, ?, ?, ?)";
-
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             preparedStmt.setString(1, _uuid);
@@ -70,7 +65,6 @@ public class ConnectToDatabase {
             preparedStmt.setString(3, _name);
             preparedStmt.setFloat(4, newPrice);
             preparedStmt.setDate(5, _date);
-
             // execute the preparedstatement
             preparedStmt.execute();
         } catch (Exception ex) {
@@ -91,9 +85,8 @@ public class ConnectToDatabase {
              * This works
              */
             // Insert statement, using prepared statements
-            String query = " insert into users (userEmail, userName, userPassword)"
-                    + " values (?, ?, ?)";
-
+            String query = " INSERT INTO users (userEmail, userName, userPassword)"
+                    + " VALUES (?, ?, ?)";
             String hashedPass = getSHA256(_userPassword);
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
@@ -107,6 +100,68 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
     }
+
+    /**
+     * Update user in database showing when someone is online.
+     * Online : 1
+     * Offline : 0
+     * @param _username
+     * @param _isOnline 
+     */
+    public void setUserOnlineStatus(String _username, int _isOnline) {
+        try {
+            // Insert statement, using prepared statements
+            String query = " UPDATE users SET isOnline = " + "'" + _isOnline + "'" 
+                    + " WHERE username = " + "'" + _username + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            // execute the preparedstatement
+            preparedStmt.execute();
+            System.out.println("Updated live status");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public LinkedList<String> getOnlineUsers() {
+        LinkedList<String> list = new LinkedList<>();
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from users where isOnline = '" + 1 + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                list.add(result.getString("username"));
+            }
+            System.out.println("Got list of live members");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Get the id of a user given their username.
+     * @param _username
+     * @return 
+     */
+    public int getIdFromUsername(String _username) {
+        int id = -1;
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from users where username = '" + _username + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                id = result.getInt("userID");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return id;
+    }
     
     /**
      * Validate the login information submitted by the user.
@@ -119,7 +174,7 @@ public class ConnectToDatabase {
         boolean isValid = false;
         try {
             // Insert statement, using prepared statements
-            String query = "select * from users where username = '" + _userName + "'";
+            String query = "SELECT * from users where username = '" + _userName + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
 //            preparedStmt.setString(1, _userName);
@@ -152,7 +207,7 @@ public class ConnectToDatabase {
         boolean isValid = true;
         try {
             // Insert statement, using prepared statements
-            String query = "select * from users where username = '" + _userName + "'";
+            String query = "SELECT * from users where username = '" + _userName + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
 //            preparedStmt.setString(1, _userName);
@@ -175,11 +230,9 @@ public class ConnectToDatabase {
         boolean isValid = false;
         try {
             // Insert statement, using prepared statements
-            String query = "select * from users where userEmail = '" + _userEmail + "'";
+            String query = "SELECT * from users where userEmail = '" + _userEmail + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
-//            preparedStmt.setString(1, _userName);
-//            preparedStmt.execute();
             ResultSet result = preparedStmt.executeQuery(query);
             return result.next();
             
@@ -199,11 +252,9 @@ public class ConnectToDatabase {
         String email = "";
         try {
             // Insert statement, using prepared statements
-            String query = "select * from users where username = '" + _username + "'";
+            String query = "SELECT * from users where username = '" + _username + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
-//            preparedStmt.setString(1, _userName);
-//            preparedStmt.execute();
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()) {
                 email = result.getString("userEmail");
@@ -224,11 +275,9 @@ public class ConnectToDatabase {
         String username = "";
         try {
             // Insert statement, using prepared statements
-            String query = "select * from users where userEmail = '" + _email + "'";
+            String query = "SELECT * from users where userEmail = '" + _email + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
-//            preparedStmt.setString(1, _userName);
-//            preparedStmt.execute();
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()) {
                 username = result.getString("username");

@@ -8,10 +8,13 @@ package tabControllers;
 
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
+import coinClasses.ConnectToDatabase;
 import coinClasses.ParseCoinName;
 import coinClasses.SingleCoin;
+import coinTrack.FXMLDocumentController;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -28,7 +31,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
@@ -46,6 +51,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  *
@@ -67,6 +73,7 @@ public class Tab2Controller implements Initializable{
             observableArrayList("3", "5", "7", "15", "25", "35", "50");
     private final ObservableList<String> BUBBLES = FXCollections.
             observableArrayList("24h", "7d", "30d", "1y", "5y");
+    private static Stage mainPage2;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -120,12 +127,8 @@ public class Tab2Controller implements Initializable{
             }
             // Make a CoinHistory api call
             coinHistory = new CoinHistory();
-            if (isSingleCoinScan) {
-                System.out.println("Sorry, havn't added this yet");
-
-            } else {
-                displayMultiCoinGraph();
-            }
+            displayMultiCoinGraph();
+            
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             System.out.println("pie chart selected");
             pieChart.getData().clear();
@@ -155,13 +158,13 @@ public class Tab2Controller implements Initializable{
             // timeSelection
             boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
             if (isComboBoxEmpty) {
+                // Default timeframe will be 7 days.
                 timeSelection = "7d";
             } else {
                 timeSelection = (String)comboBox.getValue();
             }
-//            if (coinHistory == null) {
+            // Call method to search for coin and display its graph.
             displaySingleCoinGraph();
-//            }
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             System.out.println("pie chart selected");
         } else {
@@ -169,12 +172,13 @@ public class Tab2Controller implements Initializable{
         }
     }
     
-    @FXML
-    private void handleSingleCoin(ActionEvent event) {
-        isSingleCoinScan = true;
-        splitMenuT2.setText("Single Coin");
-    }
-    
+    /**
+     * Clears data from all graphs.
+     * 
+     * This DOES NOT work 100%. New graphs spawn on top of old graphs.
+     * 
+     * @param event 
+     */
     @FXML
     private void handleClearT2(ActionEvent event) {
         barChart.getData().clear();
@@ -184,6 +188,11 @@ public class Tab2Controller implements Initializable{
         searchFieldT2.setText("");
     }
     
+    /**
+     * Test button, might add it permanently. 
+     * Shows the avaliable list of coins you can search for.
+     * @param event 
+     */
     @FXML
     private void handleTest(ActionEvent event) {
         File coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
@@ -203,16 +212,48 @@ public class Tab2Controller implements Initializable{
         }
     }
     
+    /**
+     * Changes depending on what graph tab is open.
+     * @param event 
+     */
     @FXML
     private void handleComboBox(ActionEvent event) {
         timeSelection = comboBox.getValue();
     }
     
+    /**
+     * Handle log out button click. 
+     * Takes you back to log in screen.
+     * @param event 
+     */
     @FXML
     private void handleLogOutT2(ActionEvent event) {
         System.out.println("logging out");
-        coinTrack.FXMLDocumentController.getMainStage().close();
+        Parent root;
+            try {
+                Tab2Controller.mainPage2 = new Stage();
+                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+                this.scene = new Scene(root);
+                Tab2Controller.mainPage2.setScene(this.scene);
+                Tab2Controller.mainPage2.show();
+                closeOldStage();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
+    
+    /**
+     * Change a users online status. i.e. when they log off .
+     * @param _uname
+     * @param _status 
+     */
+    private void setOnlineStatus(String _uname, int _status) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        conn.setUserOnlineStatus(_uname, _status);
+        conn.close();
+    }
+    
     /**
      * Display historical data for a single coin
      */
@@ -232,7 +273,7 @@ public class Tab2Controller implements Initializable{
                 singleHistoryMap = coinHist.getSingleHistory();
             }
         }
-        // Prevent old data from showing back up
+        // Prevent old data from showing back up  --  NOT WORKING
         barChartData2.clear();
         // Add entries from singleHistoryMap into series1
         for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
@@ -287,14 +328,10 @@ public class Tab2Controller implements Initializable{
 //        coinHistory.join();
         historyMap = coinHistory.getPriceDate();
         int count = 0;
-        for (Map.Entry<String, Integer> entry : historyMap.entrySet()) {
-//            count++;
-//            if (coinsToGraph < 25 && count < coinsToGraph) {
-//                break;
-//            }
+        historyMap.entrySet().forEach((entry) -> {
             series1.getData().add(new XYChart.Data(
                     entry.getKey(), entry.getValue()));
-        }
+        });
         barChartData.add(series1);
         barChart.setData(barChartData);
     }
@@ -316,6 +353,13 @@ public class Tab2Controller implements Initializable{
             pieChartData.add(new PieChart.Data(coin.getName(), rounded));
         }
         pieChart.setData(pieChartData);
+    }
+    
+    /**
+     * Returns and closes the main stage from the class where it was created
+     */
+    private void closeOldStage() {
+        coinTrack.FXMLDocumentController.mainStage.close();
     }
     
 
