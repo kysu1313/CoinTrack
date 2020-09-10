@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -32,9 +33,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Cell;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -45,6 +50,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
@@ -87,6 +93,10 @@ public class Tab1Controller implements Initializable{
     @FXML private ListView onlineUsersList;
     @FXML private ListView savedCoinsList;
     @FXML private ListView friendsList;
+    @FXML private ContextMenu cm;
+    @FXML private MenuItem m1;
+    @FXML private MenuItem m2;
+    @FXML private MenuItem m3;
     
     // Bottom portion (button bar)
     @FXML private TextArea txtAreaT1;
@@ -309,9 +319,57 @@ public class Tab1Controller implements Initializable{
         ConnectToDatabase conn = new ConnectToDatabase();
         this.onlineUsers = conn.getOnlineUsers();
         conn.close();
+//        this.cm = new ContextMenu();
+//        this.m1 = new MenuItem("Add Friend");
+//        this.m2 = new MenuItem("Send Message");
+//        this.m3 = new MenuItem("Block User");
+//        cm.getItems().add(this.m1);
+//        cm.getItems().add(this.m2);
+//        cm.getItems().add(this.m3);
         for (int i = 0; i < this.onlineUsers.size(); i++) {
             onlineUsersList.getItems().add(this.onlineUsers.get(i));
         }
+    }
+    
+    private void createListCells() {
+        onlineUsersList.setCellFactory(lv -> {
+
+            ListCell<String> cell = new ListCell<>();
+
+            ContextMenu contextMenu = new ContextMenu();
+
+            
+            MenuItem addFriendItem = new MenuItem();
+            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
+            addFriendItem.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                String friendName = cell.getItem();
+                if (friendName.equals(this.uname)) {
+                    txtAreaT1.setText("Wow, so lonely. Can't add yourself as a friend..");
+                } else {
+                    conn.addFriend(this.uname, friendName);
+                    txtAreaT1.setText("Added " + friendName + " to friend list!");
+                }
+                conn.close();
+            });
+            MenuItem sendMessageItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+            sendMessageItem.setOnAction(event -> {
+                
+            });
+            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
+
+            cell.textProperty().bind(cell.itemProperty());
+
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+            return cell ;
+        });
     }
     
     /**
@@ -321,13 +379,26 @@ public class Tab1Controller implements Initializable{
         coinTrack.FXMLDocumentController.getCurrentStage().close();
     }
 
+    /**
+     * Initialize the tab
+     * @param location
+     * @param resources 
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
         this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
-        
+        createListCells();
         addOnlineUsersToList();
+        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
+                }
+            }
+            
+        });
         
     }
     

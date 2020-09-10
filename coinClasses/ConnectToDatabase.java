@@ -124,6 +124,10 @@ public class ConnectToDatabase {
         }
     }
     
+    /**
+     * Returns a linked list of all users currently online.
+     * @return 
+     */
     public LinkedList<String> getOnlineUsers() {
         LinkedList<String> list = new LinkedList<>();
         try {
@@ -140,6 +144,27 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
         return list;
+    }
+    
+    public void addFriend(String _username, String _friendUsername) {
+        int fid = getIdFromUsername(_friendUsername);
+        int uid = getIdFromUsername(_username);
+        try {
+            // Insert statement, using prepared statements
+            String query = "INSERT INTO friend (friendID, userOfFriendID, friendUsername, friendOnline)"
+                    + " values (?, ?, ?, ?)";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.setInt(1, fid);
+            preparedStmt.setInt(2, uid);
+            preparedStmt.setString(3, _friendUsername);
+            preparedStmt.setInt(4, 1);
+            // execute the preparedstatement
+            preparedStmt.execute();
+            System.out.println("Added Friend");
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
 
     /**

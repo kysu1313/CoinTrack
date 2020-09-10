@@ -9,10 +9,8 @@ package coinTrack;
 
 import coinClasses.ConnectToDatabase;
 import coinClasses.RecoveryEmail;
-import com.mysql.cj.xdevapi.Session;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -21,7 +19,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -338,7 +335,16 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize (URL url, ResourceBundle rb) {
-     
+        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+        ConnectToDatabase conn = new ConnectToDatabase();
+        
+        /**
+         * HOW DO I DO SOMETHING AFTER PROGRAM IS CLOSED !?!?
+         */
+        
+        getCurrentStage().setOnCloseRequest(evt -> 
+                conn.setUserOnlineStatus(this.uname, 0)
+        );
     }
 
 }
