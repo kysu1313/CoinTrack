@@ -169,7 +169,7 @@ public class FXMLDocumentController implements Initializable {
                 String uname = this.usernameEntry.getText();
                 String pass = this.passwordEntry.getText();
                 // If all good, submit info to DB
-                conn.userDatabase(email, uname, pass);
+                conn.userDatabase(0, email, uname, pass);
                 conn.close();
                 // Save username so it can be displayed in the application
                 this.uname = uname;
