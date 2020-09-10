@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -66,19 +67,28 @@
                            <children>
                               <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0">
                                 <panes>
-                                  <TitledPane fx:id="savedCoinsT1" animated="false" text="Saved Coins">
+                                  <TitledPane fx:id="onlineUsers" animated="false" text="Online Users">
                                     <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ListView fx:id="onlineUsersList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children></AnchorPane>
                                     </content>
                                   </TitledPane>
-                                  <TitledPane fx:id="savedTradesT1" animated="false" text="Saved Trades">
+                                  <TitledPane fx:id="savedTradesT1" animated="false" text="Saved Coins">
                                     <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ListView fx:id="savedCoinsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children></AnchorPane>
                                     </content>
                                   </TitledPane>
-                                  <TitledPane animated="false" text="untitled 3">
+                                  <TitledPane animated="false" text="Friends">
                                     <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ListView fx:id="friendsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children></AnchorPane>
                                     </content>
                                   </TitledPane>
                                 </panes>

@@ -12,22 +12,29 @@ import coinClasses.ConnectToDatabase;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
+import coinTrack.FXMLDocumentController;
 import java.awt.Color;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -42,6 +49,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 
@@ -66,11 +74,19 @@ public class Tab1Controller implements Initializable{
     private boolean isSingleCoinScan;
     private GlobalCoinStats globalStats;
     private CoinRankApi cri;
+    private static Stage mainPage;
+    private String uname;
+    private LinkedList<String> onlineUsers;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
+    
+    // Accordion
+    @FXML private ListView onlineUsersList;
+    @FXML private ListView savedCoinsList;
+    @FXML private ListView friendsList;
     
     // Bottom portion (button bar)
     @FXML private TextArea txtAreaT1;
@@ -254,20 +270,64 @@ public class Tab1Controller implements Initializable{
         txtAreaT1.setText("");
     }
     
+    /**
+     * Log out user and change to login stage.
+     * Also update the users isOnline status in the database.
+     * @param event 
+     */
     @FXML
     private void handleLogOutT1(ActionEvent event) {
         System.out.println("logging out");
-        coinTrack.FXMLDocumentController.getMainStage().close();
+        Parent root;
+            try {
+                closeOldStage();
+                // Update users online status in database
+                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+                this.mainPage = new Stage();
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+                this.scene = new Scene(root);
+                this.mainPage.setScene(this.scene);
+                this.mainPage.show();
+//                closeOldStage();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
+    /**
+     * Change a users online status. i.e. when they log off .
+     * @param _uname
+     * @param _status 
+     */
+    private void setOnlineStatus(String _uname, int _status) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        conn.setUserOnlineStatus(_uname, _status);
+        conn.close();
+    }
     
+    private void addOnlineUsersToList() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.onlineUsers = conn.getOnlineUsers();
+        conn.close();
+        for (int i = 0; i < this.onlineUsers.size(); i++) {
+            onlineUsersList.getItems().add(this.onlineUsers.get(i));
+        }
+    }
     
+    /**
+     * A probably bad method of closing old screens when a new one opens
+     */
+    private void closeOldStage() {
+        coinTrack.FXMLDocumentController.getCurrentStage().close();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
-        String uname = coinTrack.FXMLDocumentController.uname;
+        this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
+        
+        addOnlineUsersToList();
         
     }
     

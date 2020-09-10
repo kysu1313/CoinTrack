@@ -35,7 +35,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Text fx:id="registerInfo" layoutX="65.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We 'definitely' won't sell your data" textAlignment="CENTER" wrappingWidth="332.05078125">
+      <Text fx:id="registerInfo" layoutX="65.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We probably won't sell your data" textAlignment="CENTER" wrappingWidth="332.05078125">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
