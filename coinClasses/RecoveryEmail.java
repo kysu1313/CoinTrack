@@ -1,9 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package coinClasses;
+
+/**
+ * Simple program that sends an email containing a code used
+ * to reset a password.
+ * 
+ * This uses the free gmail SMTP server.
+ * 
+ * - Kyle
+ */
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -14,12 +18,18 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-/**
- *
- * @author Kyle
- */
 public class RecoveryEmail {
     
+    /**
+     * Constructor. 
+     * - Makes a connection to SMTP server. 
+     * - Creates an email.
+     * - Authenticates it.
+     * - Sends the email to the recipient containing recovery code.
+     * @param _toEmail
+     * @param _uname
+     * @param _code 
+     */
     public RecoveryEmail(String _toEmail, String _uname, String _code) {
         //eppfiabpywnqnvwp is a single app password
         final String username = "cointrack13@gmail.com";

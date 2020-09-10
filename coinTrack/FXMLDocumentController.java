@@ -85,7 +85,7 @@ public class FXMLDocumentController implements Initializable {
             // After login is successful, you are taken to the main page
             Parent root;
             try {
-//                getCurrentStage().close();
+                getCurrentStage().close();
                 this.mainStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
                 root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
@@ -110,10 +110,6 @@ public class FXMLDocumentController implements Initializable {
         // After login is successful, you are taken to the main page
         Parent root;
         try {
-            // Hacky way to find last stage and close it, doesn't really work
-            if (getCurrentStage() != null) {getCurrentStage().close();}
-            if (coinTrack.CoinTrack.newStage != null) {coinTrack.CoinTrack.newStage.close();}
-            if (coinTrack.FXMLDocumentController.getCurrentStage() != null) {coinTrack.FXMLDocumentController.getCurrentStage().close();}
             // Create registration stage
             this.registerStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.registerStage;
@@ -319,6 +315,13 @@ public class FXMLDocumentController implements Initializable {
         int digits = rand.nextInt(1000);
         newCode += digits;
         return newCode;
+    }
+    
+    public void closeStage() {
+        // Hacky way to find last stage and close it, doesn't really work
+            if (getCurrentStage() != null) {getCurrentStage().close();}
+            if (coinTrack.CoinTrack.newStage != null) {coinTrack.CoinTrack.newStage.close();}
+            if (coinTrack.FXMLDocumentController.getCurrentStage() != null) {coinTrack.FXMLDocumentController.getCurrentStage().close();}
     }
     
     /**

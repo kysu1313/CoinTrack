@@ -191,6 +191,9 @@ public class Tab1Controller implements Initializable{
         
     }
     
+    /**
+     * Display global stats in bottom text area. 
+     */
     private void displayGlobalStats() {
         globalStats = new GlobalCoinStats();
         String text = "";
@@ -315,30 +318,26 @@ public class Tab1Controller implements Initializable{
         conn.close();
     }
     
+    /**
+     * Call database returning a list of all users who are online.
+     */
     private void addOnlineUsersToList() {
         ConnectToDatabase conn = new ConnectToDatabase();
         this.onlineUsers = conn.getOnlineUsers();
         conn.close();
-//        this.cm = new ContextMenu();
-//        this.m1 = new MenuItem("Add Friend");
-//        this.m2 = new MenuItem("Send Message");
-//        this.m3 = new MenuItem("Block User");
-//        cm.getItems().add(this.m1);
-//        cm.getItems().add(this.m2);
-//        cm.getItems().add(this.m3);
         for (int i = 0; i < this.onlineUsers.size(); i++) {
             onlineUsersList.getItems().add(this.onlineUsers.get(i));
         }
     }
     
+    /**
+     * This creates the right click menu on the onlineUsers list. 
+     * It also maps each button to an action.
+     */
     private void createListCells() {
         onlineUsersList.setCellFactory(lv -> {
-
             ListCell<String> cell = new ListCell<>();
-
             ContextMenu contextMenu = new ContextMenu();
-
-            
             MenuItem addFriendItem = new MenuItem();
             addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
             addFriendItem.setOnAction(event -> {
@@ -355,12 +354,10 @@ public class Tab1Controller implements Initializable{
             MenuItem sendMessageItem = new MenuItem();
             sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
             sendMessageItem.setOnAction(event -> {
-                
+                // Send a message to a friend
             });
             contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
-
             cell.textProperty().bind(cell.itemProperty());
-
             cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
                 if (isNowEmpty) {
                     cell.setContextMenu(null);
