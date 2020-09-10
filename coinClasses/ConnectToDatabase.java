@@ -79,20 +79,21 @@ public class ConnectToDatabase {
      * @param _userName
      * @param _userPassword
      */
-    public void userDatabase(String _userEmail, String _userName, String _userPassword) {
+    public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword) {
         try {
             /**
              * This works
              */
             // Insert statement, using prepared statements
-            String query = " INSERT INTO users (userEmail, userName, userPassword)"
-                    + " VALUES (?, ?, ?)";
+            String query = " INSERT INTO users (isOnline, userEmail, userName, userPassword)"
+                    + " VALUES (?, ?, ?, ?)";
             String hashedPass = getSHA256(_userPassword);
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
-            preparedStmt.setString(1, _userEmail);
-            preparedStmt.setString(2, _userName);
-            preparedStmt.setString(3, hashedPass);
+            preparedStmt.setInt(1, _online);
+            preparedStmt.setString(2, _userEmail);
+            preparedStmt.setString(3, _userName);
+            preparedStmt.setString(4, hashedPass);
             // execute the preparedstatement
             preparedStmt.execute();
             System.out.println("Registration Success");
