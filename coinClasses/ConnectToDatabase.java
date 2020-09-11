@@ -29,6 +29,9 @@ public class ConnectToDatabase {
     
     Connection con;
     
+    /**
+     * Makes a simple connection to the database.
+     */
     public ConnectToDatabase() {
         try {
             /**
@@ -146,6 +149,12 @@ public class ConnectToDatabase {
         return list;
     }
     
+    /**
+     * Create a connection between two users and add
+     * it to the table: friend. 
+     * @param _username
+     * @param _friendUsername 
+     */
     public void addFriend(String _username, String _friendUsername) {
         int fid = getIdFromUsername(_friendUsername);
         int uid = getIdFromUsername(_username);
@@ -165,6 +174,47 @@ public class ConnectToDatabase {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
+    }
+    
+    /**
+     * Remove the user friend connection. Delete the row
+     * from the friend table.
+     * @param _username 
+     */
+    public void removeFriend(String _username) {
+        try {
+            // Insert statement, using prepared statements
+            String query = "DELETE FROM friend WHERE friendUsername = '" + _username + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.execute();
+            System.out.println(_username + " was removed from friend list");
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    /**
+     * Returns a list of friends for a given user ID.
+     * @param _username
+     * @return 
+     */
+    public LinkedList<String> getFriendList(String _username) {
+        LinkedList<String> friendList = new LinkedList<>();
+        int userId = getIdFromUsername(_username);
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from friend where userOfFriendID = '" + userId + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                friendList.add(result.getString("friendUsername"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return friendList;
     }
 
     /**
