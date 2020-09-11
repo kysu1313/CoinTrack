@@ -83,6 +83,7 @@ public class Tab1Controller implements Initializable{
     private static Stage mainPage;
     private String uname;
     private LinkedList<String> onlineUsers;
+    private LinkedList<String> friendList;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -166,8 +167,6 @@ public class Tab1Controller implements Initializable{
     private void displayCoinText() {
         cri = new CoinRankApi();
         cri.join();
-        ConnectToDatabase dbConn;
-        
         LinkedList<SingleCoin> temp = cri.getCoinList();
         for (int i = 0; i < temp.size(); i++) {
             SingleCoin cn = temp.get(i);
@@ -177,17 +176,13 @@ public class Tab1Controller implements Initializable{
             String price = cn.getPrice();
             long millis=System.currentTimeMillis();
             Date date = new Date(millis);
-            /**
-             * Testing database
-             */
-//            dbConn = new ConnectToDatabase();
-//            dbConn.coinDatabase(uuid, symbol, name, price, date);
         }
         count = 50;
         System.out.println(cri.getLimit());
         coinNamePrice = cri.getNamePrice();
         coinList = cri.getCoinList();
         displayMultiCoinTable();
+        createTableCells();
         
     }
     
@@ -347,6 +342,7 @@ public class Tab1Controller implements Initializable{
                     txtAreaT1.setText("Wow, so lonely. Can't add yourself as a friend..");
                 } else {
                     conn.addFriend(this.uname, friendName);
+                    addFriendsToList();
                     txtAreaT1.setText("Added " + friendName + " to friend list!");
                 }
                 conn.close();
@@ -370,6 +366,89 @@ public class Tab1Controller implements Initializable{
     }
     
     /**
+     * This creates the right click menu on the onlineUsers list. 
+     * It also maps each button to an action.
+     */
+    private void createTableCells() {
+        ContextMenu cm2 = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Save Coin");
+        mi1.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                // Do something
+                conn.close();
+            });
+        cm2.getItems().add(mi1);
+        MenuItem mi2 = new MenuItem("Share Coin");
+        cm2.getItems().add(mi2);
+        MenuItem mi3 = new MenuItem("Track Coin");
+        cm2.getItems().add(mi3);
+        tableViewT1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                if (t.getButton() == MouseButton.SECONDARY) {
+                    cm2.show(tableViewT1, t.getScreenX(), t.getScreenY());
+                }
+            }
+        });
+    }
+    
+    /**
+     * Call database returning a list of friends.
+     */
+    private void addFriendsToList() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.friendList = conn.getFriendList(this.uname);
+        conn.close();
+        for (int i = 0; i < this.friendList.size(); i++) {
+            friendsList.getItems().add(this.friendList.get(i));
+        }
+    }
+    
+    /**
+     * Create right-clickable cells for the friend list.
+     * 
+     * Allow the user to share coins, send messages, and
+     * remove the friend. 
+     */
+    private void createFriendListCells() {
+        friendsList.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>();
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem addFriendItem = new MenuItem();
+            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
+            addFriendItem.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                String friendName = cell.getItem();
+                // Do stuff
+                conn.close();
+            });
+            MenuItem sendMessageItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+            sendMessageItem.setOnAction(event -> {
+                // Send a message to a friend
+            });
+            MenuItem removeFriendItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
+            sendMessageItem.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                conn.removeFriend(cell.getText());
+                addFriendsToList();
+                conn.close();
+            });
+            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
+            cell.textProperty().bind(cell.itemProperty());
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+            return cell ;
+        });
+    }
+    
+    /**
      * A probably bad method of closing old screens when a new one opens
      */
     private void closeOldStage() {
@@ -379,14 +458,16 @@ public class Tab1Controller implements Initializable{
     /**
      * Initialize the tab
      * @param location
-     * @param resources 
+     * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         createListCells();
+        createFriendListCells();
         addOnlineUsersToList();
+        addFriendsToList();
         onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
@@ -394,9 +475,7 @@ public class Tab1Controller implements Initializable{
                     cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
                 }
             }
-            
         });
         
     }
-    
 }

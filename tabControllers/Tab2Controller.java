@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -40,7 +41,11 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SplitMenuButton;
@@ -48,6 +53,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Text;
@@ -74,7 +80,10 @@ public class Tab2Controller implements Initializable{
     private final ObservableList<String> BUBBLES = FXCollections.
             observableArrayList("24h", "7d", "30d", "1y", "5y");
     private static Stage mainPage2;
-    
+    private String uname;
+    private LinkedList<String> onlineUsers;
+    private LinkedList<String> friendList;
+
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
@@ -82,7 +91,13 @@ public class Tab2Controller implements Initializable{
     @FXML private TabPane graphTabPane;
     @FXML private Tab barChartTab;
     @FXML private Tab pieChartTab;
-    
+
+    // Accordion
+    @FXML private ListView onlineUsersListT2;
+    @FXML private ListView savedCoinsListT2;
+    @FXML private ListView friendsListT2;
+    @FXML private ContextMenu cm;
+
     // Bottom portion Tab 2
     @FXML private SplitMenuButton splitMenuT2;
     @FXML private TextField searchFieldT2;
@@ -93,19 +108,19 @@ public class Tab2Controller implements Initializable{
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
     @FXML private Text messageText;
-    
+
     // Bar Chart
     @FXML private BarChart barChart;
     private XYChart.Series series1;
     private XYChart.Series series4;
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
-    
+
     // Pie Chart
     @FXML
     protected PieChart pieChart;
     protected ObservableList<PieChart.Data> pieChartData;
-    
+
     /**
      * This handles the scan button on tab 2.
      * It first determines which graphTab is selected
@@ -128,7 +143,7 @@ public class Tab2Controller implements Initializable{
             // Make a CoinHistory api call
             coinHistory = new CoinHistory();
             displayMultiCoinGraph();
-            
+
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             System.out.println("pie chart selected");
             pieChart.getData().clear();
@@ -141,7 +156,7 @@ public class Tab2Controller implements Initializable{
         }
 
     }
-    
+
     /**
      * Handles the search button on tab 2.
      * This button is not applicable on the pieChartTab
@@ -155,6 +170,8 @@ public class Tab2Controller implements Initializable{
             barChart.layout();
             barChartData.clear();
             series1.getData().clear();
+            barChartData2.clear();
+            series4.getData().clear();
             // timeSelection
             boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
             if (isComboBoxEmpty) {
@@ -171,13 +188,13 @@ public class Tab2Controller implements Initializable{
             System.out.println("bubble chart selected");
         }
     }
-    
+
     /**
      * Clears data from all graphs.
-     * 
+     *
      * This DOES NOT work 100%. New graphs spawn on top of old graphs.
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void handleClearT2(ActionEvent event) {
@@ -186,12 +203,14 @@ public class Tab2Controller implements Initializable{
         pieChart.getData().clear();
         pieChart.layout();
         searchFieldT2.setText("");
+        barChartData2.clear();
+        series4.getData().clear();
     }
-    
+ 
     /**
-     * Test button, might add it permanently. 
+     * Test button, might add it permanently.
      * Shows the avaliable list of coins you can search for.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleTest(ActionEvent event) {
@@ -211,20 +230,20 @@ public class Tab2Controller implements Initializable{
             Logger.getLogger(ParseCoinName.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Changes depending on what graph tab is open.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleComboBox(ActionEvent event) {
         timeSelection = comboBox.getValue();
     }
-    
+
     /**
-     * Handle log out button click. 
+     * Handle log out button click.
      * Takes you back to log in screen.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleLogOutT2(ActionEvent event) {
@@ -242,18 +261,18 @@ public class Tab2Controller implements Initializable{
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    
+
     /**
      * Change a users online status. i.e. when they log off .
      * @param _uname
-     * @param _status 
+     * @param _status
      */
     private void setOnlineStatus(String _uname, int _status) {
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
     }
-    
+
     /**
      * Display historical data for a single coin
      */
@@ -275,10 +294,10 @@ public class Tab2Controller implements Initializable{
         }
         // Prevent old data from showing back up  --  NOT WORKING
         barChartData2.clear();
+        series4.getData().clear();
         // Add entries from singleHistoryMap into series1
         for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
             long tempLong = Long.parseLong(entry.getValue());
-//            Timestamp timeStamp = new Timestamp(tempLong);
             Date d = new Date(tempLong);
             String date = "" + d;
             series4.getData().add(new XYChart.Data(
@@ -288,11 +307,11 @@ public class Tab2Controller implements Initializable{
         barChart.setTitle("Viewing the past " + timeSelection);
         barChartData2.add(series4);
         barChart.setData(barChartData2);
-        
+
         /**
          * THIS IS FOR TESTING.
          * THIS IS NOT MY CODE.
-         * 
+         *
          * Implements scrolling using the mouse wheel on the graph.
          */
         final double SCALE_DELTA = 1.1;
@@ -319,7 +338,7 @@ public class Tab2Controller implements Initializable{
             }
         });
     }
-    
+
     /**
      * Display / Rank all coin prices
      */
@@ -335,7 +354,7 @@ public class Tab2Controller implements Initializable{
         barChartData.add(series1);
         barChart.setData(barChartData);
     }
-    
+
     /**
      * Creates a LinkedList of SingleCoins
      */
@@ -354,19 +373,131 @@ public class Tab2Controller implements Initializable{
         }
         pieChart.setData(pieChartData);
     }
-    
+
+    /**
+     * Call database returning a list of all users who are online.
+     */
+    private void addOnlineUsersToList() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.onlineUsers = conn.getOnlineUsers();
+        conn.close();
+        for (int i = 0; i < this.onlineUsers.size(); i++) {
+            onlineUsersListT2.getItems().add(this.onlineUsers.get(i));
+        }
+    }
+
+    /**
+     * This creates the right click menu on the onlineUsers list. 
+     * It also maps each button to an action.
+     */
+    private void createListCells() {
+        onlineUsersListT2.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>();
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem addFriendItem = new MenuItem();
+            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
+            addFriendItem.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                String friendName = cell.getItem();
+                if (friendName.equals(this.uname)) {
+                    txtAreaT2.setText("Wow, so lonely. Can't add yourself as a friend..");
+                } else {
+                    conn.addFriend(this.uname, friendName);
+                    txtAreaT2.setText("Added " + friendName + " to friend list!");
+                }
+                conn.close();
+            });
+            MenuItem sendMessageItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+            sendMessageItem.setOnAction(event -> {
+                // Send a message to a friend
+            });
+            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
+            cell.textProperty().bind(cell.itemProperty());
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+            return cell ;
+        });
+    }
+
+    /**
+     * Call database returning a list of friends.
+     */
+    private void addFriendsToList() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.friendList = conn.getFriendList(this.uname);
+        conn.close();
+        for (int i = 0; i < this.friendList.size(); i++) {
+            friendsListT2.getItems().add(this.friendList.get(i));
+        }
+    }
+
+    private void createFriendListCells() {
+        friendsListT2.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>();
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem addFriendItem = new MenuItem();
+            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
+            addFriendItem.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                String friendName = cell.getItem();
+                // Do stuff
+                conn.close();
+            });
+            MenuItem sendMessageItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+            sendMessageItem.setOnAction(event -> {
+                // Send a message to a friend
+            });
+            MenuItem removeFriendItem = new MenuItem();
+            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
+            sendMessageItem.setOnAction(event -> {
+                // Send a message to a friend
+            });
+            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
+            cell.textProperty().bind(cell.itemProperty());
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+            return cell ;
+        });
+    }
+ 
     /**
      * Returns and closes the main stage from the class where it was created
      */
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
-    
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
+        this.uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
+        createListCells();
+        addOnlineUsersToList();
+        addFriendsToList();
+        onlineUsersListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cm.show(onlineUsersListT2, event.getScreenX(), event.getScreenY());
+                }
+            }
+
+        });
         // Initialize the barChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();
