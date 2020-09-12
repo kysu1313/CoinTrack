@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab2Controller">
+<AnchorPane id="AnchorPane" stylesheets="styleSheets/Tab2Style.css" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab2Controller">
     <children>
       <MenuBar prefHeight="28.0" prefWidth="787.0">
         <menus>
