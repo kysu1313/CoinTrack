@@ -16,3 +16,16 @@
     -fx-text-fill: white;
     -fx-font-size: 12px;
 }
+
+.button:pressed {
+    -fx-background-color: 
+        #000000,
+        linear-gradient(#f03a3a, #a32929),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-background-radius: 3,2,2,2;
+    -fx-padding: 3 7 3 7;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
