@@ -24,6 +24,9 @@ public class ParseCoinName {
     // ========== CONSTRUCTORS ==========
     
     public ParseCoinName(String _str) {
+        // This line is needed for Mac users:
+        // coinFile = new File("src/coinClasses/coinNameSymbolId.txt");
+        // This line is needed for Windows users:
         coinFile = new File("src\\coinClasses\\coinNameSymbolId.txt");
         String first = _str.split(",")[0];
         // Make sure we can read the file with a try/catch block
