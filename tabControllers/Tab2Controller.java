@@ -34,6 +34,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -300,14 +301,31 @@ public class Tab2Controller implements Initializable{
             long tempLong = Long.parseLong(entry.getValue());
             Date d = new Date(tempLong);
             String date = "" + d;
-            series4.getData().add(new XYChart.Data(
-                    date, entry.getKey()));
+            double price = entry.getKey();
+            series4.getData().add(new XYChart.Data(date, price));
         }
         // Add series1 to the barChartData, then add that to the barChart
         barChart.setTitle("Viewing the past " + timeSelection);
         barChartData2.add(series4);
         barChart.setData(barChartData2);
-
+        double lastPrice = 0;
+        int count = 0;
+        // A way to color the bars in the bargraph green or red.
+        for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
+            double price = entry.getKey();
+            if (count < singleHistoryMap.size()){
+                if (price > lastPrice) {
+                    Node n = barChart.lookup(".data" + count + ".chart-bar");
+                    n.setStyle("-fx-bar-fill: green");
+                } else {
+                    Node n = barChart.lookup(".data" + count + ".chart-bar");
+                    n.setStyle("-fx-bar-fill: red");
+                }
+            }
+            lastPrice = price;
+            count++;
+        }
+        
         /**
          * THIS IS FOR TESTING.
          * THIS IS NOT MY CODE.
