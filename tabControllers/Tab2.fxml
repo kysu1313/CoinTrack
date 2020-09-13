@@ -12,7 +12,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -46,28 +45,27 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar layoutY="526.0" prefHeight="50.0" prefWidth="904.0">
+      <ToolBar fx:id="toolBarT2" layoutY="526.0" prefHeight="50.0" prefWidth="904.0">
         <items>
             <ComboBox fx:id="comboBox" onAction="#handleComboBox" prefWidth="150.0" />
             <Button fx:id="scanBtnT2" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScanT2" text="Scan" underline="true" />
             <Button fx:id="clearBtnT2" mnemonicParsing="false" onAction="#handleClearT2" text="Clear" />
             <TextField fx:id="searchFieldT2" />
           <Button fx:id="searchBtnT2" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearchT2" text="Search" />
-            <ProgressIndicator fx:id="progIndT2" progress="0.0" />
-            <Button fx:id="testBtn" mnemonicParsing="false" onAction="#handleTest" text="Test" />
-            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " textAlignment="CENTER" translateX="70.0">
+            <ComboBox fx:id="addRemoveComboBox" prefWidth="150.0" />
+            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " textAlignment="CENTER" translateX="50.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
-            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT2" text="Log Out" translateX="90.0" />
+            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT2" text="Log Out" translateX="150.0" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="897.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.15453527435610304" prefHeight="432.0" prefWidth="895.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.1858902575587906" prefHeight="432.0" prefWidth="895.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
@@ -77,7 +75,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="onlineUsersListT2" layoutX="-13.0" layoutY="83.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="onlineUsersListT2" layoutX="-13.0" layoutY="83.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -85,7 +83,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="savedCoinsListT2" layoutX="-19.0" layoutY="52.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="savedCoinsListT2" layoutX="-19.0" layoutY="52.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -93,7 +91,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="friendsListT2" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="friendsListT2" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -130,16 +128,16 @@
                                           </AnchorPane>
                                     </content>
                                   </Tab>
-                                    <Tab text="Line Chart">
+                                    <Tab fx:id="lineChartTab" text="Line Chart">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="401.0" prefWidth="754.0">
                                              <children>
-                                                <LineChart layoutX="57.0" layoutY="-13.0" prefHeight="401.0" prefWidth="752.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <LineChart fx:id="lineChart" layoutX="57.0" layoutY="-13.0" prefHeight="401.0" prefWidth="752.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                   <xAxis>
-                                                    <CategoryAxis side="BOTTOM" />
+                                                    <CategoryAxis fx:id="lineCategoryAxis" side="BOTTOM" />
                                                   </xAxis>
                                                   <yAxis>
-                                                    <NumberAxis side="LEFT" />
+                                                    <NumberAxis fx:id="lineNumberAxis" side="LEFT" />
                                                   </yAxis>
                                                 </LineChart>
                                              </children>
@@ -156,7 +154,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.15453527435610304" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.18365061590145576" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
