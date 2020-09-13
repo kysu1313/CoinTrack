@@ -42,6 +42,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -58,6 +59,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -91,6 +93,7 @@ public class Tab2Controller implements Initializable{
     private HashMap<String, XYChart.Series> seriesMap;
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
+    private LinkedList<XYChart.Data<String, Number>> dataList;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -420,28 +423,41 @@ public class Tab2Controller implements Initializable{
         getSeriesForChart(linesToGraph).forEach((series) -> {
             lineChartData.add(series);
         });
+        
         // Add series1 to the barChartData, then add that to the barChart
         lineChart.setTitle("Viewing the past 1y of: " + searchFieldT2.getText());
-//        lineChartData.add(newSeries);
         lineChart.setData(lineChartData);
+        addToolTips(dataList);
     }
-    
+    /**
+     * Create the different series for each coin the user adds.
+     * Returns a linkedList of the XYChart.Series to add to the chart.
+     * @param lines
+     * @return 
+     */
     private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
         for (String line : lines) {
             CoinHistory coinHist = new CoinHistory(0, line, timeSelection);
             singleHistoryMap = coinHist.getSingleHistory();
             XYChart.Series newSeries = new XYChart.Series();
-            
             singleHistoryMap.entrySet().forEach((entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
                 Date d = new Date(tempLong);
                 String date = "" + d;
                 double price = entry.getKey();
                 newSeries.getData().add(new XYChart.Data(date, price));
+                dataList.add(new XYChart.Data(date, price));
             });
             seriesList.add(newSeries);
         }
         return seriesList;
+    }
+    
+    private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
+        dataLst.forEach((data) -> {
+            Tooltip t = new Tooltip(data.getYValue().toString());
+            Tooltip.install(data.getNode(), t);
+        });
     }
 
     /**
@@ -642,6 +658,7 @@ public class Tab2Controller implements Initializable{
         seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
+        dataList = new LinkedList<>();
         series1.setName("Data");
         series4.setName("Prices");
         addRemoveComboBox.setItems(ADDREMOVE);
