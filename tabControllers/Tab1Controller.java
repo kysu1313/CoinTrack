@@ -84,6 +84,7 @@ public class Tab1Controller implements Initializable{
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
+    private static Stage mainPage1;
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -202,6 +203,58 @@ public class Tab1Controller implements Initializable{
     }
     
     /**
+     * Clears the tableView and textArea.
+     * @param event 
+     */
+    @FXML
+    private void handleClearT1(ActionEvent event) {
+        System.out.println("clearing data");
+        tableViewT1.getItems().clear();
+        txtAreaT1.setText("");
+    }
+    
+    /**
+     * Log out user and change to login stage.
+     * Also update the users isOnline status in the database.
+     * @param event 
+     */
+//    @FXML
+//    private void handleLogOutT1(ActionEvent event) {
+//        System.out.println("logging out");
+//        Parent root;
+//            try {
+//                closeOldStage();
+//                // Update users online status in database
+//                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+//                this.mainPage = new Stage();
+//                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+//                this.scene = new Scene(root);
+//                this.mainPage.setScene(this.scene);
+//                this.mainPage.show();
+////                closeOldStage();
+//            } catch (IOException ex) {
+//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//    }
+    
+    @FXML
+    private void handleLogOutT1(ActionEvent event) {
+        System.out.println("logging out");
+        Parent root;
+            try {
+                Tab1Controller.mainPage1 = new Stage();
+                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+                this.scene = new Scene(root);
+                Tab1Controller.mainPage1.setScene(this.scene);
+                Tab1Controller.mainPage1.show();
+                closeOldStage();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    
+    /**
      * Display coin data to the table
      */
     private void displayMultiCoinTable() {
@@ -230,11 +283,12 @@ public class Tab1Controller implements Initializable{
                 @Override
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
+                        // Change color based on data
                     if (!isEmpty()) {
-                        this.setStyle("-fx-text-fill: green");
-                        // Get fancy and change color based on data
-                        if(item.contains("-")) 
-                            this.setStyle("-fx-text-fill: red");
+                        this.setStyle("-fx-text-fill: #09de57;-fx-font-weight: bold;");
+                        if(item.contains("-")) {
+                            this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
+                        }
                         setText(item);
                     }
                 }
@@ -252,7 +306,6 @@ public class Tab1Controller implements Initializable{
                     if (event.getClickCount() == 2 && (!row.isEmpty())) {
                         SingleCoin rowData = row.getItem();
                         System.out.println(rowData);
-//                        txtAreaT1.setText(rowData.getIconUrl());
                         String imgPath = rowData.getIconUrl();
 
                         // Attempting to resize the coin logo image.
@@ -266,44 +319,8 @@ public class Tab1Controller implements Initializable{
         });
     }
     
-    
     /**
-     * Clears the tableView and textArea.
-     * @param event 
-     */
-    @FXML
-    private void handleClearT1(ActionEvent event) {
-        System.out.println("clearing data");
-        tableViewT1.getItems().clear();
-        txtAreaT1.setText("");
-    }
-    
-    /**
-     * Log out user and change to login stage.
-     * Also update the users isOnline status in the database.
-     * @param event 
-     */
-    @FXML
-    private void handleLogOutT1(ActionEvent event) {
-        System.out.println("logging out");
-        Parent root;
-            try {
-                closeOldStage();
-                // Update users online status in database
-                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-                this.mainPage = new Stage();
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-                this.scene = new Scene(root);
-                this.mainPage.setScene(this.scene);
-                this.mainPage.show();
-//                closeOldStage();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-    }
-    
-    /**
-     * Change a users online status. i.e. when they log off .
+     * Change a users online status. i.e. when they log on/off .
      * @param _uname
      * @param _status 
      */
@@ -318,6 +335,7 @@ public class Tab1Controller implements Initializable{
      */
     private void addOnlineUsersToList() {
         ConnectToDatabase conn = new ConnectToDatabase();
+        this.onlineUsers = new LinkedList<>();
         this.onlineUsers = conn.getOnlineUsers();
         conn.close();
         for (int i = 0; i < this.onlineUsers.size(); i++) {
@@ -397,6 +415,7 @@ public class Tab1Controller implements Initializable{
      */
     private void addFriendsToList() {
         ConnectToDatabase conn = new ConnectToDatabase();
+        this.friendList = new LinkedList<>();
         this.friendList = conn.getFriendList(this.uname);
         conn.close();
         for (int i = 0; i < this.friendList.size(); i++) {
@@ -449,10 +468,10 @@ public class Tab1Controller implements Initializable{
     }
     
     /**
-     * A probably bad method of closing old screens when a new one opens
+     * Returns and closes the main stage from the class where it was created
      */
     private void closeOldStage() {
-        coinTrack.FXMLDocumentController.getCurrentStage().close();
+        coinTrack.FXMLDocumentController.mainStage.close();
     }
 
     /**

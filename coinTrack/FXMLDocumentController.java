@@ -332,6 +332,11 @@ public class FXMLDocumentController implements Initializable {
         return FXMLDocumentController.mainStage;
     }
     
+    /**
+     * This is supposed to return the current stage so it
+     * can be closed. But I don't think it works... idk.
+     * @return 
+     */
     public static Stage getCurrentStage() {
         return FXMLDocumentController.currentStage;
     }
@@ -343,6 +348,7 @@ public class FXMLDocumentController implements Initializable {
         
         /**
          * HOW DO I DO SOMETHING AFTER PROGRAM IS CLOSED !?!?
+         * ARGHHH
          */
         
         getCurrentStage().setOnCloseRequest(evt -> 

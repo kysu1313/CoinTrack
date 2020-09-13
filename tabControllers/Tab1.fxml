@@ -19,9 +19,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" stylesheets="styleSheets/Tab1Style.css" prefHeight="647.0" prefWidth="787.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
+<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="897.0" stylesheets="styleSheets/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
     <children>
-      <MenuBar prefHeight="28.0" prefWidth="787.0">
+      <MenuBar prefHeight="28.0" prefWidth="897.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -40,7 +40,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar layoutX="14.0" layoutY="528.0" prefHeight="34.0" prefWidth="759.0">
+      <ToolBar layoutY="528.0" prefHeight="50.0" prefWidth="911.0">
         <items>
             <CheckBox fx:id="searchGlobalStats" mnemonicParsing="false" text="Global Stats" />
             <CheckBox fx:id="searchCoins" mnemonicParsing="false" text="All Coins" />
@@ -57,15 +57,15 @@
             <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT1" text="Log Out" translateX="120.0" />
         </items>
       </ToolBar>
-      <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="787.0">
+      <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="911.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.21171770972037285" prefHeight="432.0" prefWidth="785.0">
+                  <SplitPane dividerPositions="0.16983240223463686" prefHeight="432.0" prefWidth="897.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0">
+                              <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0" style="-fx-background-color: #858585;">
                                 <panes>
                                   <TitledPane fx:id="onlineUsers" animated="false" text="Online Users">
                                     <content>
@@ -97,7 +97,7 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView fx:id="tableViewT1" prefHeight="430.0" prefWidth="594.0">
+                              <TableView fx:id="tableViewT1" prefHeight="430.0" prefWidth="751.0">
                               </TableView>
                            </children>
                         </AnchorPane>
@@ -107,7 +107,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.210727969348659" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.16758544652701213" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
