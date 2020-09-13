@@ -20,11 +20,18 @@ public class ParseCoinName {
     private int coinId;
     private String coinName;
     private File coinFile;
+    private static String OS = System.getProperty("os.name").toLowerCase();
+
     
     // ========== CONSTRUCTORS ==========
     
     public ParseCoinName(String _str) {
-        coinFile = new File("src\\coinClasses\\coinNameSymbolId.txt");
+        // Used to determine if user is on Mac or Windows
+        if (isWindows()) {
+            coinFile = new File("src\\coinClasses\\coinNameSymbolId.txt");
+        } else if (isMac()) {
+            coinFile = new File("src/coinClasses/coinNameSymbolId.txt");
+        }
         String first = _str.split(",")[0];
         // Make sure we can read the file with a try/catch block
         try {
@@ -45,7 +52,12 @@ public class ParseCoinName {
     }
     
     public ParseCoinName(int _id) {
-        coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
+        // Used to determine if user is on Mac or Windows
+        if (isWindows()) {
+            coinFile = new File("src\\coinClasses\\coinNameSymbolId.txt");
+        } else if (isMac()) {
+            coinFile = new File("src/coinClasses/coinNameSymbolId.txt");
+        }
         // Make sure we can read the file with a try/catch block
         try {
             Scanner scanner = new Scanner(coinFile);
@@ -63,9 +75,25 @@ public class ParseCoinName {
             Logger.getLogger(ParseCoinName.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * Check if OS is Windows.
+     * @return 
+     */
+    private static boolean isWindows() {
+        return (OS.indexOf("win") >= 0);
+    }
+
+    /**
+     * Check if OS is Mac.
+     * @return 
+     */
+    private static boolean isMac() {
+        return (OS.indexOf("mac") >= 0);
+    }
+
     // ========== GETTERS ==========
-    
+
     /**
      * Return the coin id
      * @return 

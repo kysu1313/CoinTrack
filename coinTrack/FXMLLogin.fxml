@@ -7,26 +7,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" stylesheets="styleSheets/LoginStyle.css" prefHeight="311.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" fx:id="anchorPane" prefHeight="311.0" prefWidth="300.0" stylesheets="styleSheets/LoginStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
-      <Button defaultButton="true" layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onAction="#login" text="Login">
+      <Button defaultButton="true" layoutX="89.0" layoutY="180.0" mnemonicParsing="false" onAction="#login" prefHeight="39.0" prefWidth="124.0" text="Login">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <TextField fx:id="username" layoutX="28.0" layoutY="61.0" prefHeight="39.0" prefWidth="246.0" promptText="username">
+      <TextField fx:id="username" layoutX="28.0" layoutY="61.0" prefHeight="39.0" prefWidth="246.0" promptText="username" style="-fx-background-color: #e0e0e0;" styleClass="login-username">
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <PasswordField fx:id="txtPassword" layoutX="28.0" layoutY="122.0" prefHeight="39.0" prefWidth="246.0" promptText="password">
+      <PasswordField fx:id="txtPassword" layoutX="28.0" layoutY="122.0" prefHeight="39.0" prefWidth="246.0" promptText="password" style="-fx-background-color: #e0e0e0;">
          <font>
             <Font size="18.0" />
          </font></PasswordField>
-      <Label fx:id="lblStatus" layoutX="128.0" layoutY="20.0" text="Login">
+      <Label fx:id="lblStatus" layoutX="126.0" layoutY="20.0" styleClass="login-label" text="Login" textFill="WHITE">
          <font>
-            <Font size="18.0" />
+            <Font name="SansSerif Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="registerBtn" layoutX="116.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleRegister" text="Register">
+      <Button fx:id="registerBtn" layoutX="89.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="30.0" prefWidth="124.0" text="Register">
          <font>
             <Font size="14.0" />
          </font>
