@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -38,8 +39,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -54,6 +57,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -78,12 +82,15 @@ public class Tab2Controller implements Initializable{
             observableArrayList("24h", "7d", "30d", "1y", "5y");
     private final ObservableList<String> NUMCOINS = FXCollections.
             observableArrayList("3", "5", "7", "15", "25", "35", "50");
-    private final ObservableList<String> BUBBLES = FXCollections.
-            observableArrayList("24h", "7d", "30d", "1y", "5y");
+    private final ObservableList<String> ADDREMOVE = FXCollections.
+            observableArrayList("add", "remove");
     private static Stage mainPage2;
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
+    private HashMap<String, XYChart.Series> seriesMap;
+    private LinkedList<XYChart.Series> seriesList;
+    private LinkedList<String> linesToGraph;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -92,6 +99,9 @@ public class Tab2Controller implements Initializable{
     @FXML private TabPane graphTabPane;
     @FXML private Tab barChartTab;
     @FXML private Tab pieChartTab;
+    @FXML private Tab lineChartTab;
+    @FXML private ToolBar toolBarT2;
+    @FXML private ComboBox addRemoveComboBox;
 
     // Accordion
     @FXML private ListView onlineUsersListT2;
@@ -116,6 +126,14 @@ public class Tab2Controller implements Initializable{
     private XYChart.Series series4;
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
+    
+    // Line Chart
+    @FXML private LineChart lineChart;
+    private XYChart.Series lineSeries1;
+    private XYChart.Series lineSeries2;
+    private ObservableList<XYChart.Series<String, Number>> lineChartData;
+    private ObservableList<XYChart.Series<String, Number>> lineChartData2;
+    
 
     // Pie Chart
     @FXML
@@ -183,10 +201,32 @@ public class Tab2Controller implements Initializable{
             }
             // Call method to search for coin and display its graph.
             displaySingleCoinGraph();
-        } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
-            System.out.println("pie chart selected");
+        } else if (graphTabPane.getSelectionModel().getSelectedItem() == lineChartTab) {
+            System.out.println("line chart selected");
+            boolean isComboBoxEmpty = addRemoveComboBox.getSelectionModel().isEmpty();
+            boolean isTimeBoxEmpty = comboBox.getSelectionModel().isEmpty();
+            String arSelection = (String)addRemoveComboBox.getValue();
+            String warning = "";
+            if (isComboBoxEmpty) {
+                warning += "Select 'add' or 'remove' from the drop down menu.\n";
+                txtAreaT2.setText(warning);
+            } else if (arSelection.equalsIgnoreCase("add")){
+                if (searchFieldT2.getText().isEmpty()) {
+                    warning += "Enter the name of a coin to add.\n";
+                    txtAreaT2.setText(warning);
+                } else {
+                    if (linesToGraph.size() >= 10) {
+                        txtAreaT2.setText("Too many coins, clear graph to view more.");
+                    } else {
+                        linesToGraph.add(searchFieldT2.getText());
+                        displayLineGraph();
+                    }
+                }
+            } else {
+                removeCoinFromLineChart(searchFieldT2.getText());
+            }
         } else {
-            System.out.println("bubble chart selected");
+            System.out.println("pie chart selected");
         }
     }
 
@@ -206,6 +246,7 @@ public class Tab2Controller implements Initializable{
         searchFieldT2.setText("");
         barChartData2.clear();
         series4.getData().clear();
+        clearLineChart();
     }
  
     /**
@@ -325,7 +366,6 @@ public class Tab2Controller implements Initializable{
             lastPrice = price;
             count++;
         }
-        
         /**
          * THIS IS FOR TESTING.
          * THIS IS NOT MY CODE.
@@ -355,6 +395,77 @@ public class Tab2Controller implements Initializable{
                 }
             }
         });
+    }
+    
+    /**
+     * Display coin historical prices in a line chart.
+     */
+    private void displayLineGraph() {
+        System.out.println("displaying line graph");
+        XYChart.Series newSeries = new XYChart.Series();
+        // Get the string/int from the text field.
+        if (searchFieldT2.getText().isEmpty()){
+            searchFieldT2.setText("Coin name or id");
+        } else {
+            char ch = searchFieldT2.getText().charAt(0);
+            if (Character.isAlphabetic(ch)){
+                CoinHistory coinHist = new CoinHistory(0, searchFieldT2.getText(), timeSelection);
+                singleHistoryMap = coinHist.getSingleHistory();
+            } else {
+                int temp = Integer.parseInt(searchFieldT2.getText());
+                CoinHistory coinHist = new CoinHistory(temp, "", timeSelection);
+                singleHistoryMap = coinHist.getSingleHistory();
+            }
+        }
+        getSeriesForChart(linesToGraph).forEach((series) -> {
+            lineChartData.add(series);
+        });
+        // Add series1 to the barChartData, then add that to the barChart
+        lineChart.setTitle("Viewing the past 1y of: " + searchFieldT2.getText());
+//        lineChartData.add(newSeries);
+        lineChart.setData(lineChartData);
+    }
+    
+    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
+        for (String line : lines) {
+            CoinHistory coinHist = new CoinHistory(0, line, timeSelection);
+            singleHistoryMap = coinHist.getSingleHistory();
+            XYChart.Series newSeries = new XYChart.Series();
+            
+            singleHistoryMap.entrySet().forEach((entry) -> {
+                long tempLong = Long.parseLong(entry.getValue());
+                Date d = new Date(tempLong);
+                String date = "" + d;
+                double price = entry.getKey();
+                newSeries.getData().add(new XYChart.Data(date, price));
+            });
+            seriesList.add(newSeries);
+        }
+        return seriesList;
+    }
+
+    /**
+     * Remove all coins from the line chart.
+     */
+    private void clearLineChart() {
+        seriesMap.clear();
+        lineChart.getData().clear();
+        lineChart.layout();
+        lineChartData.clear();
+        seriesList.forEach((entry) -> {
+            entry.getData().clear();
+        });
+//        seriesList.clear();
+    }
+
+    /**
+     * Remove the given coin from the line chart.
+     * @param coin
+     */
+    private void removeCoinFromLineChart(String coin) {
+        XYChart.Series toRemove = seriesMap.get(coin);
+        seriesMap.remove(coin);
+        lineChartData.remove(toRemove);
     }
 
     /**
@@ -455,6 +566,9 @@ public class Tab2Controller implements Initializable{
         }
     }
 
+    /**
+     * Creates right-clickable cells in the friends list in the accordion.
+     */
     private void createFriendListCells() {
         friendsListT2.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<>();
@@ -504,6 +618,8 @@ public class Tab2Controller implements Initializable{
         messageText.setText("Hello " + uname);
         this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
+        linesToGraph = new LinkedList<>();
+        seriesList = new LinkedList<>();
         createListCells();
         addOnlineUsersToList();
         addFriendsToList();
@@ -516,15 +632,19 @@ public class Tab2Controller implements Initializable{
             }
 
         });
-        // Initialize the barChart arrays they will pull data from.
+        // Initialize the barChart & lineChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();
         pieChartData = FXCollections.observableArrayList();
+        lineChartData = FXCollections.observableArrayList();
         pieChart.setTitle("Coin Prices");
+        lineChart.setTitle("Compare Prices");
+        seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
         series1.setName("Data");
         series4.setName("Prices");
+        addRemoveComboBox.setItems(ADDREMOVE);
         // Tab listener. Detects which graph tab is selected
         graphTabPane.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
@@ -536,17 +656,24 @@ public class Tab2Controller implements Initializable{
                     tabSelection = 1;
                     scanBtnT2.setDisable(true);
                     searchBtnT2.setDisable(false);
+                    addRemoveComboBox.setVisible(false);
                     comboBox.setItems(TIMES);
                 } else if (currentTab == pieChartTab) {
                     comboBox.setValue("Number of coins");
                     tabSelection = 2;
                     searchBtnT2.setDisable(true);
                     scanBtnT2.setDisable(false);
+                    addRemoveComboBox.setVisible(false);
                     comboBox.setItems(NUMCOINS);
-                } else {
-                    comboBox.setValue("Bubbles");
+                } else if (currentTab == lineChartTab) {
+                    comboBox.setValue("Timeframe");
                     tabSelection = 3;
-                    comboBox.setItems(BUBBLES);
+                    searchBtnT2.setDisable(false);
+                    scanBtnT2.setDisable(true);
+                    addRemoveComboBox.setVisible(true);
+                    comboBox.setItems(TIMES);
+                    addRemoveComboBox.setValue("Add / Remove");
+//                    addRemoveComboBox.setTranslateX(-125);
                 }
             }
         });
@@ -554,5 +681,6 @@ public class Tab2Controller implements Initializable{
         comboBox.setValue("Timeframe");
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
+        addRemoveComboBox.setVisible(false);
     }
 }

@@ -3,11 +3,11 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -48,20 +48,19 @@
             <Button fx:id="clearBtnT1" accessibleHelp="Clear table" mnemonicParsing="false" onAction="#handleClearT1" text="Clear" />
             <TextField fx:id="searchFieldT1" />
           <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-            <ProgressIndicator fx:id="progIndT1" accessibleHelp="Loading Results" progress="0.0" />
-            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="90.0">
+            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="50.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
-            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT1" text="Log Out" translateX="120.0" />
+            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT1" text="Log Out" translateX="150.0" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="911.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.16983240223463686" prefHeight="432.0" prefWidth="897.0">
+                  <SplitPane dividerPositions="0.18435754189944134" prefHeight="432.0" prefWidth="897.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
@@ -71,15 +70,15 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="onlineUsersList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="onlineUsersList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
-                                  <TitledPane fx:id="savedTradesT1" animated="false" text="Saved Coins">
+                                  <TitledPane fx:id="savedTradesT1" animated="false" style="-fx-background-color: #858585;" text="Saved Coins">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="savedCoinsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="savedCoinsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -87,7 +86,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="friendsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="friendsList" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -107,7 +106,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.16758544652701213" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.18081587651598677" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
