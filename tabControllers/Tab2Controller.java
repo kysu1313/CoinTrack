@@ -69,6 +69,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.assistantControllers.HoveredThresholdNode;
 import tabControllers.assistantControllers.ShowCoordinates;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
@@ -77,6 +78,7 @@ import tabControllers.assistantControllers.Tab2AssistantController;
  * @author Kyle
  */
 public class Tab2Controller implements Initializable{
+    
     private CoinHistory coinHistory;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
@@ -100,6 +102,7 @@ public class Tab2Controller implements Initializable{
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
+    public HoveredThresholdNode node;
     
     Tab2AssistantController assistT2;
 
@@ -452,13 +455,16 @@ public class Tab2Controller implements Initializable{
             CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
             this.singleHistoryMap = coinHist.getSingleHistory();
             XYChart.Series newSeries = new XYChart.Series();
-            this.singleHistoryMap.entrySet().forEach((entry) -> {
+            double previousPrice = 0;
+            this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
                 Date d = new Date(tempLong);
                 String date = "" + d;
                 double price = entry.getKey();
-                newSeries.getData().add(new XYChart.Data(date, price));
-                XYChart.Data chartData = new XYChart.Data(date, price);
+                XYChart.Data item = new XYChart.Data(date, price);
+                newSeries.getData().add(item);
+                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+                
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
@@ -472,27 +478,34 @@ public class Tab2Controller implements Initializable{
      * @param lines
      * @return 
      */
-    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
-        for (String line : lines) {
-            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
-            this.singleHistoryMap = coinHist.getSingleHistory();
-            XYChart.Series newSeries = new XYChart.Series();
-//            NumberAxis xAxis = new NumberAxis();
-//            NumberAxis yAxis = new NumberAxis();
-            this.singleHistoryMap.entrySet().forEach((entry) -> {
-                long tempLong = Long.parseLong(entry.getValue());
-                Date d = new Date(tempLong);
-                String date = "" + d;
-                double price = entry.getKey();
-                newSeries.getData().add(new XYChart.Data(date, price));
-                this.dataList.add(new XYChart.Data(date, price));
-            });
-            this.seriesList.add(newSeries);
-        }
-        
-//        coordsLabel = assistT2.getLineChartCoords(lineChart);
-        return this.seriesList;
-    }
+//    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
+//        for (String line : lines) {
+//            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
+//            this.singleHistoryMap = coinHist.getSingleHistory();
+//            XYChart.Series newSeries = new XYChart.Series();
+//            int count = 0;
+//            this.singleHistoryMap.entrySet().forEach((entry) -> {
+//                long tempLong = Long.parseLong(entry.getValue());
+//                Date d = new Date(tempLong);
+//                String date = "" + d;
+//                double price = entry.getKey();
+//                XYChart.Data item = new XYChart.Data(date, price);
+//                newSeries.getData().add(item);
+//                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+////                newSeries.getData().add(new XYChart.Data(date, price));
+//                this.dataList.add(new XYChart.Data(date, price));
+//            });
+////            for (int i = 0; i < singleHistoryMap.size(); i++) {
+////                XYChart.Data item = (XYChart.Data) newSeries.getData().get(i);
+////                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+////                
+////            }
+//            this.seriesList.add(newSeries);
+//        }
+//        
+////        coordsLabel = assistT2.getLineChartCoords(lineChart);
+//        return this.seriesList;
+//    }
     
     private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
         dataLst.forEach((data) -> {
