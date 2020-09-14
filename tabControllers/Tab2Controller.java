@@ -65,6 +65,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.assistantControllers.Tab2AssistantController;
 
 /**
  *
@@ -94,6 +95,8 @@ public class Tab2Controller implements Initializable{
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
+    
+    Tab2AssistantController assistT2;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -186,47 +189,47 @@ public class Tab2Controller implements Initializable{
      */
     @FXML
     private void handleSearchT2(ActionEvent event) {
-        if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
+        if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
             System.out.println("bar chart selected");
-            barChart.getData().clear();
-            barChart.layout();
-            barChartData.clear();
-            series1.getData().clear();
-            barChartData2.clear();
-            series4.getData().clear();
+            this.barChart.getData().clear();
+            this.barChart.layout();
+            this.barChartData.clear();
+            this.series1.getData().clear();
+            this.barChartData2.clear();
+            this.series4.getData().clear();
             // timeSelection
-            boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
+            boolean isComboBoxEmpty = this.comboBox.getSelectionModel().isEmpty();
             if (isComboBoxEmpty) {
                 // Default timeframe will be 7 days.
-                timeSelection = "7d";
+                this.timeSelection = "7d";
             } else {
-                timeSelection = (String)comboBox.getValue();
+                this.timeSelection = (String)this.comboBox.getValue();
             }
             // Call method to search for coin and display its graph.
             displaySingleCoinGraph();
-        } else if (graphTabPane.getSelectionModel().getSelectedItem() == lineChartTab) {
+        } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
             System.out.println("line chart selected");
-            boolean isComboBoxEmpty = addRemoveComboBox.getSelectionModel().isEmpty();
-            boolean isTimeBoxEmpty = comboBox.getSelectionModel().isEmpty();
-            String arSelection = (String)addRemoveComboBox.getValue();
+            boolean isComboBoxEmpty = this.addRemoveComboBox.getSelectionModel().isEmpty();
+            boolean isTimeBoxEmpty = this.comboBox.getSelectionModel().isEmpty();
+            String arSelection = (String)this.addRemoveComboBox.getValue();
             String warning = "";
             if (isComboBoxEmpty) {
                 warning += "Select 'add' or 'remove' from the drop down menu.\n";
-                txtAreaT2.setText(warning);
+                this.txtAreaT2.setText(warning);
             } else if (arSelection.equalsIgnoreCase("add")){
-                if (searchFieldT2.getText().isEmpty()) {
+                if (this.searchFieldT2.getText().isEmpty()) {
                     warning += "Enter the name of a coin to add.\n";
-                    txtAreaT2.setText(warning);
+                    this.txtAreaT2.setText(warning);
                 } else {
-                    if (linesToGraph.size() >= 10) {
-                        txtAreaT2.setText("Too many coins, clear graph to view more.");
+                    if (this.linesToGraph.size() >= 10) {
+                        this.txtAreaT2.setText("Too many coins, clear graph to view more.");
                     } else {
-                        linesToGraph.add(searchFieldT2.getText());
+                        this.linesToGraph.add(this.searchFieldT2.getText());
                         displayLineGraph();
                     }
                 }
             } else {
-                removeCoinFromLineChart(searchFieldT2.getText());
+                removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
             System.out.println("pie chart selected");
@@ -242,13 +245,13 @@ public class Tab2Controller implements Initializable{
      */
     @FXML
     private void handleClearT2(ActionEvent event) {
-        barChart.getData().clear();
-        barChart.layout();
-        pieChart.getData().clear();
-        pieChart.layout();
-        searchFieldT2.setText("");
-        barChartData2.clear();
-        series4.getData().clear();
+        this.barChart.getData().clear();
+        this.barChart.layout();
+        this.pieChart.getData().clear();
+        this.pieChart.layout();
+        this.searchFieldT2.setText("");
+        this.barChartData2.clear();
+        this.series4.getData().clear();
         clearLineChart();
     }
  
@@ -270,7 +273,7 @@ public class Tab2Controller implements Initializable{
                 String[] parts = line.split(" ");
                 lines += line + "\n";
             }
-            txtAreaT2.setText(lines);
+            this.txtAreaT2.setText(lines);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ParseCoinName.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -282,7 +285,7 @@ public class Tab2Controller implements Initializable{
      */
     @FXML
     private void handleComboBox(ActionEvent event) {
-        timeSelection = comboBox.getValue();
+        this.timeSelection = this.comboBox.getValue();
     }
 
     /**
@@ -306,6 +309,16 @@ public class Tab2Controller implements Initializable{
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
+    
+    @FXML
+    private void LineChartMouseEnter(ActionEvent event) {
+        
+    }
+    
+    @FXML
+    private void lineChartMouseExit(ActionEvent event) {
+        
+    }
 
     /**
      * Change a users online status. i.e. when they log off .
@@ -324,45 +337,45 @@ public class Tab2Controller implements Initializable{
     private void displaySingleCoinGraph() {
         System.out.println("displaying graph");
         // Get the string/int from the text field.
-        if (searchFieldT2.getText().isEmpty()){
-            searchFieldT2.setText("Coin name or id");
+        if (this.searchFieldT2.getText().isEmpty()){
+            this.searchFieldT2.setText("Coin name or id");
         } else {
-            char ch = searchFieldT2.getText().charAt(0);
+            char ch = this.searchFieldT2.getText().charAt(0);
             if (Character.isAlphabetic(ch)){
-                CoinHistory coinHist = new CoinHistory(0, searchFieldT2.getText(), timeSelection);
-                singleHistoryMap = coinHist.getSingleHistory();
+                CoinHistory coinHist = new CoinHistory(0, this.searchFieldT2.getText(), this.timeSelection);
+                this.singleHistoryMap = coinHist.getSingleHistory();
             } else {
-                int temp = Integer.parseInt(searchFieldT2.getText());
-                CoinHistory coinHist = new CoinHistory(temp, "", timeSelection);
-                singleHistoryMap = coinHist.getSingleHistory();
+                int temp = Integer.parseInt(this.searchFieldT2.getText());
+                CoinHistory coinHist = new CoinHistory(temp, "", this.timeSelection);
+                this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
         // Prevent old data from showing back up  --  NOT WORKING
-        barChartData2.clear();
-        series4.getData().clear();
+        this.barChartData2.clear();
+        this.series4.getData().clear();
         // Add entries from singleHistoryMap into series1
-        for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
+        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
             long tempLong = Long.parseLong(entry.getValue());
             Date d = new Date(tempLong);
             String date = "" + d;
             double price = entry.getKey();
-            series4.getData().add(new XYChart.Data(date, price));
+            this.series4.getData().add(new XYChart.Data(date, price));
         }
         // Add series1 to the barChartData, then add that to the barChart
-        barChart.setTitle("Viewing the past " + timeSelection);
-        barChartData2.add(series4);
-        barChart.setData(barChartData2);
+        this.barChart.setTitle("Viewing the past " + this.timeSelection);
+        this.barChartData2.add(this.series4);
+        this.barChart.setData(this.barChartData2);
         double lastPrice = 0;
         int count = 0;
         // A way to color the bars in the bargraph green or red.
-        for (Map.Entry<Double, String> entry : singleHistoryMap.entrySet()) {
+        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
             double price = entry.getKey();
-            if (count < singleHistoryMap.size()){
+            if (count < this.singleHistoryMap.size()){
                 if (price > lastPrice) {
-                    Node n = barChart.lookup(".data" + count + ".chart-bar");
+                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
                     n.setStyle("-fx-bar-fill: green");
                 } else {
-                    Node n = barChart.lookup(".data" + count + ".chart-bar");
+                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
                     n.setStyle("-fx-bar-fill: red");
                 }
             }
@@ -376,26 +389,21 @@ public class Tab2Controller implements Initializable{
          * Implements scrolling using the mouse wheel on the graph.
          */
         final double SCALE_DELTA = 1.1;
-        barChart.setOnScroll(new EventHandler<ScrollEvent>() {
-            public void handle(ScrollEvent event) {
-                event.consume();
-
-                if (event.getDeltaY() == 0) {
-                    return;
-                }
-                // Keep the scale ratio as you zoom in/out
-                double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
-                barChart.setScaleX(barChart.getScaleX() * scaleFactor);
-                barChart.setScaleY(barChart.getScaleY() * scaleFactor);
+        this.barChart.setOnScroll((ScrollEvent event) -> {
+            event.consume();
+            
+            if (event.getDeltaY() == 0) {
+                return;
             }
+            // Keep the scale ratio as you zoom in/out
+            double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
+            barChart.setScaleX(barChart.getScaleX() * scaleFactor);
+            barChart.setScaleY(barChart.getScaleY() * scaleFactor);
         });
-
-        barChart.setOnMousePressed(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) {
-                    barChart.setScaleX(1.0);
-                    barChart.setScaleY(1.0);
-                }
+        this.barChart.setOnMousePressed((MouseEvent event) -> {
+            if (event.getClickCount() == 2) {
+                barChart.setScaleX(1.0);
+                barChart.setScaleY(1.0);
             }
         });
     }
@@ -407,27 +415,27 @@ public class Tab2Controller implements Initializable{
         System.out.println("displaying line graph");
         XYChart.Series newSeries = new XYChart.Series();
         // Get the string/int from the text field.
-        if (searchFieldT2.getText().isEmpty()){
-            searchFieldT2.setText("Coin name or id");
+        if (this.searchFieldT2.getText().isEmpty()){
+            this.searchFieldT2.setText("Coin name or id");
         } else {
-            char ch = searchFieldT2.getText().charAt(0);
+            char ch = this.searchFieldT2.getText().charAt(0);
             if (Character.isAlphabetic(ch)){
-                CoinHistory coinHist = new CoinHistory(0, searchFieldT2.getText(), timeSelection);
-                singleHistoryMap = coinHist.getSingleHistory();
+                CoinHistory coinHist = new CoinHistory(0, this.searchFieldT2.getText(), this.timeSelection);
+                this.singleHistoryMap = coinHist.getSingleHistory();
             } else {
-                int temp = Integer.parseInt(searchFieldT2.getText());
-                CoinHistory coinHist = new CoinHistory(temp, "", timeSelection);
-                singleHistoryMap = coinHist.getSingleHistory();
+                int temp = Integer.parseInt(this.searchFieldT2.getText());
+                CoinHistory coinHist = new CoinHistory(temp, "", this.timeSelection);
+                this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
-        getSeriesForChart(linesToGraph).forEach((series) -> {
-            lineChartData.add(series);
+        getSeriesForChart(this.linesToGraph).forEach((series) -> {
+            this.lineChartData.add(series);
         });
         
         // Add series1 to the barChartData, then add that to the barChart
-        lineChart.setTitle("Viewing the past 1y of: " + searchFieldT2.getText());
-        lineChart.setData(lineChartData);
-        addToolTips(dataList);
+        this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
+        this.lineChart.setData(this.lineChartData);
+        addToolTips(this.dataList);
     }
     /**
      * Create the different series for each coin the user adds.
@@ -437,20 +445,20 @@ public class Tab2Controller implements Initializable{
      */
     private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
         for (String line : lines) {
-            CoinHistory coinHist = new CoinHistory(0, line, timeSelection);
-            singleHistoryMap = coinHist.getSingleHistory();
+            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
+            this.singleHistoryMap = coinHist.getSingleHistory();
             XYChart.Series newSeries = new XYChart.Series();
-            singleHistoryMap.entrySet().forEach((entry) -> {
+            this.singleHistoryMap.entrySet().forEach((entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
                 Date d = new Date(tempLong);
                 String date = "" + d;
                 double price = entry.getKey();
                 newSeries.getData().add(new XYChart.Data(date, price));
-                dataList.add(new XYChart.Data(date, price));
+                this.dataList.add(new XYChart.Data(date, price));
             });
-            seriesList.add(newSeries);
+            this.seriesList.add(newSeries);
         }
-        return seriesList;
+        return this.seriesList;
     }
     
     private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
@@ -464,11 +472,11 @@ public class Tab2Controller implements Initializable{
      * Remove all coins from the line chart.
      */
     private void clearLineChart() {
-        seriesMap.clear();
-        lineChart.getData().clear();
-        lineChart.layout();
-        lineChartData.clear();
-        seriesList.forEach((entry) -> {
+        this.seriesMap.clear();
+        this.lineChart.getData().clear();
+        this.lineChart.layout();
+        this.lineChartData.clear();
+        this.seriesList.forEach((entry) -> {
             entry.getData().clear();
         });
 //        seriesList.clear();
@@ -479,9 +487,9 @@ public class Tab2Controller implements Initializable{
      * @param coin
      */
     private void removeCoinFromLineChart(String coin) {
-        XYChart.Series toRemove = seriesMap.get(coin);
-        seriesMap.remove(coin);
-        lineChartData.remove(toRemove);
+        XYChart.Series toRemove = this.seriesMap.get(coin);
+        this.seriesMap.remove(coin);
+        this.lineChartData.remove(toRemove);
     }
 
     /**
@@ -490,45 +498,31 @@ public class Tab2Controller implements Initializable{
     private void displayMultiCoinGraph() {
         System.out.println("displaying graph");
 //        coinHistory.join();
-        historyMap = coinHistory.getPriceDate();
+        this.historyMap = this.coinHistory.getPriceDate();
         int count = 0;
-        historyMap.entrySet().forEach((entry) -> {
-            series1.getData().add(new XYChart.Data(
+        this.historyMap.entrySet().forEach((entry) -> {
+            this.series1.getData().add(new XYChart.Data(
                     entry.getKey(), entry.getValue()));
         });
-        barChartData.add(series1);
-        barChart.setData(barChartData);
+        this.barChartData.add(this.series1);
+        this.barChart.setData(this.barChartData);
     }
 
     /**
-     * Creates a LinkedList of SingleCoins
+     * Creates a LinkedList of SingleCoins.
+     * 
+     * This method has been moved to Tab2AssistantController
+     * in an effort to keep this controller as clean as possible.
      */
     private void displayPieChart() {
-        // Make sure the thread is finished
-        coinList.join();
-        LinkedList<SingleCoin> temp = coinList.getSortedCoinList();
-        pieChartCoins = Integer.parseInt(comboBox.getValue());
-        // Loops over SingleCoin list and adds data to pieChart
-        for (int i = 0; i <= pieChartCoins-1; i++) {
-            SingleCoin coin = temp.get(i);
-            double price = Double.parseDouble(coin.getPrice());
-            // Allow 5 decimal places
-            double rounded = (double)Math.round(price * 100000d) / 100000d;
-            pieChartData.add(new PieChart.Data(coin.getName(), rounded));
-        }
-        pieChart.setData(pieChartData);
+        assistT2.PieChart(this.coinList, this.pieChartCoins, this.comboBox, this.pieChartData, this.pieChart);
     }
 
     /**
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        this.onlineUsers = conn.getOnlineUsers();
-        conn.close();
-        for (int i = 0; i < this.onlineUsers.size(); i++) {
-            onlineUsersListT2.getItems().add(this.onlineUsers.get(i));
-        }
+        assistT2.addOnlineUsers(this.onlineUsers, this.onlineUsersListT2);
     }
 
     /**
@@ -536,88 +530,21 @@ public class Tab2Controller implements Initializable{
      * It also maps each button to an action.
      */
     private void createListCells() {
-        onlineUsersListT2.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem addFriendItem = new MenuItem();
-            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
-            addFriendItem.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                String friendName = cell.getItem();
-                if (friendName.equals(this.uname)) {
-                    txtAreaT2.setText("Wow, so lonely. Can't add yourself as a friend..");
-                } else {
-                    conn.addFriend(this.uname, friendName);
-                    txtAreaT2.setText("Added " + friendName + " to friend list!");
-                }
-                conn.close();
-            });
-            MenuItem sendMessageItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-            sendMessageItem.setOnAction(event -> {
-                // Send a message to a friend
-            });
-            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
-            cell.textProperty().bind(cell.itemProperty());
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if (isNowEmpty) {
-                    cell.setContextMenu(null);
-                } else {
-                    cell.setContextMenu(contextMenu);
-                }
-            });
-            return cell ;
-        });
+        assistT2.listCells(this.onlineUsersListT2, this.uname, this.txtAreaT2);
     }
 
     /**
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        this.friendList = conn.getFriendList(this.uname);
-        conn.close();
-        for (int i = 0; i < this.friendList.size(); i++) {
-            friendsListT2.getItems().add(this.friendList.get(i));
-        }
+        assistT2.friendList(this.friendList, this.uname, this.friendsListT2);
     }
 
     /**
      * Creates right-clickable cells in the friends list in the accordion.
      */
     private void createFriendListCells() {
-        friendsListT2.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem addFriendItem = new MenuItem();
-            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
-            addFriendItem.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                String friendName = cell.getItem();
-                // Do stuff
-                conn.close();
-            });
-            MenuItem sendMessageItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-            sendMessageItem.setOnAction(event -> {
-                // Send a message to a friend
-            });
-            MenuItem removeFriendItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
-            sendMessageItem.setOnAction(event -> {
-                // Send a message to a friend
-            });
-            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
-            cell.textProperty().bind(cell.itemProperty());
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if (isNowEmpty) {
-                    cell.setContextMenu(null);
-                } else {
-                    cell.setContextMenu(contextMenu);
-                }
-            });
-            return cell ;
-        });
+        assistT2.friendListCells(this.friendsListT2);
     }
  
     /**
@@ -630,6 +557,7 @@ public class Tab2Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        assistT2 = new Tab2AssistantController();
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         this.uname = coinTrack.FXMLDocumentController.uname;
