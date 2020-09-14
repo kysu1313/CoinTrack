@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.LinkedList;
+import tabControllers.AlertMessages;
 
 public class ConnectToDatabase {
     
@@ -71,7 +72,38 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
     }
-    
+    /**
+     * Insert data to the "user_coins" table
+     * 
+     * @param userName
+     * @param _coin_id 
+     */
+    public boolean insertSavedCoin(String userName, int _coin_id) {
+         try {
+            // Insert statement, using prepared statements
+
+            int id = getIdFromUsername(userName);
+            if (checkSavedCoinsForDuplication(_coin_id, id)) {
+                AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
+                return false;
+            }
+            
+            String query = " INSERT INTO `user_coins` (`user_id`, `coin_id`) VALUES (?, ?)";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, _coin_id);
+             System.out.println(preparedStmt.toString());
+            // execute the preparedstatement
+            preparedStmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            AlertMessages.showErrorMessage("Save COin", "Coin saving failed against users.");
+
+            return false;
+        }
+    }
     /**
      * Insert data to the "users" table.
      * 
@@ -393,5 +425,54 @@ public class ConnectToDatabase {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * This method gets the data from the `user_coins` database. As there are onl id's of coin and user saved in this table so we have to use left join
+     * to get other tables data.
+     * @param username
+     * @return 
+     */
+    public LinkedList<String> getSavedCoins(String username) {
+        LinkedList<String> list = new LinkedList<>();
+        try {
+            String query = "SELECT `coins`.`symbol`, `coins`.`name`, `users`.`username` FROM `user_coins` LEFT JOIN users ON user_coins.user_id = users.userID LEFT JOIN coins ON user_coins.coin_id = coins.entryID WHERE `user_coins`.`user_id` = " + getIdFromUsername(username);
+
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            System.out.println(query);
+            while(result.next()) {
+                list.add(result.getString("symbol") + " " + result.getString("name"));
+            }
+            System.out.println("Got list of coins of user logged in.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return list;
+    }    
+
+    /**
+     * This method checks that the coin user is saving, is saved previously or not. 
+     * @param id
+     * @param _coin_id
+     * @return 
+     */
+    private boolean checkSavedCoinsForDuplication(int id, int _coin_id) {
+        try {
+            String query = "SELECT * FROM `user_coins` WHERE `user_coins`.`user_id` = " + id + " AND `user_coins`.`coin_id` = " + _coin_id;
+
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            
+            while(!result.isBeforeFirst()) {
+                return true;
+            }            
+            return false;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error in DB Connection.");
+            return false;
+        }
+        
+    }
 }

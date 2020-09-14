@@ -83,6 +83,8 @@ public class Tab1Controller implements Initializable{
     private static Stage mainPage;
     private String uname;
     private LinkedList<String> onlineUsers;
+    private LinkedList<String> savedCoins;
+
     
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -397,6 +399,37 @@ public class Tab1Controller implements Initializable{
             
         });
         
+        MenuItem mi1 = new MenuItem("Save");
+        mi1.setOnAction((ActionEvent e) -> {
+            SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
+            saveCoin(this.uname, item.getId()); 
+            populateSavedCoins();
+        });
+
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(mi1);
+        tableViewT1.setContextMenu(menu);
+        populateSavedCoins();
     }
     
+    private void saveCoin(String userName, int coinID) {
+        
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(userName, coinID)) {
+            AlertMessages.showInformationMessage("Save COin", "Coin saved successfully against users.");
+        }
+    }
+    
+    private void populateSavedCoins() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        savedCoinsList.getItems().clear();
+        this.savedCoins = conn.getSavedCoins(this.uname);
+        conn.close();
+        if (this.savedCoins != null && this.savedCoins.size() > 0) {
+            for (int i = 0; i < this.savedCoins.size(); i++) {
+                savedCoinsList.getItems().add(this.savedCoins.get(i));
+            }
+        }
+       
+    }
 }
