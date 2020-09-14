@@ -38,8 +38,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
@@ -63,8 +66,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.assistantControllers.HoveredThresholdNode;
+import tabControllers.assistantControllers.ShowCoordinates;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
 /**
@@ -72,6 +78,7 @@ import tabControllers.assistantControllers.Tab2AssistantController;
  * @author Kyle
  */
 public class Tab2Controller implements Initializable{
+    
     private CoinHistory coinHistory;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
@@ -95,6 +102,7 @@ public class Tab2Controller implements Initializable{
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
+    public HoveredThresholdNode node;
     
     Tab2AssistantController assistT2;
 
@@ -108,6 +116,8 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab lineChartTab;
     @FXML private ToolBar toolBarT2;
     @FXML private ComboBox addRemoveComboBox;
+    @FXML public static Label coordsLabel;
+    @FXML private VBox sideVBox;
 
     // Accordion
     @FXML private ListView onlineUsersListT2;
@@ -134,7 +144,10 @@ public class Tab2Controller implements Initializable{
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
     // Line Chart
+    @FXML private LineChart<String, Number> lineChart2;
     @FXML private LineChart lineChart;
+    private CategoryAxis xAxis;
+    private NumberAxis yAxis;
     private XYChart.Series lineSeries1;
     private XYChart.Series lineSeries2;
     private ObservableList<XYChart.Series<String, Number>> lineChartData;
@@ -428,38 +441,71 @@ public class Tab2Controller implements Initializable{
                 this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
-        getSeriesForChart(this.linesToGraph).forEach((series) -> {
+        getSeriesForChart2(this.linesToGraph).forEach((series) -> {
             this.lineChartData.add(series);
         });
         
         // Add series1 to the barChartData, then add that to the barChart
         this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
         this.lineChart.setData(this.lineChartData);
-        addToolTips(this.dataList);
     }
-    /**
-     * Create the different series for each coin the user adds.
-     * Returns a linkedList of the XYChart.Series to add to the chart.
-     * @param lines
-     * @return 
-     */
-    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
+    
+    private LinkedList<XYChart.Series> getSeriesForChart2(LinkedList<String> lines) {
         for (String line : lines) {
             CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
             this.singleHistoryMap = coinHist.getSingleHistory();
             XYChart.Series newSeries = new XYChart.Series();
-            this.singleHistoryMap.entrySet().forEach((entry) -> {
+            double previousPrice = 0;
+            this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
                 Date d = new Date(tempLong);
                 String date = "" + d;
                 double price = entry.getKey();
-                newSeries.getData().add(new XYChart.Data(date, price));
+                XYChart.Data item = new XYChart.Data(date, price);
+                newSeries.getData().add(item);
+                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+                
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
         }
         return this.seriesList;
     }
+    
+    /**
+     * Create the different series for each coin the user adds.
+     * Returns a linkedList of the XYChart.Series to add to the chart.
+     * @param lines
+     * @return 
+     */
+//    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
+//        for (String line : lines) {
+//            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
+//            this.singleHistoryMap = coinHist.getSingleHistory();
+//            XYChart.Series newSeries = new XYChart.Series();
+//            int count = 0;
+//            this.singleHistoryMap.entrySet().forEach((entry) -> {
+//                long tempLong = Long.parseLong(entry.getValue());
+//                Date d = new Date(tempLong);
+//                String date = "" + d;
+//                double price = entry.getKey();
+//                XYChart.Data item = new XYChart.Data(date, price);
+//                newSeries.getData().add(item);
+//                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+////                newSeries.getData().add(new XYChart.Data(date, price));
+//                this.dataList.add(new XYChart.Data(date, price));
+//            });
+////            for (int i = 0; i < singleHistoryMap.size(); i++) {
+////                XYChart.Data item = (XYChart.Data) newSeries.getData().get(i);
+////                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
+////                
+////            }
+//            this.seriesList.add(newSeries);
+//        }
+//        
+////        coordsLabel = assistT2.getLineChartCoords(lineChart);
+//        return this.seriesList;
+//    }
     
     private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
         dataLst.forEach((data) -> {
@@ -553,6 +599,54 @@ public class Tab2Controller implements Initializable{
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
+    
+    private void setMouseLineChart() {
+        final Axis<String> xAx = lineChart.getXAxis();
+        final Axis<Number> yAx = lineChart.getYAxis();
+        final Label cursorCoords = new Label();
+        sideVBox.getChildren().add(cursorCoords);
+        final Node chartBackground = lineChart.lookup(".chart-plot-background");
+        for (Node n : chartBackground.getParent().getChildrenUnmodifiable()) {
+            if (n != chartBackground && n != xAx && n != yAx) {
+                n.setMouseTransparent(true);
+            }
+        }
+        lineChart.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        lineChart.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            String x = mouseEvent.getX() + "";
+            String xy = x + ", " + yAx.getValueForDisplay(mouseEvent.getY());
+            cursorCoords.setText(xy);
+        });
+        lineChart.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+        xAx.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        xAx.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            cursorCoords.setText( xAx.getValueForDisplay(mouseEvent.getX()));
+        });
+        xAx.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+
+        yAx.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        yAx.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            cursorCoords.setText(
+                    String.format(
+                            "y = %.2f",
+                            yAx.getValueForDisplay(mouseEvent.getY())
+                    )
+            );
+        });
+        yAx.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+    }
 
 
     @Override
@@ -564,6 +658,12 @@ public class Tab2Controller implements Initializable{
         messageText.setText("Hello " + uname);
         linesToGraph = new LinkedList<>();
         seriesList = new LinkedList<>();
+        coordsLabel = new Label();
+        xAxis = new CategoryAxis();
+        yAxis = new NumberAxis();
+        lineChart2 = new LineChart(xAxis, yAxis);
+        lineSeries2 = new XYChart.Series();
+        
         createListCells();
         addOnlineUsersToList();
         addFriendsToList();
@@ -617,6 +717,7 @@ public class Tab2Controller implements Initializable{
                     scanBtnT2.setDisable(true);
                     addRemoveComboBox.setVisible(true);
                     comboBox.setItems(TIMES);
+                    setMouseLineChart();
                     addRemoveComboBox.setValue("Add / Remove");
 //                    addRemoveComboBox.setTranslateX(-125);
                 }
