@@ -464,7 +464,8 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             
-            while(!result.isBeforeFirst()) {
+            //while(!result.isBeforeFirst()) 
+            while(result.next()==true){
                 return true;
             }            
             return false;
