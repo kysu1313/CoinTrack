@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class SingleCoin implements SingleCoinInterface{
-    
+
     private JSONObject coinList;
     private int id;
     private String uuid;
@@ -38,7 +38,7 @@ public class SingleCoin implements SingleCoinInterface{
     private double change;
     private int rank;
     private String stringChange;
-    
+
     private JSONArray object;
     private int coinId;
     private LinkedHashMap<Double, String> coinList2;
@@ -46,11 +46,11 @@ public class SingleCoin implements SingleCoinInterface{
     /**
      * Constructor for JSONObject.
      * Used in CoinRankApi class
-     * @param job 
+     * @param job
      */
     public SingleCoin(JSONObject job) {
         coinList = job;
-        
+
         id = coinList.getInt("id");
         uuid = coinList.getString("uuid");
         slug = coinList.getString("slug");
@@ -64,15 +64,15 @@ public class SingleCoin implements SingleCoinInterface{
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
-        
+
         stringChange = "" + change;
     }
-    
+
     /**
      * Constructor for JSONArray.
      * Used in CoinHistory class to pull data
      * for a coin using its id.
-     * @param jar 
+     * @param jar
      */
     public SingleCoin (JSONArray _jar, int _id) {
         this.object = _jar;
@@ -91,16 +91,16 @@ public class SingleCoin implements SingleCoinInterface{
             this.coinList2.put(price, date);
         }
     }
-    
-    
+
+
     // ========== GETTERS ==========
-    
+
 //    public
-    
+
     public LinkedHashMap<Double, String> getCoinHistory() {
         return this.coinList2;
     }
-    
+
     @Override
     public int getId() {
         return coinList.getInt("id");
@@ -220,10 +220,10 @@ public class SingleCoin implements SingleCoinInterface{
     public int getRank() {
         return coinList.getInt("rank");
     }
-    
+
     public String getStringChange() {
         return this.stringChange;
     }
 
-    
+
 }
