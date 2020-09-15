@@ -443,5 +443,51 @@ public class ConnectToDatabase {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public LinkedList<String> getSavedCoins(String username) {
+        LinkedList<String> list = new LinkedList<>();
+        try {
+            String query = "SELECT `coins`.`symbol`, `coins`.`name`, `users`.`username` FROM `user_coins` LEFT JOIN users ON user_coins.user_id = users.userID LEFT JOIN coins ON user_coins.coin_id = coins.entryID WHERE `user_coins`.`user_id` = " + getIdFromUsername(username);
+
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            System.out.println(query);
+            while(result.next()) {
+                list.add(result.getString("symbol") + " " + result.getString("name"));
+            }
+            System.out.println("Got list of coins of user logged in.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return list;
+    }    
+
+    /**
+     * This method checks that the coin user is saving, is saved previously or not. 
+     * @param id
+     * @param _coin_id
+     * @return 
+     */
+    private boolean checkSavedCoinsForDuplication(int id, int _coin_id) {
+        try {
+            String query = "SELECT * FROM `user_coins` WHERE `user_coins`.`user_id` = " + id + " AND `user_coins`.`coin_id` = " + _coin_id;
+
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            System.out.println("Query:" + query);
+            //while(!result.isBeforeFirst()) 
+            while(result.next()== true){
+                return true;
+            }            
+            return false;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error in DB Connection.");
+            return false;
+        }
+        
+    }
 }
+
+    
+
