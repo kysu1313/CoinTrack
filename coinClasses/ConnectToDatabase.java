@@ -83,7 +83,7 @@ public class ConnectToDatabase {
             // Insert statement, using prepared statements
 
             int id = getIdFromUsername(userName);
-            if (checkSavedCoinsForDuplication(_coin_id, id)) {
+            if (checkSavedCoinsForDuplication(id, _coin_id)) {
                 AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
                 return false;
             }
@@ -463,9 +463,10 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-            
+            System.out.println("Query:" + query);
+            System.out.println("Result set Value " + result.next());
             //while(!result.isBeforeFirst()) 
-            while(result.next()==true){
+            while(result.next()== true){
                 return true;
             }            
             return false;
