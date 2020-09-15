@@ -402,7 +402,7 @@ public class Tab1Controller implements Initializable{
         MenuItem mi1 = new MenuItem("Save");
         mi1.setOnAction((ActionEvent e) -> {
             SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
-            saveCoin(this.uname, item.getId()); 
+            saveCoin(this.uname, item.getRank()); 
             populateSavedCoins();
         });
 
