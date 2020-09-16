@@ -172,15 +172,12 @@ public class Tab1Controller implements Initializable{
         cri = new CoinRankApi();
         cri.join();
         LinkedList<SingleCoin> temp = cri.getCoinList();
-        for (int i = 0; i < temp.size(); i++) {
-            SingleCoin cn = temp.get(i);
-            String uuid = cn.getUuid();
-            String symbol = cn.getSymbol();
-            String name = cn.getName();
-            String price = cn.getPrice();
-            long millis=System.currentTimeMillis();
-            Date date = new Date(millis);
-        }
+        
+        /**
+         * Add coins to new database table
+         */
+//        cri.updateDatabaseCoins(temp);
+        
         count = 50;
         System.out.println(cri.getLimit());
         coinNamePrice = cri.getNamePrice();

@@ -49,6 +49,63 @@ public class ConnectToDatabase {
     /**
      * Insert data into the "coins" table.
      * 
+     * @param _coinID
+     * @param _uuid
+     * @param _slug
+     * @param _symbol
+     * @param _name
+     * @param _color
+     * @param _url
+     * @param _numMarkets
+     * @param _numExchanges
+     * @param _volume
+     * @param _marketCap
+     * @param _price
+     * @param _change
+     * @param _coinRank
+     * @param _date
+     */
+    public void addCoinToDatabase(int _coinID, String _uuid, String _slug, 
+                            String _symbol, String _name,
+                            int _numMarkets, int _numExchanges, 
+                            int _volume, int _marketCap, String _price, 
+                            double _change, int _coinRank) {
+        try {
+            // Parse price to a float because DB requires it.
+            float newPrice = Float.parseFloat(_price);
+            // Insert statement, using prepared statements
+            String query = " insert into all_coins (coinID, uuid, slug, \n"
+                                                + "symbol, name, "
+                                                + "numMarkets, numExchanges, \n"
+                                                + "volume, marketCap, price, \n"
+                                                + "changePrice, coinRank)"
+                                                + " values (?, ?, ?, ?, ?, ?, ?, "
+                                                + "?, ?, ?, ?, ?)";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.setInt(1, _coinID);
+            preparedStmt.setString(2, _uuid);
+            preparedStmt.setString(3, _slug);
+            preparedStmt.setString(4, _symbol);
+            preparedStmt.setString(5, _name);
+            preparedStmt.setInt(6, _numMarkets);
+            preparedStmt.setInt(7, _numExchanges);
+            preparedStmt.setInt(8, _volume);
+            preparedStmt.setInt(9, _marketCap);
+            preparedStmt.setString(10, _price);
+            preparedStmt.setDouble(11, _change);
+            preparedStmt.setInt(12, _coinRank);
+//            preparedStmt.setDate(15, _date);
+            // execute the preparedstatement
+            preparedStmt.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    /**
+     * Insert data into the "coins" table.
+     * 
      * @param _uuid
      * @param _symbol
      * @param _name
