@@ -97,6 +97,20 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     
     // ========== GETTERS ==========
     
+    public void updateDatabaseCoins(LinkedList<SingleCoin> coinList) {
+//        Timestamp ts = new Timestamp(System.currentTimeMillis());
+//        Date date = new Date ();
+//        date.setTime((long)ts*1000);
+        ConnectToDatabase conn = new ConnectToDatabase();
+        coinList.forEach((coin) -> {
+            conn.addCoinToDatabase(coin.getId(), coin.getUuid(), coin.getSlug(),
+                            coin.getSymbol(), coin.getName(),
+                            coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
+                            coin.getVolume(), coin.getMarketCap(), coin.getPrice(), 
+                            coin.getChange(), coin.getRank());
+        });
+    }
+    
     /**
      * Creates a LinkedList of each coin in the "coins" json array.
      *
