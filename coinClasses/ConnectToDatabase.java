@@ -566,7 +566,7 @@ public class ConnectToDatabase {
             System.out.println("Query: " + query);
             while(!result.isBeforeFirst()) {
            // while(result.next()== true){
-                return true;
+                return false;
             }            
             return false;
         } catch (SQLException ex) {
