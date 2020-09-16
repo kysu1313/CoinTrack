@@ -521,7 +521,7 @@ public class ConnectToDatabase {
     
     /**
      * Close the database connection.
-     * 
+     *
      * Must do this after every ConnectionToDatabase object
      * is done being used!!
      */
@@ -532,10 +532,22 @@ public class ConnectToDatabase {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    /**
+     * Return the coins a user has saved.
+     * @param username
+     * @return 
+     */
     public LinkedList<String> getSavedCoins(String username) {
         LinkedList<String> list = new LinkedList<>();
         try {
-            String query = "SELECT `all_coins`.`symbol`, `all_coins`.`name`, `users`.`username` FROM `user_coins` LEFT JOIN users ON user_coins.user_id = users.userID LEFT JOIN all_coins ON user_coins.coin_id = all_coins.coinID WHERE `user_coins`.`user_id` = " + getIdFromUsername(username);
+            String query = "SELECT `all_coins`.`symbol`, "
+                    + "`all_coins`.`name`, `users`.`username` "
+                    + "FROM `user_coins` LEFT JOIN users "
+                    + "ON user_coins.user_id = users.userID "
+                    + "LEFT JOIN all_coins ON user_coins.coin_id = "
+                    + "all_coins.coinID WHERE `user_coins`.`user_id` = "
+                    + "" + getIdFromUsername(username);
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
