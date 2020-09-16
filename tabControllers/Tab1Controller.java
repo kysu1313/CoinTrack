@@ -1,8 +1,8 @@
 package tabControllers;
+
 /**
- * This is the document controller for Tab 1.
- * Main function is to handle scans, table view
- * and the side accordion.
+ * This is the document controller for Tab 1. Main function is to handle scans,
+ * table view and the side accordion.
  *
  * - Kyle
  */
@@ -59,13 +59,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import tabControllers.assistantControllers.Tab1AssistantController;
 
-
-
 /**
  *
  * @author Kyle
  */
-public class Tab1Controller implements Initializable{
+public class Tab1Controller implements Initializable {
 
     private LinkedHashMap<String, String> coinNamePrice;
     private LinkedList<SingleCoin> coinList;
@@ -90,38 +88,53 @@ public class Tab1Controller implements Initializable{
     Tab1AssistantController assistT1;
 
     protected Scene scene;
-    @FXML protected TextField usernamePhone;
-    @FXML protected PasswordField txtPassword;
-    @FXML protected Label lblStatus;
+    @FXML
+    protected TextField usernamePhone;
+    @FXML
+    protected PasswordField txtPassword;
+    @FXML
+    protected Label lblStatus;
 
     // Accordion
-    @FXML private ListView onlineUsersList;
-    @FXML private ListView savedCoinsList;
-    @FXML private ListView friendsList;
-    @FXML private ContextMenu cm;
-    @FXML private MenuItem m1;
-    @FXML private MenuItem m2;
-    @FXML private MenuItem m3;
+    @FXML
+    private ListView onlineUsersList;
+    @FXML
+    private ListView savedCoinsList;
+    @FXML
+    private ListView friendsList;
+    @FXML
+    private ContextMenu cm;
+    @FXML
+    private MenuItem m1;
+    @FXML
+    private MenuItem m2;
+    @FXML
+    private MenuItem m3;
 
     // Bottom portion (button bar)
-    @FXML private TextArea txtAreaT1;
-    @FXML private WebView webViewT1;
-    @FXML private CheckBox searchCoins;
-    @FXML private CheckBox searchGlobalStats;
-    @FXML private Text messageText;
+    @FXML
+    private TextArea txtAreaT1;
+    @FXML
+    private WebView webViewT1;
+    @FXML
+    private CheckBox searchCoins;
+    @FXML
+    private CheckBox searchGlobalStats;
+    @FXML
+    private Text messageText;
 
     // Table View
-    @FXML public TableView<SingleCoin> tableViewT1;
-
+    @FXML
+    public TableView<SingleCoin> tableViewT1;
 
     /**
      * Search for a specific coin.
      *
      * This needs work.
      *
-     * Determine if the entered text is a string
-     * or an integer. Then call the coin api, and
-     * display the information for that coin.
+     * Determine if the entered text is a string or an integer. Then call the
+     * coin api, and display the information for that coin.
+     *
      * @param event
      */
     @FXML
@@ -134,23 +147,22 @@ public class Tab1Controller implements Initializable{
     }
 
     /**
-     * This method handles both scanning for all coins
-     * and all markets / exchanges.
-     * Simple logic determines the selected checkBoxes,
-     * clears existing data, then calls the appropriate
-     * classes and displays data.
+     * This method handles both scanning for all coins and all markets /
+     * exchanges. Simple logic determines the selected checkBoxes, clears
+     * existing data, then calls the appropriate classes and displays data.
+     *
      * @param event
      */
     @FXML
     private void handleScan(ActionEvent event) {
         System.out.println("Scanning");
-        if (searchGlobalStats.isSelected() && searchCoins.isSelected()){
+        if (searchGlobalStats.isSelected() && searchCoins.isSelected()) {
             tableViewT1.getItems().clear();
             tableViewT1.getColumns().clear();
             txtAreaT1.setText("");
             displayGlobalStats();
             displayCoinText();
-        } else if (searchGlobalStats.isSelected()){
+        } else if (searchGlobalStats.isSelected()) {
             txtAreaT1.setText("");
             displayGlobalStats();
         } else if (searchCoins.isSelected()) {
@@ -161,12 +173,10 @@ public class Tab1Controller implements Initializable{
     }
 
     // ========== HELPER METHODS ==========
-
     /**
      * Display the api data to the screen.
      *
-     * Currently this just posts it into the
-     * TextArea at the bottom of the page.
+     * Currently this just posts it into the TextArea at the bottom of the page.
      */
     private void displayCoinText() {
         cri = new CoinRankApi();
@@ -178,7 +188,7 @@ public class Tab1Controller implements Initializable{
             String symbol = cn.getSymbol();
             String name = cn.getName();
             String price = cn.getPrice();
-            long millis=System.currentTimeMillis();
+            long millis = System.currentTimeMillis();
             Date date = new Date(millis);
         }
         count = 50;
@@ -207,6 +217,7 @@ public class Tab1Controller implements Initializable{
 
     /**
      * Clears the tableView and textArea.
+     *
      * @param event
      */
     @FXML
@@ -220,22 +231,22 @@ public class Tab1Controller implements Initializable{
     private void handleLogOutT1(ActionEvent event) {
         System.out.println("logging out");
         Parent root;
-            try {
-                Tab1Controller.mainPage1 = new Stage();
-                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-                this.scene = new Scene(root);
-                Tab1Controller.mainPage1.setScene(this.scene);
-                Tab1Controller.mainPage1.show();
-                closeOldStage();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            Tab1Controller.mainPage1.setScene(this.scene);
+            Tab1Controller.mainPage1.show();
+            closeOldStage();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
-     * Add data to tableView.
-     * This is done in Tab1AssistantController.java to reduce space used here.
+     * Add data to tableView. This is done in Tab1AssistantController.java to
+     * reduce space used here.
      */
     private void displayMultiCoinTable() {
         assistT1.coinTable(tableViewT1, coinList, webViewT1);
@@ -243,6 +254,7 @@ public class Tab1Controller implements Initializable{
 
     /**
      * Change a users online status. i.e. when they log on/off .
+     *
      * @param _uname
      * @param _status
      */
@@ -266,8 +278,8 @@ public class Tab1Controller implements Initializable{
     }
 
     /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
+     * This creates the right click menu on the onlineUsers list. It also maps
+     * each button to an action.
      */
     private void createListCells() {
         onlineUsersList.setCellFactory(lv -> {
@@ -301,22 +313,23 @@ public class Tab1Controller implements Initializable{
                     cell.setContextMenu(contextMenu);
                 }
             });
-            return cell ;
+            return cell;
         });
     }
+
     /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
+     * This creates the right click menu on the onlineUsers list. It also maps
+     * each button to an action.
      */
     private void createTableCells() {
         ContextMenu cm2 = new ContextMenu();
         MenuItem mi1 = new MenuItem("Save Coin");
         mi1.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();               
-                SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
+            ConnectToDatabase conn = new ConnectToDatabase();
+            SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
             saveCoin(this.uname, item.getId());
             populateSavedCoins();
-            });
+        });
         ContextMenu menu = new ContextMenu();
         menu.getItems().add(mi1);
         tableViewT1.setContextMenu(menu);
@@ -353,8 +366,7 @@ public class Tab1Controller implements Initializable{
     /**
      * Create right-clickable cells for the friend list.
      *
-     * Allow the user to share coins, send messages, and
-     * remove the friend.
+     * Allow the user to share coins, send messages, and remove the friend.
      */
     private void createFriendListCells() {
         friendsList.setCellFactory(lv -> {
@@ -390,7 +402,7 @@ public class Tab1Controller implements Initializable{
                     cell.setContextMenu(contextMenu);
                 }
             });
-            return cell ;
+            return cell;
         });
     }
 
@@ -403,6 +415,7 @@ public class Tab1Controller implements Initializable{
 
     /**
      * Initialize the tab
+     *
      * @param location
      * @param resources
      */
@@ -415,7 +428,7 @@ public class Tab1Controller implements Initializable{
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
-        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY) {
@@ -425,7 +438,8 @@ public class Tab1Controller implements Initializable{
         });
 
     }
-     private void saveCoin(String userName, int coinID) {
+
+    private void saveCoin(String userName, int coinID) {
 
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(userName, coinID)) {
