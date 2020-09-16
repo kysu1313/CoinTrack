@@ -304,7 +304,28 @@ public class Tab1Controller implements Initializable{
             return cell ;
         });
     }
-    
+    /* private void createTableCells() {
+        ContextMenu cm2 = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Save Coin");
+        mi1.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                // Do something
+                conn.close();
+            });
+        cm2.getItems().add(mi1);
+        MenuItem mi2 = new MenuItem("Share Coin");
+        cm2.getItems().add(mi2);
+        MenuItem mi3 = new MenuItem("Track Coin");
+        cm2.getItems().add(mi3);
+        tableViewT1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                if (t.getButton() == MouseButton.SECONDARY) {
+                    cm2.show(tableViewT1, t.getScreenX(), t.getScreenY());
+                }
+            }
+        });
+    }*/
     /**
      * This creates the right click menu on the onlineUsers list. 
      * It also maps each button to an action.
@@ -315,8 +336,16 @@ public class Tab1Controller implements Initializable{
         mi1.setOnAction(event -> {
                 ConnectToDatabase conn = new ConnectToDatabase();
                 // Do something
-                conn.close();
+                SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
+            saveCoin(this.uname, item.getId()); 
+            populateSavedCoins();
+                
             });
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(mi1);
+        tableViewT1.setContextMenu(menu);
+        populateSavedCoins();
+        
         cm2.getItems().add(mi1);
         MenuItem mi2 = new MenuItem("Share Coin");
         cm2.getItems().add(mi2);
@@ -418,7 +447,7 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
-         MenuItem mi1 = new MenuItem("Save");
+         /*MenuItem mi1 = new MenuItem("Save");
         mi1.setOnAction((ActionEvent e) -> {
             SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
             saveCoin(this.uname, item.getId()); 
@@ -428,7 +457,7 @@ public class Tab1Controller implements Initializable{
         ContextMenu menu = new ContextMenu();
         menu.getItems().add(mi1);
         tableViewT1.setContextMenu(menu);
-        populateSavedCoins();
+        populateSavedCoins();*/
         
     }
      private void saveCoin(String userName, int coinID) {
