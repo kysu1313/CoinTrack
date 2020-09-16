@@ -3,7 +3,7 @@ package tabControllers;
  * This is the document controller for Tab 1.
  * Main function is to handle scans, table view
  * and the side accordion.
- * 
+ *
  * - Kyle
  */
 import coinClasses.CoinHistory;
@@ -66,7 +66,7 @@ import tabControllers.assistantControllers.Tab1AssistantController;
  * @author Kyle
  */
 public class Tab1Controller implements Initializable{
-    
+
     private LinkedHashMap<String, String> coinNamePrice;
     private LinkedList<SingleCoin> coinList;
     private int count;
@@ -86,14 +86,14 @@ public class Tab1Controller implements Initializable{
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
     private static Stage mainPage1;
-    
+    private LinkedList<String> savedCoins;
     Tab1AssistantController assistT1;
-    
+
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
-    
+
     // Accordion
     @FXML private ListView onlineUsersList;
     @FXML private ListView savedCoinsList;
@@ -102,18 +102,18 @@ public class Tab1Controller implements Initializable{
     @FXML private MenuItem m1;
     @FXML private MenuItem m2;
     @FXML private MenuItem m3;
-    
+
     // Bottom portion (button bar)
     @FXML private TextArea txtAreaT1;
     @FXML private WebView webViewT1;
     @FXML private CheckBox searchCoins;
     @FXML private CheckBox searchGlobalStats;
     @FXML private Text messageText;
-    
+
     // Table View
     @FXML public TableView<SingleCoin> tableViewT1;
-    
-    
+
+
     /**
      * Search for a specific coin.
      *
@@ -132,7 +132,7 @@ public class Tab1Controller implements Initializable{
         }
         coinHistory = new CoinHistory();
     }
-    
+
     /**
      * This method handles both scanning for all coins
      * and all markets / exchanges.
@@ -159,9 +159,9 @@ public class Tab1Controller implements Initializable{
             displayCoinText();
         }
     }
-    
+
     // ========== HELPER METHODS ==========
-    
+
     /**
      * Display the api data to the screen.
      *
@@ -187,11 +187,11 @@ public class Tab1Controller implements Initializable{
         coinList = cri.getCoinList();
         displayMultiCoinTable();
         createTableCells();
-        
+
     }
-    
+
     /**
-     * Display global stats in bottom text area. 
+     * Display global stats in bottom text area.
      */
     private void displayGlobalStats() {
         globalStats = new GlobalCoinStats();
@@ -201,13 +201,13 @@ public class Tab1Controller implements Initializable{
         text += "Total Exchanges: " + globalStats.getTotalExchanges() + "\n";
         text += "Market Cap: " + globalStats.getTotalMarketCap() + "\n";
         text += "Total 24h Volume: " + globalStats.getTotal24hVolume() + "\n";
-        
+
         txtAreaT1.setText(text);
     }
-    
+
     /**
      * Clears the tableView and textArea.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleClearT1(ActionEvent event) {
@@ -215,7 +215,7 @@ public class Tab1Controller implements Initializable{
         tableViewT1.getItems().clear();
         txtAreaT1.setText("");
     }
-    
+
     @FXML
     private void handleLogOutT1(ActionEvent event) {
         System.out.println("logging out");
@@ -232,7 +232,7 @@ public class Tab1Controller implements Initializable{
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    
+
     /**
      * Add data to tableView.
      * This is done in Tab1AssistantController.java to reduce space used here.
@@ -240,18 +240,18 @@ public class Tab1Controller implements Initializable{
     private void displayMultiCoinTable() {
         assistT1.coinTable(tableViewT1, coinList, webViewT1);
     }
-    
+
     /**
      * Change a users online status. i.e. when they log on/off .
      * @param _uname
-     * @param _status 
+     * @param _status
      */
     private void setOnlineStatus(String _uname, int _status) {
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
     }
-    
+
     /**
      * Call database returning a list of all users who are online.
      */
@@ -264,9 +264,9 @@ public class Tab1Controller implements Initializable{
             onlineUsersList.getItems().add(this.onlineUsers.get(i));
         }
     }
-    
+
     /**
-     * This creates the right click menu on the onlineUsers list. 
+     * This creates the right click menu on the onlineUsers list.
      * It also maps each button to an action.
      */
     private void createListCells() {
@@ -304,19 +304,24 @@ public class Tab1Controller implements Initializable{
             return cell ;
         });
     }
-    
     /**
-     * This creates the right click menu on the onlineUsers list. 
+     * This creates the right click menu on the onlineUsers list.
      * It also maps each button to an action.
      */
     private void createTableCells() {
         ContextMenu cm2 = new ContextMenu();
         MenuItem mi1 = new MenuItem("Save Coin");
         mi1.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                // Do something
-                conn.close();
+                ConnectToDatabase conn = new ConnectToDatabase();               
+                SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
+            saveCoin(this.uname, item.getId());
+            populateSavedCoins();
             });
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(mi1);
+        tableViewT1.setContextMenu(menu);
+        populateSavedCoins();
+
         cm2.getItems().add(mi1);
         MenuItem mi2 = new MenuItem("Share Coin");
         cm2.getItems().add(mi2);
@@ -331,7 +336,7 @@ public class Tab1Controller implements Initializable{
             }
         });
     }
-    
+
     /**
      * Call database returning a list of friends.
      */
@@ -344,12 +349,12 @@ public class Tab1Controller implements Initializable{
             friendsList.getItems().add(this.friendList.get(i));
         }
     }
-    
+
     /**
      * Create right-clickable cells for the friend list.
-     * 
+     *
      * Allow the user to share coins, send messages, and
-     * remove the friend. 
+     * remove the friend.
      */
     private void createFriendListCells() {
         friendsList.setCellFactory(lv -> {
@@ -388,7 +393,7 @@ public class Tab1Controller implements Initializable{
             return cell ;
         });
     }
-    
+
     /**
      * Returns and closes the main stage from the class where it was created
      */
@@ -418,6 +423,26 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
-        
+
+    }
+     private void saveCoin(String userName, int coinID) {
+
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(userName, coinID)) {
+            AlertMessages.showInformationMessage("Save COin", "Coin saved successfully against users.");
+        }
+    }
+
+    private void populateSavedCoins() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        savedCoinsList.getItems().clear();
+        this.savedCoins = conn.getSavedCoins(this.uname);
+        conn.close();
+        if (this.savedCoins != null && this.savedCoins.size() > 0) {
+            for (int i = 0; i < this.savedCoins.size(); i++) {
+                savedCoinsList.getItems().add(this.savedCoins.get(i));
+            }
+        }
+
     }
 }
