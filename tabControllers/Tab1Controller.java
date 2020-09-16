@@ -309,10 +309,9 @@ public class Tab1Controller implements Initializable{
         ContextMenu cm2 = new ContextMenu();
         MenuItem mi1 = new MenuItem("Save Coin");
         mi1.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();               
                 SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
-            saveCoin(this.uname, item.getId());
-            populateSavedCoins();
+                saveCoin(this.uname, item.getId());
+                populateSavedCoins();
             });
         ContextMenu menu = new ContextMenu();
         menu.getItems().add(mi1);
@@ -397,6 +396,27 @@ public class Tab1Controller implements Initializable{
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
+    
+    private void saveCoin(String userName, int coinID) {
+
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(userName, coinID)) {
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully against users.");
+        }
+        dbConn.close();
+    }
+
+    private void populateSavedCoins() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        savedCoinsList.getItems().clear();
+        this.savedCoins = conn.getSavedCoins(this.uname);
+        conn.close();
+        if (this.savedCoins != null && this.savedCoins.size() > 0) {
+            for (int i = 0; i < this.savedCoins.size(); i++) {
+                savedCoinsList.getItems().add(this.savedCoins.get(i));
+            }
+        }
+    }
 
     /**
      * Initialize the tab
@@ -420,26 +440,5 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
-
-    }
-     private void saveCoin(String userName, int coinID) {
-
-        ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
-            AlertMessages.showInformationMessage("Save COin", "Coin saved successfully against users.");
-        }
-    }
-
-    private void populateSavedCoins() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        savedCoinsList.getItems().clear();
-        this.savedCoins = conn.getSavedCoins(this.uname);
-        conn.close();
-        if (this.savedCoins != null && this.savedCoins.size() > 0) {
-            for (int i = 0; i < this.savedCoins.size(); i++) {
-                savedCoinsList.getItems().add(this.savedCoins.get(i));
-            }
-        }
-
     }
 }
