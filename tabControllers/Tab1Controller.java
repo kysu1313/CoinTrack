@@ -172,6 +172,12 @@ public class Tab1Controller implements Initializable{
         cri = new CoinRankApi();
         cri.join();
         LinkedList<SingleCoin> temp = cri.getCoinList();
+        
+        /**
+         * UPDATING DATABASE
+         */
+        cri.updateDatabaseCoins(temp);
+        
         for (int i = 0; i < temp.size(); i++) {
             SingleCoin cn = temp.get(i);
             String uuid = cn.getUuid();
@@ -395,6 +401,17 @@ public class Tab1Controller implements Initializable{
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
+    
+    private void addOnlineUsers() {
+        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+    }
 
     /**
      * Initialize the tab
@@ -404,20 +421,14 @@ public class Tab1Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.uname = coinTrack.FXMLDocumentController.uname;
-        messageText.setText("Hello " + uname);
-        assistT1 = new Tab1AssistantController();
+        this.messageText.setText("Hello " + this.uname);
+        this.assistT1 = new Tab1AssistantController();
+        this.cm = new ContextMenu();
         createListCells();
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
-        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
+        addOnlineUsers();
         
     }
 }

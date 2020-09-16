@@ -71,7 +71,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      * Create a new thread if the thread is not already started.
      */
     public void start() {
-        System.out.println("Starting Thread");
+        System.out.println("Starting Thread" + t.getId());
         if (t == null) {
             t = new Thread(this);
             t.start();
@@ -110,6 +110,20 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
             tmpList.add(coin);
         }
         return tmpList;
+    }
+    
+    public void updateDatabaseCoins(LinkedList<SingleCoin> coinList) {
+//        Timestamp ts = new Timestamp(System.currentTimeMillis());
+//        Date date = new Date ();
+//        date.setTime((long)ts*1000);
+        ConnectToDatabase conn = new ConnectToDatabase();
+        coinList.forEach((coin) -> {
+            conn.addCoinToDatabase(coin.getId(), coin.getUuid(), coin.getSlug(),
+                            coin.getSymbol(), coin.getName(),
+                            coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
+                            coin.getVolume(), coin.getMarketCap(), coin.getPrice(), 
+                            coin.getChange(), coin.getRank());
+        });
     }
     
     public LinkedList<SingleCoin> getSortedCoinList() {

@@ -12,6 +12,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -83,7 +84,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     public void run() {
         history = new LinkedList<>();
         // Increment the coin "id" for each call. Not sure how many coins there are though.
-        for (int i = 1; i < 70; i++) {
+        for (int i = 1; i < 100; i++) {
             try {
                 String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
                 HttpResponse<JsonNode> response = Unirest.get(url)
@@ -96,21 +97,6 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
                 change = data.getDouble("change");
                 // JSONArray containing price history for the particular coin.
                 JSONArray histArr = data.getJSONArray("history");
-
-                
-                /**
-                 * More efficient way to save single coin history?
-                 */
-//                LinkedHashMap<Double, String> temp = new LinkedHashMap<>();
-//                for (int x = 0; x < histArr.length(); x++) {
-//                    JSONObject inner = histArr.getJSONObject(i);
-//                    double price = inner.getDouble("price");
-//                    String time = inner.getString("timestamp");
-//                    temp.put(price, time);
-//                }
-//                allCoins.put(i, temp);
-
-
                 // This creates the individual SingleCoinHistory objects
                 // Pass the JSONArray and the id of the coin.
                 SingleCoin single = new SingleCoin(histArr, i);
@@ -162,6 +148,20 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
      */
     public boolean isAlive() {
         return t.isAlive();
+    }
+    
+    public void updateDatabaseCoins() {
+//        Timestamp ts = new Timestamp(System.currentTimeMillis());
+//        Date date = new Date ();
+//        date.setTime((long)ts*1000);
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.history.forEach((coin) -> {
+            conn.addCoinToDatabase(coin.getId(), coin.getUuid(), coin.getSlug(),
+                            coin.getSymbol(), coin.getName(),
+                            coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
+                            coin.getVolume(), coin.getMarketCap(), coin.getPrice(), 
+                            coin.getChange(), coin.getRank());
+        });
     }
     
     public LinkedHashMap<Double, String> getSingleHistory() {

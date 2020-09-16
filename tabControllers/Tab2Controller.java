@@ -322,16 +322,6 @@ public class Tab2Controller implements Initializable{
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    
-    @FXML
-    private void LineChartMouseEnter(ActionEvent event) {
-        
-    }
-    
-    @FXML
-    private void lineChartMouseExit(ActionEvent event) {
-        
-    }
 
     /**
      * Change a users online status. i.e. when they log off .
@@ -342,6 +332,37 @@ public class Tab2Controller implements Initializable{
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
+    }
+    
+    /**
+     * Add all coins to sideVBox that are currently being viewed.
+     */
+    private void addAllCoinsToVBox() {
+        this.linesToGraph.forEach((item) -> {
+            addCoinToVBox(item);
+        });
+    }
+    
+    /**
+     * Add the given coin to the sideVBox.
+     * @param coin 
+     */
+    private void addCoinToVBox(String coin) {
+        Label newLabel = new Label(coin);
+        this.sideVBox.getChildren().add(newLabel);
+        newLabel.setMaxWidth(Double.MAX_VALUE);
+    }
+    
+    /**
+     * Remove given coin from sideVBox.
+     * @param coin 
+     */
+    private void removeCoinFromVBox(String coin) {
+        this.linesToGraph.forEach((item) -> {
+            if (item.equals(coin)) {
+                linesToGraph.removeFirstOccurrence(coin);
+            }
+        });
     }
 
     /**
@@ -378,23 +399,14 @@ public class Tab2Controller implements Initializable{
         this.barChart.setTitle("Viewing the past " + this.timeSelection);
         this.barChartData2.add(this.series4);
         this.barChart.setData(this.barChartData2);
-        double lastPrice = 0;
-        int count = 0;
-        // A way to color the bars in the bargraph green or red.
-        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
-            double price = entry.getKey();
-            if (count < this.singleHistoryMap.size()){
-                if (price > lastPrice) {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: green");
-                } else {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: red");
-                }
-            }
-            lastPrice = price;
-            count++;
-        }
+        colorBarChart("green", "red");
+        barChartZoom();
+    }
+    
+    /**
+     * Add the ability to zoom in on the barchart.
+     */
+    private void barChartZoom() {
         /**
          * THIS IS FOR TESTING.
          * THIS IS NOT MY CODE.
@@ -404,7 +416,6 @@ public class Tab2Controller implements Initializable{
         final double SCALE_DELTA = 1.1;
         this.barChart.setOnScroll((ScrollEvent event) -> {
             event.consume();
-            
             if (event.getDeltaY() == 0) {
                 return;
             }
@@ -419,6 +430,31 @@ public class Tab2Controller implements Initializable{
                 barChart.setScaleY(1.0);
             }
         });
+    }
+    
+    /**
+     * Method to color the barchart bars different colors depending on 
+     * the previous bars price.
+     * Can only take basic colors, i.e. green, red, blue, orange, etc.
+     * @param priceUp, the color for increasing price.
+     * @param priceDown, the color for decreasing price.
+     */
+    private void colorBarChart(String priceUp, String priceDown) {
+        double lastPrice = 0;
+        int count = 0;
+        // A way to color the bars in the bargraph green or red.
+        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
+            double price = entry.getKey();
+            if (price > lastPrice) {
+                Node n = this.barChart.lookup(".data" + count + ".chart-bar");
+                n.setStyle("-fx-bar-fill: " + priceUp);
+            } else {
+                Node n = this.barChart.lookup(".data" + count + ".chart-bar");
+                n.setStyle("-fx-bar-fill: " + priceDown);
+            }
+            lastPrice = price;
+            count++;
+        }
     }
     
     /**
@@ -446,10 +482,16 @@ public class Tab2Controller implements Initializable{
         });
         
         // Add series1 to the barChartData, then add that to the barChart
-        this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
+        this.lineChart.setTitle("Viewing the past " + this.timeSelection + " of: " + this.searchFieldT2.getText());
         this.lineChart.setData(this.lineChartData);
     }
     
+    /**
+     * Create the different series for each coin the user adds.
+     * Returns a linkedList of the XYChart.Series to add to the chart.
+     * @param lines
+     * @return 
+     */
     private LinkedList<XYChart.Series> getSeriesForChart2(LinkedList<String> lines) {
         for (String line : lines) {
             CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
@@ -464,7 +506,7 @@ public class Tab2Controller implements Initializable{
                 XYChart.Data item = new XYChart.Data(date, price);
                 newSeries.getData().add(item);
                 Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-                
+
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
@@ -473,40 +515,11 @@ public class Tab2Controller implements Initializable{
     }
     
     /**
-     * Create the different series for each coin the user adds.
-     * Returns a linkedList of the XYChart.Series to add to the chart.
-     * @param lines
-     * @return 
+     * 
+     * This stupid function still doesn't work.............. UGH.
+     * 
+     * @param dataLst 
      */
-//    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
-//        for (String line : lines) {
-//            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
-//            this.singleHistoryMap = coinHist.getSingleHistory();
-//            XYChart.Series newSeries = new XYChart.Series();
-//            int count = 0;
-//            this.singleHistoryMap.entrySet().forEach((entry) -> {
-//                long tempLong = Long.parseLong(entry.getValue());
-//                Date d = new Date(tempLong);
-//                String date = "" + d;
-//                double price = entry.getKey();
-//                XYChart.Data item = new XYChart.Data(date, price);
-//                newSeries.getData().add(item);
-//                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-////                newSeries.getData().add(new XYChart.Data(date, price));
-//                this.dataList.add(new XYChart.Data(date, price));
-//            });
-////            for (int i = 0; i < singleHistoryMap.size(); i++) {
-////                XYChart.Data item = (XYChart.Data) newSeries.getData().get(i);
-////                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-////                
-////            }
-//            this.seriesList.add(newSeries);
-//        }
-//        
-////        coordsLabel = assistT2.getLineChartCoords(lineChart);
-//        return this.seriesList;
-//    }
-    
     private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
         dataLst.forEach((data) -> {
             Tooltip t = new Tooltip(data.getYValue().toString());
@@ -518,6 +531,7 @@ public class Tab2Controller implements Initializable{
      * Remove all coins from the line chart.
      */
     private void clearLineChart() {
+        comboBox.setVisible(true);
         this.seriesMap.clear();
         this.lineChart.getData().clear();
         this.lineChart.layout();
@@ -699,6 +713,7 @@ public class Tab2Controller implements Initializable{
                 if (currentTab == barChartTab) {
                     comboBox.setValue("Timeframe");
                     tabSelection = 1;
+                    comboBox.setVisible(true);
                     scanBtnT2.setDisable(true);
                     searchBtnT2.setDisable(false);
                     addRemoveComboBox.setVisible(false);
@@ -707,6 +722,7 @@ public class Tab2Controller implements Initializable{
                     comboBox.setValue("Number of coins");
                     tabSelection = 2;
                     searchBtnT2.setDisable(true);
+                    comboBox.setVisible(true);
                     scanBtnT2.setDisable(false);
                     addRemoveComboBox.setVisible(false);
                     comboBox.setItems(NUMCOINS);

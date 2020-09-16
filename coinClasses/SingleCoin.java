@@ -7,6 +7,7 @@ package coinClasses;
  * @author Kyle
  */
 import interfaces.SingleCoinInterface;
+import java.sql.Connection;
 import java.util.LinkedHashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -95,7 +96,9 @@ public class SingleCoin implements SingleCoinInterface{
     
     // ========== GETTERS ==========
     
-//    public
+    public void updateCoinInDatabase(Connection conn) {
+        
+    }
     
     public LinkedHashMap<Double, String> getCoinHistory() {
         return this.coinList2;
