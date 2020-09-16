@@ -131,7 +131,33 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRegisterSubmit(ActionEvent event) {
         System.out.println("register");
-        // Ugly if else to check for bad inputs.
+        // Check good input and if username exists in DB
+        if (checkGoodInput() && usernameAcceptable()) {
+                Parent root;
+                try {
+                    getCurrentStage().close();
+                    Stage stage = new Stage();
+                    FXMLDocumentController.currentStage = stage;
+                    root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
+                    this.scene = new Scene(root);
+                    stage.setScene(this.scene);
+                    stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                this.registerInfo.setFill(Color.RED);
+                this.registerInfo.setText("username taken");
+            }
+    }
+    
+    /**
+     * Checks the register user information entered.
+     * Returns true if acceptable input, false if not acceptable.
+     * @return 
+     */
+    private boolean checkGoodInput() {
+        boolean isGood = false;
         if (this.emailEntry.getText().isEmpty()){
             this.emailEntry.setPromptText("Enter an email address");
             this.registerInfo.setFill(Color.RED);
@@ -154,38 +180,34 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Passwords must match");
         } else {
-            // Call DB connection class
-            ConnectToDatabase conn = new ConnectToDatabase();
-            // Check is username exists in DB
-            if (!conn.usernameExists(this.usernameEntry.getText())) { // TODO: invert  boolean ???
-                String email = this.emailEntry.getText();
-                String uname = this.usernameEntry.getText();
-                String pass = this.passwordEntry.getText();
-                // If all good, submit info to DB
-                conn.userDatabase(0, email, uname, pass);
-                conn.close();
-                // Save username so it can be displayed in the application
-                this.uname = uname;
-                // After login is successful, you are taken to the main page
-                this.registerInfo.setFill(Color.GREEN);
-                this.registerInfo.setText("SUCCESS!");
-                Parent root;
-                try {
-                    getCurrentStage().close();
-                    Stage stage = new Stage();
-                    FXMLDocumentController.currentStage = stage;
-                    root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
-                    this.scene = new Scene(root);
-                    stage.setScene(this.scene);
-                    stage.show();
-//                    FXMLDocumentController.registerStage.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else {
-                this.registerInfo.setFill(Color.RED);
-                this.registerInfo.setText("username taken");
-            }
+            isGood = true;
+        }
+        return isGood;
+    }
+    
+    /**
+     * Checks if a username already exists in database.
+     * @return 
+     */
+    private boolean usernameAcceptable() {
+        // Call DB connection class
+        ConnectToDatabase conn = new ConnectToDatabase();
+        // Check is username exists in DB
+        if (!conn.usernameExists(this.usernameEntry.getText())) { // TODO: invert  boolean ???
+            String email = this.emailEntry.getText();
+            String uname = this.usernameEntry.getText();
+            String pass = this.passwordEntry.getText();
+            // If all good, submit info to DB
+            conn.userDatabase(0, email, uname, pass);
+            conn.close();
+            // Save username so it can be displayed in the application
+            this.uname = uname;
+            // After login is successful, you are taken to the main page
+            this.registerInfo.setFill(Color.GREEN);
+            this.registerInfo.setText("SUCCESS!");
+            return true;
+        } else {
+            return false;
         }
     }
     
