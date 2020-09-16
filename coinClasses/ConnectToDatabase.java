@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.LinkedList;
+import tabControllers.AlertMessages;
 
 public class ConnectToDatabase {
     
@@ -74,7 +75,38 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
     }
-    
+    /**
+     * Insert data to the "user_coins" table
+     * 
+     * @param userName
+     * @param _coin_id 
+     */
+    public boolean insertSavedCoin(String userName, int _coin_id) {
+         try {
+            // Insert statement, using prepared statements
+
+            int id = getIdFromUsername(userName);
+            if (checkSavedCoinsForDuplication(_coin_id, id)) {
+                AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
+                return false;
+            }
+            
+            String query = " INSERT INTO `user_coins` (`user_id`, `coin_id`) VALUES (?, ?)";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.setInt(1, id);
+            preparedStmt.setInt(2, _coin_id);
+             System.out.println(preparedStmt.toString());
+            // execute the preparedstatement
+            preparedStmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            AlertMessages.showErrorMessage("Save COin", "Coin saving failed against users.");
+
+            return false;
+        }
+    }
     /**
      * Insert data to the "users" table.
      * 

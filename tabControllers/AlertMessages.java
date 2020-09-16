@@ -11,7 +11,7 @@ import javafx.scene.control.Alert;
  *
  * @author 
  */
-public class AlterMessage {
+public class AlertMessages {
     
     public static void showErrorMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
