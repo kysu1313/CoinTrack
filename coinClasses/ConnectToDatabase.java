@@ -47,15 +47,13 @@ public class ConnectToDatabase {
     }
     
     /**
-     * Insert data into the "coins" table.
+     * Insert data into the "all_coins" table.
      * 
      * @param _coinID
      * @param _uuid
      * @param _slug
      * @param _symbol
      * @param _name
-     * @param _color
-     * @param _url
      * @param _numMarkets
      * @param _numExchanges
      * @param _volume
@@ -63,7 +61,6 @@ public class ConnectToDatabase {
      * @param _price
      * @param _change
      * @param _coinRank
-     * @param _date
      */
     public void addCoinToDatabase(int _coinID, String _uuid, String _slug, 
                             String _symbol, String _name,
@@ -106,6 +103,8 @@ public class ConnectToDatabase {
     /**
      * Insert data into the "coins" table.
      * 
+     * THIS TABLE IS AN OLD VERSION. USE all_coins FROM NOW ON.
+     * 
      * @param _uuid
      * @param _symbol
      * @param _name
@@ -147,7 +146,7 @@ public class ConnectToDatabase {
                 AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
                 return false;
             }
-            
+
             String query = " INSERT INTO `user_coins` (`user_id`, `coin_id`) VALUES (?, ?)";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
@@ -166,7 +165,8 @@ public class ConnectToDatabase {
     }
     /**
      * Insert data to the "users" table.
-     * 
+     *
+     * @param _online
      * @param _userEmail
      * @param _userName
      * @param _userPassword
@@ -189,8 +189,8 @@ public class ConnectToDatabase {
             // execute the preparedstatement
             preparedStmt.execute();
             System.out.println("Registration Success");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
     }
 
@@ -211,8 +211,8 @@ public class ConnectToDatabase {
             // execute the preparedstatement
             preparedStmt.execute();
             System.out.println("Updated live status");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
     }
     
@@ -232,8 +232,8 @@ public class ConnectToDatabase {
                 list.add(result.getString("username"));
             }
             System.out.println("Got list of live members");
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
         return list;
     }
@@ -535,7 +535,7 @@ public class ConnectToDatabase {
     public LinkedList<String> getSavedCoins(String username) {
         LinkedList<String> list = new LinkedList<>();
         try {
-            String query = "SELECT `coins`.`symbol`, `coins`.`name`, `users`.`username` FROM `user_coins` LEFT JOIN users ON user_coins.user_id = users.userID LEFT JOIN coins ON user_coins.coin_id = coins.entryID WHERE `user_coins`.`user_id` = " + getIdFromUsername(username);
+            String query = "SELECT `all_coins`.`symbol`, `all_coins`.`name`, `users`.`username` FROM `user_coins` LEFT JOIN users ON user_coins.user_id = users.userID LEFT JOIN all_coins ON user_coins.coin_id = all_coins.coinID WHERE `user_coins`.`user_id` = " + getIdFromUsername(username);
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
@@ -563,15 +563,14 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-            System.out.println("Query:" + query);
+            System.out.println("Query: " + query);
             //while(!result.isBeforeFirst()) 
             while(result.next()== true){
                 return true;
             }            
             return false;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.out.println("Error in DB Connection.");
+            System.out.println("Error in DB Connection: " + ex);
             return false;
         }
         
