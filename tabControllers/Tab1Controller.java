@@ -57,18 +57,9 @@ public class Tab1Controller implements Initializable{
     private LinkedHashMap<String, String> coinNamePrice;
     private LinkedList<SingleCoin> coinList;
     private int count;
-    private Task copyWorker;
-    private Image icon;
-    private WebEngine webEngine;
     private CoinHistory coinHistory;
-    private LinkedList<SingleCoinHistory> history;
-    private LinkedHashMap<String, Integer> historyMap;
-    private LinkedHashMap<Double, String> singleHistoryMap;
-    private int coinsToGraph = 25;
-    private boolean isSingleCoinScan;
     private GlobalCoinStats globalStats;
     private CoinRankApi cri;
-    private static Stage mainPage;
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
@@ -86,9 +77,6 @@ public class Tab1Controller implements Initializable{
     @FXML private ListView savedCoinsList;
     @FXML private ListView friendsList;
     @FXML private ContextMenu cm;
-    @FXML private MenuItem m1;
-    @FXML private MenuItem m2;
-    @FXML private MenuItem m3;
 
     // Bottom portion (button bar)
     @FXML private TextArea txtAreaT1;
@@ -161,7 +149,7 @@ public class Tab1Controller implements Initializable{
         LinkedList<SingleCoin> temp = cri.getCoinList();
         
         /**
-         * Add coins to new database table
+         * Add coins to new database table all_coins
          */
 //        cri.updateDatabaseCoins(temp);
         
@@ -204,17 +192,17 @@ public class Tab1Controller implements Initializable{
     private void handleLogOutT1(ActionEvent event) {
         System.out.println("logging out");
         Parent root;
-            try {
-                Tab1Controller.mainPage1 = new Stage();
-                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-                this.scene = new Scene(root);
-                Tab1Controller.mainPage1.setScene(this.scene);
-                Tab1Controller.mainPage1.show();
-                closeOldStage();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            Tab1Controller.mainPage1.setScene(this.scene);
+            Tab1Controller.mainPage1.show();
+            closeOldStage();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -385,10 +373,9 @@ public class Tab1Controller implements Initializable{
     }
     
     private void saveCoin(String userName, int coinID) {
-
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(userName, coinID)) {
-            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully against users.");
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
         }
         dbConn.close();
     }
@@ -415,6 +402,7 @@ public class Tab1Controller implements Initializable{
         this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         assistT1 = new Tab1AssistantController();
+        populateSavedCoins();
         createListCells();
         createFriendListCells();
         addOnlineUsersToList();
