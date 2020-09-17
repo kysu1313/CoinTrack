@@ -48,8 +48,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.Tab1AssistantController;
 
-
-
 /**
  *
  * @author Kyle
