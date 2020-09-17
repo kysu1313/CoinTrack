@@ -178,7 +178,8 @@
                                           <VBox fx:id="sideVBox" prefHeight="430.0" prefWidth="106.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
                                                 <Label fx:id="coordsLabel" prefHeight="34.0" prefWidth="107.0" text="Label" />
-                                             </children>
+
+                                            </children>
                                           </VBox>
                                        </children>
                                     </AnchorPane>

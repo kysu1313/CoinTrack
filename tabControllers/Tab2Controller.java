@@ -98,10 +98,12 @@ public class Tab2Controller implements Initializable{
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
+    private LinkedList<String> savedCoins;
     private HashMap<String, XYChart.Series> seriesMap;
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
+    private XYChart.Series[] seriesArr;
     public HoveredThresholdNode node;
     
     Tab2AssistantController assistT2;
@@ -118,6 +120,7 @@ public class Tab2Controller implements Initializable{
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
     @FXML private VBox sideVBox;
+    @FXML private Label hoverLabel;
 
     // Accordion
     @FXML private ListView onlineUsersListT2;
@@ -144,14 +147,10 @@ public class Tab2Controller implements Initializable{
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
     // Line Chart
-    @FXML private LineChart<String, Number> lineChart2;
     @FXML private LineChart lineChart;
     private CategoryAxis xAxis;
     private NumberAxis yAxis;
-    private XYChart.Series lineSeries1;
-    private XYChart.Series lineSeries2;
-    private ObservableList<XYChart.Series<String, Number>> lineChartData;
-    private ObservableList<XYChart.Series<String, Number>> lineChartData2;
+    private ObservableList<XYChart.Series<Number, String>> lineChartData;
     
 
     // Pie Chart
@@ -322,16 +321,6 @@ public class Tab2Controller implements Initializable{
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
     }
-    
-    @FXML
-    private void LineChartMouseEnter(ActionEvent event) {
-        
-    }
-    
-    @FXML
-    private void lineChartMouseExit(ActionEvent event) {
-        
-    }
 
     /**
      * Change a users online status. i.e. when they log off .
@@ -378,6 +367,11 @@ public class Tab2Controller implements Initializable{
         this.barChart.setTitle("Viewing the past " + this.timeSelection);
         this.barChartData2.add(this.series4);
         this.barChart.setData(this.barChartData2);
+        colorBarGraph();
+        scaleGraph();
+    }
+    
+    private void colorBarGraph() {
         double lastPrice = 0;
         int count = 0;
         // A way to color the bars in the bargraph green or red.
@@ -395,23 +389,22 @@ public class Tab2Controller implements Initializable{
             lastPrice = price;
             count++;
         }
-        /**
-         * THIS IS FOR TESTING.
-         * THIS IS NOT MY CODE.
-         *
-         * Implements scrolling using the mouse wheel on the graph.
-         */
-        final double SCALE_DELTA = 1.1;
+    }
+    
+    /**
+    * Implements scrolling using the mouse wheel on the graph.
+    */
+    private void scaleGraph() {
+        double delta = 1.1;
         this.barChart.setOnScroll((ScrollEvent event) -> {
             event.consume();
-            
             if (event.getDeltaY() == 0) {
                 return;
             }
             // Keep the scale ratio as you zoom in/out
-            double scaleFactor = (event.getDeltaY() > 0) ? SCALE_DELTA : 1 / SCALE_DELTA;
-            barChart.setScaleX(barChart.getScaleX() * scaleFactor);
-            barChart.setScaleY(barChart.getScaleY() * scaleFactor);
+            double factor = (event.getDeltaY() > 0) ? delta : 1 / delta;
+            barChart.setScaleX(barChart.getScaleX() * factor);
+            barChart.setScaleY(barChart.getScaleY() * factor);
         });
         this.barChart.setOnMousePressed((MouseEvent event) -> {
             if (event.getClickCount() == 2) {
@@ -441,77 +434,48 @@ public class Tab2Controller implements Initializable{
                 this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
-        getSeriesForChart2(this.linesToGraph).forEach((series) -> {
-            this.lineChartData.add(series);
-        });
-        
+        getSeriesForChart2(this.linesToGraph);
         // Add series1 to the barChartData, then add that to the barChart
         this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
         this.lineChart.setData(this.lineChartData);
     }
-    
-    private LinkedList<XYChart.Series> getSeriesForChart2(LinkedList<String> lines) {
+
+    /**
+     * This creates a linkedList of Series that will be added to the
+     * Line Chart.
+     *
+     * I'm not sure what the best way to do this is...
+     *
+     * @param lines
+     * @return
+     */
+    private void getSeriesForChart2(LinkedList<String> lines) {
+        // For every coin entered, create a new CoinHistory object.
         for (String line : lines) {
             CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
             this.singleHistoryMap = coinHist.getSingleHistory();
-            XYChart.Series newSeries = new XYChart.Series();
+//            XYChart.Series newSeries = new XYChart.Series();
+            XYChart.Series<Number, String> newSeries = new XYChart.Series();
             double previousPrice = 0;
+            // Create the datapoints for the line chart.
             this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
                 Date d = new Date(tempLong);
                 String date = "" + d;
                 double price = entry.getKey();
                 XYChart.Data item = new XYChart.Data(date, price);
+                item.setExtraValue(line + ": " + price);
                 newSeries.getData().add(item);
-                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-                
+                newSeries.getNode();
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
+            for (Data<Number, String> entry : newSeries.getData()) {
+                Tooltip t = new Tooltip(entry.getExtraValue().toString());
+                Tooltip.install(entry.getNode(), t);
+            }
+            this.lineChartData.add(newSeries);
         }
-        return this.seriesList;
-    }
-    
-    /**
-     * Create the different series for each coin the user adds.
-     * Returns a linkedList of the XYChart.Series to add to the chart.
-     * @param lines
-     * @return 
-     */
-//    private LinkedList<XYChart.Series> getSeriesForChart(LinkedList<String> lines) {
-//        for (String line : lines) {
-//            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
-//            this.singleHistoryMap = coinHist.getSingleHistory();
-//            XYChart.Series newSeries = new XYChart.Series();
-//            int count = 0;
-//            this.singleHistoryMap.entrySet().forEach((entry) -> {
-//                long tempLong = Long.parseLong(entry.getValue());
-//                Date d = new Date(tempLong);
-//                String date = "" + d;
-//                double price = entry.getKey();
-//                XYChart.Data item = new XYChart.Data(date, price);
-//                newSeries.getData().add(item);
-//                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-////                newSeries.getData().add(new XYChart.Data(date, price));
-//                this.dataList.add(new XYChart.Data(date, price));
-//            });
-////            for (int i = 0; i < singleHistoryMap.size(); i++) {
-////                XYChart.Data item = (XYChart.Data) newSeries.getData().get(i);
-////                Tooltip.install(item.getNode(), new Tooltip("" + item.getYValue()));
-////                
-////            }
-//            this.seriesList.add(newSeries);
-//        }
-//        
-////        coordsLabel = assistT2.getLineChartCoords(lineChart);
-//        return this.seriesList;
-//    }
-    
-    private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
-        dataLst.forEach((data) -> {
-            Tooltip t = new Tooltip(data.getYValue().toString());
-            Tooltip.install(data.getNode(), t);
-        });
     }
 
     /**
@@ -553,7 +517,27 @@ public class Tab2Controller implements Initializable{
         this.barChartData.add(this.series1);
         this.barChart.setData(this.barChartData);
     }
+    
+    private void saveCoin(String userName, int coinID) {
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(userName, coinID)) {
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
+        }
+        dbConn.close();
+    }
 
+    private void populateSavedCoins() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        savedCoinsListT2.getItems().clear();
+        this.savedCoins = conn.getSavedCoins(this.uname);
+        conn.close();
+        if (this.savedCoins != null && this.savedCoins.size() > 0) {
+            for (int i = 0; i < this.savedCoins.size(); i++) {
+                savedCoinsListT2.getItems().add(this.savedCoins.get(i));
+            }
+        }
+    }
+    
     /**
      * Creates a LinkedList of SingleCoins.
      * 
@@ -647,49 +631,8 @@ public class Tab2Controller implements Initializable{
             cursorCoords.setVisible(false);
         });
     }
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        assistT2 = new Tab2AssistantController();
-        String uname = coinTrack.FXMLDocumentController.uname;
-        messageText.setText("Hello " + uname);
-        this.uname = coinTrack.FXMLDocumentController.uname;
-        messageText.setText("Hello " + uname);
-        linesToGraph = new LinkedList<>();
-        seriesList = new LinkedList<>();
-        coordsLabel = new Label();
-        xAxis = new CategoryAxis();
-        yAxis = new NumberAxis();
-        lineChart2 = new LineChart(xAxis, yAxis);
-        lineSeries2 = new XYChart.Series();
-        
-        createListCells();
-        addOnlineUsersToList();
-        addFriendsToList();
-        onlineUsersListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cm.show(onlineUsersListT2, event.getScreenX(), event.getScreenY());
-                }
-            }
-
-        });
-        // Initialize the barChart & lineChart arrays they will pull data from.
-        barChartData = FXCollections.observableArrayList();
-        barChartData2 = FXCollections.observableArrayList();
-        pieChartData = FXCollections.observableArrayList();
-        lineChartData = FXCollections.observableArrayList();
-        pieChart.setTitle("Coin Prices");
-        lineChart.setTitle("Compare Prices");
-        seriesMap = new HashMap<>();
-        series1 = new BarChart.Series<>();
-        series4 = new BarChart.Series<>();
-        dataList = new LinkedList<>();
-        series1.setName("Data");
-        series4.setName("Prices");
-        addRemoveComboBox.setItems(ADDREMOVE);
+    
+    private void tabChanges() {
         // Tab listener. Detects which graph tab is selected
         graphTabPane.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
@@ -723,6 +666,63 @@ public class Tab2Controller implements Initializable{
                 }
             }
         });
+    }
+    
+    private void addListEvents() {
+        onlineUsersListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            ContextMenu cmu = new ContextMenu();
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cmu.show(onlineUsersListT2, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+        savedCoinsListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            ContextMenu cmu = new ContextMenu();
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cmu.show(savedCoinsListT2, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        assistT2 = new Tab2AssistantController();
+        // Save uname from login page.
+        String uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
+        this.uname = coinTrack.FXMLDocumentController.uname;
+        messageText.setText("Hello " + uname);
+        linesToGraph = new LinkedList<>();
+        seriesList = new LinkedList<>();
+        coordsLabel = new Label();
+        xAxis = new CategoryAxis();
+        yAxis = new NumberAxis();
+        populateSavedCoins();
+        createListCells();
+        addOnlineUsersToList();
+        addFriendsToList();
+        addListEvents();
+        // Initialize the barChart & lineChart arrays they will pull data from.
+        barChartData = FXCollections.observableArrayList();
+        barChartData2 = FXCollections.observableArrayList();
+        pieChartData = FXCollections.observableArrayList();
+        lineChartData = FXCollections.observableArrayList();
+        pieChart.setTitle("Coin Prices");
+        lineChart.setTitle("Compare Prices");
+        seriesMap = new HashMap<>();
+        series1 = new BarChart.Series<>();
+        series4 = new BarChart.Series<>();
+        dataList = new LinkedList<>();
+        series1.setName("Data");
+        series4.setName("Prices");
+        addRemoveComboBox.setItems(ADDREMOVE);
+        tabChanges();
         // Set the default comboBox values
         comboBox.setValue("Timeframe");
         comboBox.setItems(TIMES);

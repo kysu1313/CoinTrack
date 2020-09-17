@@ -564,16 +564,15 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             System.out.println("Query: " + query);
-            //while(!result.isBeforeFirst()) 
+            //while(!result.isBeforeFirst())
             while(result.next()== true){
                 return true;
-            }            
+            }
             return false;
         } catch (SQLException ex) {
             System.out.println("Error in DB Connection: " + ex);
             return false;
         }
-        
     }
 }
 
