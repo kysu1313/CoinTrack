@@ -64,7 +64,7 @@ public class SingleCoin implements SingleCoinInterface{
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
-        
+//        coinId = coinList.getInt("coinID");
         stringChange = "" + change;
     }
     
@@ -224,6 +224,14 @@ public class SingleCoin implements SingleCoinInterface{
     public String getStringChange() {
         return this.stringChange;
     }
+
+//    public int getCoinId() {
+//        return coinId;
+//    }
+//
+//    public void setCoinId(int coinId) {
+//        this.coinId = coinId;
+//    }
 
     
 }

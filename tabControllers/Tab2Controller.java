@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -95,7 +96,7 @@ public class Tab2Controller implements Initializable{
     private final ObservableList<String> ADDREMOVE = FXCollections.
             observableArrayList("add", "remove");
     private static Stage mainPage2;
-    private String uname;
+    private static String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
     private HashMap<String, XYChart.Series> seriesMap;
@@ -158,6 +159,8 @@ public class Tab2Controller implements Initializable{
     @FXML
     protected PieChart pieChart;
     protected ObservableList<PieChart.Data> pieChartData;
+
+    private LinkedList<String> savedCoins;
 
     /**
      * This handles the scan button on tab 2.
@@ -600,11 +603,28 @@ public class Tab2Controller implements Initializable{
         coinTrack.FXMLDocumentController.mainStage.close();
     }
     
+
+    public void populateSavedCoins() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        if (savedCoinsListT2.getItems() != null && savedCoinsListT2.getItems().size() > 0) {
+            savedCoinsListT2.getItems().clear();
+        }
+        savedCoins = conn.getSavedCoins(uname);
+        conn.close();
+        if (savedCoins != null && savedCoins.size() > 0) {
+            for (int i = 0; i < savedCoins.size(); i++) {
+                savedCoinsListT2.getItems().add(savedCoins.get(i));
+            }
+        }
+    }
+    
+    
     private void setMouseLineChart() {
         final Axis<String> xAx = lineChart.getXAxis();
         final Axis<Number> yAx = lineChart.getYAxis();
         final Label cursorCoords = new Label();
         sideVBox.getChildren().add(cursorCoords);
+        savedCoinsListT2.getItems().add("");
         final Node chartBackground = lineChart.lookup(".chart-plot-background");
         for (Node n : chartBackground.getParent().getChildrenUnmodifiable()) {
             if (n != chartBackground && n != xAx && n != yAx) {
@@ -651,6 +671,7 @@ public class Tab2Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         assistT2 = new Tab2AssistantController();
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
@@ -728,5 +749,6 @@ public class Tab2Controller implements Initializable{
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
         addRemoveComboBox.setVisible(false);
+        populateSavedCoins();
     }
 }

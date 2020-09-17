@@ -310,6 +310,7 @@ public class Tab1Controller implements Initializable{
         MenuItem mi1 = new MenuItem("Save Coin");
         mi1.setOnAction(event -> {
                 SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
+                System.out.println("Coin ID " + item.getId());
                 saveCoin(this.uname, item.getId());
                 populateSavedCoins();
             });
@@ -403,6 +404,7 @@ public class Tab1Controller implements Initializable{
         if (dbConn.insertSavedCoin(userName, coinID)) {
             AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully against users.");
         }
+       
         dbConn.close();
     }
 
@@ -440,5 +442,8 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
+        
+        populateSavedCoins();
+
     }
 }
