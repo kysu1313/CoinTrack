@@ -142,7 +142,7 @@ public class ConnectToDatabase {
             // Insert statement, using prepared statements
 
             int id = getIdFromUsername(userName);
-            if (checkSavedCoinsForDuplication(_coin_id, id)) {
+            if (checkSavedCoinsForDuplication(id, _coin_id)) {
                 AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
                 return false;
             }
