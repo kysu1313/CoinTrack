@@ -399,9 +399,9 @@ public class Tab2Controller implements Initializable{
             this.barChartData2.add(this.series4);
             this.barChart.setData(this.barChartData2);
             colorBarChart("green", "red");
-            scalableGraph();
+            scaleGraph();
         }
-    }
+    
     }
     
     /**
@@ -410,8 +410,8 @@ public class Tab2Controller implements Initializable{
     *
     * Implements scrolling using the mouse wheel on the graph.
     */
-    private void scalableGraph() {
-        final double SCALE_DELTA = 1.1;
+    private void scaleGraph() {
+        double delta = 1.1;
         this.barChart.setOnScroll((ScrollEvent event) -> {
             event.consume();
             if (event.getDeltaY() == 0) {
@@ -521,7 +521,7 @@ public class Tab2Controller implements Initializable{
             }
             this.lineChartData.add(newSeries);
         }
-        return this.seriesList;
+//        return this.seriesList;
     }
     
     /**
