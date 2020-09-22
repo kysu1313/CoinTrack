@@ -8,6 +8,7 @@ package coinClasses;
  * - Kyle
  */
 
+import interfaces.CoinHistoryInterface;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -51,14 +52,9 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
             ParseCoinName newName = new ParseCoinName(_name);
             coinId = newName.getId();
         }
-        try {
-            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
-            HttpResponse<JsonNode> response = Unirest.get(url)
-                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-                    .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
-                    .asJson();
-            // Extract body, data, and change
-            JSONObject resp = new JSONObject(response.getBody().toString());
+            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";            
+            // Call API connector class
+            JSONObject resp = new ConnectToApi(url, "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             JSONObject data = resp.getJSONObject("data");
             change = data.getDouble("change");
             // JSONArray containing price history for the particular coin.
@@ -73,10 +69,6 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
                 String date = "" + temp.getInt("timestamp");
                 singleHistoryMap.put(price, date);
             }
-
-        } catch (UnirestException ex) {
-            Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     @Override
@@ -84,45 +76,21 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
         history = new LinkedList<>();
         // Increment the coin "id" for each call. Not sure how many coins there are though.
         for (int i = 1; i < 70; i++) {
+            String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
+            // For each response, extract body, data, and change
+            JSONObject resp = new ConnectToApi(url, "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+            JSONObject data = resp.getJSONObject("data");
+            change = data.getDouble("change");
+            // JSONArray containing price history for the particular coin.
+            JSONArray histArr = data.getJSONArray("history");
+            // This creates the individual SingleCoinHistory objects
+            // Pass the JSONArray and the id of the coin.
+            SingleCoin single = new SingleCoin(histArr, i);
+            // Pause api calls to prevent timeouts.
+            history.add(single);
             try {
-                String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
-                HttpResponse<JsonNode> response = Unirest.get(url)
-                        .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-                        .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
-                        .asJson();
-                // For each response, extract body, data, and change
-                JSONObject resp = new JSONObject(response.getBody().toString());
-                JSONObject data = resp.getJSONObject("data");
-                change = data.getDouble("change");
-                // JSONArray containing price history for the particular coin.
-                JSONArray histArr = data.getJSONArray("history");
-
-                
-                /**
-                 * More efficient way to save single coin history?
-                 */
-//                LinkedHashMap<Double, String> temp = new LinkedHashMap<>();
-//                for (int x = 0; x < histArr.length(); x++) {
-//                    JSONObject inner = histArr.getJSONObject(i);
-//                    double price = inner.getDouble("price");
-//                    String time = inner.getString("timestamp");
-//                    temp.put(price, time);
-//                }
-//                allCoins.put(i, temp);
-
-
-                // This creates the individual SingleCoinHistory objects
-                // Pass the JSONArray and the id of the coin.
-                SingleCoin single = new SingleCoin(histArr, i);
-                // Pause api calls to prevent timeouts.
-                history.add(single);
-                try {
-                    TimeUnit.SECONDS.sleep((long) 0.03);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-            } catch (UnirestException ex) {
+                TimeUnit.SECONDS.sleep((long) 0.03);
+            } catch (InterruptedException ex) {
                 Logger.getLogger(CoinHistory.class.getName()).log(Level.SEVERE, null, ex);
             }
 

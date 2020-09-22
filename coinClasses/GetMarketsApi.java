@@ -20,33 +20,19 @@ import org.json.JSONObject;
  */
 public class GetMarketsApi {
     
-    JSONArray markets;
-    JSONObject data;
+    private JSONArray markets;
+    private JSONObject resp;
+    private JSONObject data;
     
     public GetMarketsApi() {
 
-        String url = "https://coinranking1.p.rapidapi.com/markets";
-        HttpResponse<JsonNode> response;
-        try {
-            response = Unirest.get(url)
-                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-                    .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
-                    .asJson();
-
-            JSONObject resp = new JSONObject(response.getBody().toString());
-            data = resp.getJSONObject("data");
-            
-            markets = data.getJSONArray("markets");
-            
-            for (int i = 0; i < markets.length(); i++) {
-                SingleMarket mkt = new SingleMarket(markets.getJSONObject(i));
-            }
-
-        } catch (UnirestException ex) {
-            Logger.getLogger(GetMarketsApi.class.getName()).log(Level.SEVERE, null, ex);
+        // Call API connector class
+        this.resp = new ConnectToApi("coinranking1.p.rapidapi.com",
+        "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+        data = this.resp.getJSONObject("data");
+        markets = data.getJSONArray("markets");
+        for (int i = 0; i < markets.length(); i++) {
+            SingleMarket mkt = new SingleMarket(markets.getJSONObject(i));
         }
-
     }
-
-    
 }

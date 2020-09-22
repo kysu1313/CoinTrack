@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package coinClasses;
+package interfaces;
 
+import coinClasses.SingleCoin;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -12,7 +13,7 @@ import java.util.LinkedList;
  *
  * @author Kyle
  */
-interface CoinHistoryInterface {
+public interface CoinHistoryInterface {
     
     public LinkedHashMap<String, Integer> getPriceDate();
     public LinkedList<SingleCoin> getHistory();
