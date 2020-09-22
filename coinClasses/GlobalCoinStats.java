@@ -1,20 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package coinClasses;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONObject;
 
 /**
- *
+ *  Data for the bottom text area.
+ * I'm not sure if this is for a single coin, single market, or all coins.
  * @author Kyle
  */
 public class GlobalCoinStats {
@@ -29,25 +19,15 @@ public class GlobalCoinStats {
     
     public GlobalCoinStats() {
         
-        try {
-            HttpResponse<JsonNode> response = Unirest.get("https://coinranking1.p.rapidapi.com/stats")
-                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-                    .header("x-rapidapi-key", "f20725d47cmshb045d494d70d075p19a1bcjsn0a052376e5cc")
-                    .asJson();
-            
-            this.resp = new JSONObject(response.getBody().toString());
-            this.data = resp.getJSONObject("data");
-            
-            this.totalCoins = data.getInt("totalCoins");
-            this.totalMarkets = data.getInt("totalMarkets");
-            this.totalExchanges = data.getInt("totalExchanges");
-            this.totalMarketCap = data.getInt("totalMarketCap");
-            this.total24hVolume = data.getInt("total24hVolume");
-            
-        } catch (UnirestException ex) {
-            Logger.getLogger(GlobalCoinStats.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        // Call API connector class
+        this.resp = new ConnectToApi("https://coinranking1.p.rapidapi.com/stats",
+            "f20725d47cmshb045d494d70d075p19a1bcjsn0a052376e5cc").getJsonObject();
+        this.data = resp.getJSONObject("data");
+        this.totalCoins = data.getInt("totalCoins");
+        this.totalMarkets = data.getInt("totalMarkets");
+        this.totalExchanges = data.getInt("totalExchanges");
+        this.totalMarketCap = data.getInt("totalMarketCap");
+        this.total24hVolume = data.getInt("total24hVolume");
     }
     
     

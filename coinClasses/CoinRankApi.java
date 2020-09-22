@@ -26,6 +26,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
 
     private Thread t;
     private HttpResponse<JsonNode> response;
+    private JSONObject resp;
     private JSONObject data;
     private JSONObject stats;
     private JSONObject base;
@@ -50,21 +51,12 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      */
     @Override
     public void run() {
-        try {
-            this.response = Unirest.get("https://coinranking1.p.rapidapi.com/coins")
-                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
-                    .header("x-rapidapi-key", "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc")
-                    .asJson();
-
-            JSONObject coinRank = new JSONObject(response.getBody().toString());
-
+            JSONObject coinRank = new ConnectToApi("https://coinranking1.p.rapidapi.com/coins",
+            "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             data = coinRank.getJSONObject("data");
             stats = data.getJSONObject("stats");
             coins = data.getJSONArray("coins");
             coinList = getCoinList();
-        } catch (UnirestException ex) {
-            Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
