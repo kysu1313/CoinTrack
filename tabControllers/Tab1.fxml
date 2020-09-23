@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -30,7 +31,10 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" text="Currency Type">
+                     <graphic>
+                        <ComboBox fx:id="currencyCombo" prefWidth="150.0" />
+                     </graphic></MenuItem>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -60,11 +64,6 @@
                </tooltip></Button>
               <TextField fx:id="searchFieldT1" />
               <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" disable="true" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="50.0">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Text>
             <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT1" text="Log Out" translateX="150.0">
                <tooltip>
                   <Tooltip text="Log out changing your online status" />
@@ -139,6 +138,15 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <Button fx:id="testT1" layoutX="14.0" layoutY="578.0" mnemonicParsing="false" onAction="#handleTest" text="Test" />
+      <ToolBar layoutY="578.0" prefHeight="25.0" prefWidth="911.0">
+        <items>
+          <Button fx:id="testT1" mnemonicParsing="false" onAction="#handleTest" text="Test" />
+            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="300.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Text>
+        </items>
+      </ToolBar>
     </children>
 </AnchorPane>

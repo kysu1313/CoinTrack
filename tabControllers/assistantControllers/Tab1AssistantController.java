@@ -23,15 +23,16 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
 /**
- * This Class contains additional methods used in Tab1 to display 
- * data to the screen. 
- * 
- * The main purpose of this class is to keep the main tab controllers
- * as clean as possible.
+ * This Class contains additional methods used in Tab1 to display data to the
+ * screen.
+ *
+ * The main purpose of this class is to keep the main tab controllers as clean
+ * as possible.
+ *
  * @author Kyle
  */
 public class Tab1AssistantController {
-    
+
     public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1) {
         // Create columns
         TableColumn col1 = new TableColumn("Symbol");
@@ -48,28 +49,28 @@ public class Tab1AssistantController {
         col5.setCellValueFactory(new PropertyValueFactory<>("stringChange"));
         col6.setCellValueFactory(new PropertyValueFactory<>("volume"));
         // Add columns to tableView
-        tableViewT1.getColumns().addAll(col1,col2,col3,col4,col5,col6);
+        tableViewT1.getColumns().addAll(col1, col2, col3, col4, col5, col6);
         ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
         // Change text color of "change" column if positive or negative change.
         col5.setCellFactory(new Callback<TableColumn, TableCell>() {
-        public TableCell call(TableColumn param) {
-            return new TableCell<SingleCoin, String>() {
+            public TableCell call(TableColumn param) {
+                return new TableCell<SingleCoin, String>() {
 
-                @Override
-                public void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
                         // Change color based on data
-                    if (!isEmpty()) {
-                        this.setStyle("-fx-text-fill: #09de57;-fx-font-weight: bold;");
-                        if(item.contains("-")) {
-                            this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
+                        if (!isEmpty()) {
+                            this.setStyle("-fx-text-fill: #09de57;-fx-font-weight: bold;");
+                            if (item.contains("-")) {
+                                this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
+                            }
+                            setText(item);
                         }
-                        setText(item);
                     }
-                }
-            };
-        }
-    });
+                };
+            }
+        });
         tableViewT1.setItems(obvList);
         tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // Allows user to double click a table row and display info in textArea
@@ -93,5 +94,5 @@ public class Tab1AssistantController {
             return row;
         });
     }
-    
+
 }
