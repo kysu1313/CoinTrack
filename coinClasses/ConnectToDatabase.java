@@ -152,7 +152,7 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             preparedStmt.setInt(1, id);
             preparedStmt.setInt(2, _coin_id);
-             System.out.println(preparedStmt.toString());
+//             System.out.println(preparedStmt.toString());
             // execute the preparedstatement
             preparedStmt.execute();
             return true;
@@ -551,7 +551,7 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-            System.out.println(query);
+//            System.out.println(query);
             while(result.next()) {
                 list.add(result.getString("symbol") + " " + result.getString("name"));
             }
@@ -575,7 +575,7 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-            System.out.println("Query: " + query);
+//            System.out.println("Query: " + query);
             //while(!result.isBeforeFirst())
             while(result.next()== true){
                 return true;

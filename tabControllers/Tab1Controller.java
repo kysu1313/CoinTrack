@@ -9,19 +9,22 @@ package tabControllers;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
-import coinClasses.CurrencyConvert;
+import coinClasses.FixerCurrencyApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
 import coinTrack.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,6 +34,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -72,6 +76,7 @@ public class Tab1Controller implements Initializable{
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
+    @FXML private ComboBox currencyCombo;
 
     // Accordion
     @FXML private ListView onlineUsersList;
@@ -167,7 +172,7 @@ public class Tab1Controller implements Initializable{
     @FXML
     private void handleTest(ActionEvent event) {
         try {
-            CurrencyConvert cc = new CurrencyConvert();
+            FixerCurrencyApi cc = new FixerCurrencyApi();
             System.out.println(cc.convert("USD", "JPY", 2093.32));
         } catch (IOException ex) {
             Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
@@ -221,7 +226,7 @@ public class Tab1Controller implements Initializable{
      * This is done in Tab1AssistantController.java to reduce space used here.
      */
     private void displayMultiCoinTable() {
-        assistT1.coinTable(tableViewT1, coinList, webViewT1);
+        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1);
     }
 
     /**
@@ -391,6 +396,9 @@ public class Tab1Controller implements Initializable{
         dbConn.close();
     }
 
+    /**
+     * Pull saved coin data from database and add it to the accordion.
+     */
     private void populateSavedCoins() {
         ConnectToDatabase conn = new ConnectToDatabase();
         savedCoinsList.getItems().clear();
@@ -401,6 +409,25 @@ public class Tab1Controller implements Initializable{
                 savedCoinsList.getItems().add(this.savedCoins.get(i));
             }
         }
+    }
+    
+    /**
+     * Populates the currency changer drop down combo box located
+     * under the "edit" button in the menu bar.
+     */
+    private void populateCurrencyDropdown() {
+        
+        try {
+            FixerCurrencyApi fca = new FixerCurrencyApi();
+            HashMap<String,String> map = fca.getSupportedSymbols();
+//            for (Map.Entry<String,String> entry : map.entrySet()){
+//                this.currencyCombo.getItems().add(entry.getKey() + ": " + entry.getValue());
+//            }
+            this.currencyCombo.setItems(FXCollections.observableArrayList(map));
+        } catch (IOException ex) {
+            Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -413,11 +440,13 @@ public class Tab1Controller implements Initializable{
         this.uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         assistT1 = new Tab1AssistantController();
+        currencyCombo = new ComboBox();
         populateSavedCoins();
         createListCells();
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
+        populateCurrencyDropdown();
         onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
