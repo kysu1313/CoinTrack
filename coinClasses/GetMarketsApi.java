@@ -28,7 +28,8 @@ public class GetMarketsApi {
 
         // Call API connector class
         this.resp = new ConnectToApi("coinranking1.p.rapidapi.com",
-        "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+            "coinranking1.p.rapidapi.com",
+            "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
         data = this.resp.getJSONObject("data");
         markets = data.getJSONArray("markets");
         for (int i = 0; i < markets.length(); i++) {

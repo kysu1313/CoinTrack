@@ -54,7 +54,9 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
         }
             String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";            
             // Call API connector class
-            JSONObject resp = new ConnectToApi(url, "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+            JSONObject resp = new ConnectToApi(url, 
+                    "coinranking1.p.rapidapi.com",
+                    "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             JSONObject data = resp.getJSONObject("data");
             change = data.getDouble("change");
             // JSONArray containing price history for the particular coin.
@@ -78,7 +80,9 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
         for (int i = 1; i < 70; i++) {
             String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
             // For each response, extract body, data, and change
-            JSONObject resp = new ConnectToApi(url, "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+            JSONObject resp = new ConnectToApi(url, 
+                    "coinranking1.p.rapidapi.com",
+                    "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             JSONObject data = resp.getJSONObject("data");
             change = data.getDouble("change");
             // JSONArray containing price history for the particular coin.

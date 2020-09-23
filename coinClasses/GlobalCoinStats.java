@@ -21,6 +21,7 @@ public class GlobalCoinStats {
         
         // Call API connector class
         this.resp = new ConnectToApi("https://coinranking1.p.rapidapi.com/stats",
+            "coinranking1.p.rapidapi.com",
             "f20725d47cmshb045d494d70d075p19a1bcjsn0a052376e5cc").getJsonObject();
         this.data = resp.getJSONObject("data");
         this.totalCoins = data.getInt("totalCoins");
