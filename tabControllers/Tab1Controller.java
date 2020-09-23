@@ -12,6 +12,7 @@ import coinClasses.ConnectToDatabase;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
+import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
@@ -63,8 +64,8 @@ public class Tab1Controller implements Initializable{
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
-    private static Stage mainPage1;
-    private LinkedList<String> savedCoins;
+    public static Stage mainPage1;
+    private LinkedList<UserCoin> savedCoins;
     Tab1AssistantController assistT1;
 
     protected Scene scene;
@@ -415,5 +416,21 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
+        addContextMenuToList();
+    }
+    
+    private void addContextMenuToList() {
+        ContextMenu contextMenu = new ContextMenu();
+            MenuItem deleteCoin = new MenuItem();
+            deleteCoin.textProperty().bind(Bindings.format("Delete"));
+            deleteCoin.setOnAction(event -> {
+                ConnectToDatabase conn = new ConnectToDatabase();
+                conn.deleteSavedCoin((UserCoin)savedCoinsList.getSelectionModel().getSelectedItem());
+                populateSavedCoins();
+                conn.close();
+            });
+           
+            contextMenu.getItems().addAll(deleteCoin);
+            savedCoinsList.setContextMenu(contextMenu);
     }
 }
