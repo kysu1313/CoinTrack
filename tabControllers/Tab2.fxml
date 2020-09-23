@@ -71,7 +71,6 @@
                <tooltip>
                   <Tooltip text="Select wether you want to add or remove the entered coin from the graph" />
                </tooltip></ComboBox>
-               <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
             <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " textAlignment="CENTER" translateX="50.0">
                <font>
                   <Font name="System Bold" size="14.0" />
