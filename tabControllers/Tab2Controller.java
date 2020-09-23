@@ -11,7 +11,6 @@ import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.ParseCoinName;
 import coinClasses.SingleCoin;
-import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -99,7 +98,7 @@ public class Tab2Controller implements Initializable{
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
-    private LinkedList<UserCoin> savedCoins;
+    private LinkedList<String> savedCoins;
     private HashMap<String, XYChart.Series> seriesMap;
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
@@ -792,10 +791,5 @@ public class Tab2Controller implements Initializable{
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
         addRemoveComboBox.setVisible(false);
-    }
-    
-    @FXML
-    private void refresh(ActionEvent event) {
-        populateSavedCoins();
     }
 }

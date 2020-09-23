@@ -17,8 +17,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -540,11 +538,11 @@ public class ConnectToDatabase {
      * @param username
      * @return 
      */
-    public LinkedList<UserCoin> getSavedCoins(String username) {
-        LinkedList<UserCoin> list = new LinkedList<>();
+    public LinkedList<String> getSavedCoins(String username) {
+        LinkedList<String> list = new LinkedList<>();
         try {
             String query = "SELECT `all_coins`.`symbol`, "
-                    + "`all_coins`.`name`, `users`.`username`,user_coins.coin_id,`user_coins`.`user_id` "
+                    + "`all_coins`.`name`, `users`.`username` "
                     + "FROM `user_coins` LEFT JOIN users "
                     + "ON user_coins.user_id = users.userID "
                     + "LEFT JOIN all_coins ON user_coins.coin_id = "
@@ -555,7 +553,7 @@ public class ConnectToDatabase {
             ResultSet result = preparedStmt.executeQuery(query);
             System.out.println(query);
             while(result.next()) {
-                list.add(new UserCoin(result.getString("symbol"), result.getString("name"), result.getString("username"), result.getInt("coin_id"), result.getInt("user_id")));
+                list.add(result.getString("symbol") + " " + result.getString("name"));
             }
             System.out.println("Got list of coins of user logged in.");
         } catch (SQLException ex) {
@@ -583,21 +581,6 @@ public class ConnectToDatabase {
                 return true;
             }
             return false;
-        } catch (SQLException ex) {
-            System.out.println("Error in DB Connection: " + ex);
-            return false;
-        }
-    }
-    
-    public boolean deleteSavedCoin(UserCoin userCoin) {
-        try {
-            String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + userCoin.getUserID() + " AND `user_coins`.`coin_id` = " + userCoin.getCoinID();
-
-            Statement stmt = con.createStatement();
-      
-            stmt.executeUpdate(query);
-            
-            return true;
         } catch (SQLException ex) {
             System.out.println("Error in DB Connection: " + ex);
             return false;
