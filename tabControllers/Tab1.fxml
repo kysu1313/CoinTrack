@@ -139,5 +139,6 @@
             </AnchorPane>
         </items>
       </SplitPane>
+      <Button fx:id="testT1" layoutX="14.0" layoutY="578.0" mnemonicParsing="false" onAction="#handleTest" text="Test" />
     </children>
 </AnchorPane>

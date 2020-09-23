@@ -9,6 +9,7 @@ package tabControllers;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
+import coinClasses.CurrencyConvert;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
@@ -135,6 +136,44 @@ public class Tab1Controller implements Initializable{
         }
     }
 
+    /**
+     * Clears the tableView and textArea.
+     * @param event
+     */
+    @FXML
+    private void handleClearT1(ActionEvent event) {
+        System.out.println("clearing data");
+        tableViewT1.getItems().clear();
+        txtAreaT1.setText("");
+    }
+
+    @FXML
+    private void handleLogOutT1(ActionEvent event) {
+        System.out.println("logging out");
+        Parent root;
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            Tab1Controller.mainPage1.setScene(this.scene);
+            Tab1Controller.mainPage1.show();
+            closeOldStage();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @FXML
+    private void handleTest(ActionEvent event) {
+        try {
+            CurrencyConvert cc = new CurrencyConvert();
+            System.out.println(cc.convert("USD", "JPY", 2093.32));
+        } catch (IOException ex) {
+            Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // ========== HELPER METHODS ==========
 
     /**
@@ -175,34 +214,6 @@ public class Tab1Controller implements Initializable{
         text += "Total 24h Volume: " + globalStats.getTotal24hVolume() + "\n";
 
         txtAreaT1.setText(text);
-    }
-
-    /**
-     * Clears the tableView and textArea.
-     * @param event
-     */
-    @FXML
-    private void handleClearT1(ActionEvent event) {
-        System.out.println("clearing data");
-        tableViewT1.getItems().clear();
-        txtAreaT1.setText("");
-    }
-
-    @FXML
-    private void handleLogOutT1(ActionEvent event) {
-        System.out.println("logging out");
-        Parent root;
-        try {
-            Tab1Controller.mainPage1 = new Stage();
-            setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-            this.scene = new Scene(root);
-            Tab1Controller.mainPage1.setScene(this.scene);
-            Tab1Controller.mainPage1.show();
-            closeOldStage();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**

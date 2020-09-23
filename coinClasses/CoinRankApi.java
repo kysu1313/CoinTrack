@@ -52,7 +52,8 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     @Override
     public void run() {
             JSONObject coinRank = new ConnectToApi("https://coinranking1.p.rapidapi.com/coins",
-            "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
+                "coinranking1.p.rapidapi.com",
+                "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             data = coinRank.getJSONObject("data");
             stats = data.getJSONObject("stats");
             coins = data.getJSONArray("coins");

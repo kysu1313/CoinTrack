@@ -19,11 +19,12 @@ public class ConnectToApi implements ApiInterface{
     private JSONObject job;
     private String response;
     
-    public ConnectToApi(String _url, String _key) {
+    // Constructor for all rapid apis
+    public ConnectToApi(String _url, String _endpoint, String _key) {
         HttpResponse<JsonNode> resp;
         try {
             resp = Unirest.get(_url) // "https://coinranking1.p.rapidapi.com/stats"
-                    .header("x-rapidapi-host", "coinranking1.p.rapidapi.com")
+                    .header("x-rapidapi-host", _endpoint)
                     .header("x-rapidapi-key", _key)
                     .asJson();
             this.response = resp.getBody().toString();
