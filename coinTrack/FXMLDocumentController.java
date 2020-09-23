@@ -28,6 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.Tab1Controller;
 
 /**
  *
@@ -85,6 +86,9 @@ public class FXMLDocumentController implements Initializable {
             // After login is successful, you are taken to the main page
             Parent root;
             try {
+                if (Tab1Controller.mainPage1 != null) {
+                    Tab1Controller.mainPage1 .close();
+                }
                 getCurrentStage().close();
                 this.mainStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
