@@ -7,7 +7,7 @@ package coinClasses;
 
 /**
  *
- * @author Hamza Cheema
+ * @author Parth 
  */
 public class UserCoin {
     private String symbol;
