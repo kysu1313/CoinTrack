@@ -194,6 +194,7 @@ public class Tab1Controller implements Initializable{
      */
     private void resetCurrency() {
         this.selectedCurrency = "USD";
+        System.out.println("selected currency: " + this.selectedCurrency);
     }
 
     /**
