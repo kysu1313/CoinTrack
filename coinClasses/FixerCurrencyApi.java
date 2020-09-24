@@ -6,15 +6,20 @@ package coinClasses;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 import org.json.JSONObject;
 
 public class FixerCurrencyApi implements interfaces.ConvertCurrencyInterface{
     
     private final String ENDPOINT = "fixer-fixer-currency-v1.p.rapidapi.com";
     private final String KEY = "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc";
+    private HashMap<String, String> map;
+    private String[] symbolArr;
 
     public FixerCurrencyApi() throws IOException {
         System.out.println("Calling Fixer API");
+        this.map = new HashMap<>();
     }
 
     /**
@@ -40,19 +45,30 @@ public class FixerCurrencyApi implements interfaces.ConvertCurrencyInterface{
      * @return
      */
     public HashMap<String, String> getSupportedSymbols() {
-        HashMap<String, String> map = new HashMap<>();
         String url = "https://fixer-fixer-currency-v1.p.rapidapi.com/symbols";
         ConnectToApi con = new ConnectToApi(url, this.ENDPOINT, this.KEY);
-        JSONObject obj = con.getJsonObject();
-        JSONObject symbols = obj.getJSONObject("symbols");
+        JSONObject symbols = con.getJsonObject().getJSONObject("symbols");
         Iterator<String> keys = symbols.keys();
-        
         while (keys.hasNext()) {
             String key = keys.next();
-            if (symbols.get(key) instanceof JSONObject) {
-                map.put(key.toString(), symbols.getString(key));
-            }
+            this.map.put(key.toString(), symbols.getString(key));
+            
         }
-        return map;
+        return this.map;
     }
+    
+    /**
+     * Get the exchange rate from one currency to another.
+     * @param _from
+     * @param _to
+     * @return 
+     */
+    public long getExchangeRate(String _from, String _to) {
+        String url = "https://fixer-fixer-currency-v1.p.rapidapi.com/latest?base=" 
+                    + _from + "&symbols=GBP%252C" + _to + "%252CEUR";
+        ConnectToApi con = new ConnectToApi(url, this.ENDPOINT, this.KEY);
+        JSONObject obj = con.getJsonObject();
+        return obj.getJSONObject("rates").getLong(_to);
+    }
+    
 }

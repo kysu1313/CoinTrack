@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,11 +41,14 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -71,6 +75,8 @@ public class Tab1Controller implements Initializable{
     private LinkedList<String> friendList;
     public static Stage mainPage1;
     private LinkedList<UserCoin> savedCoins;
+    private ObservableList<String> currencies;
+    private String selectedCurrency;
     Tab1AssistantController assistT1;
 
     protected Scene scene;
@@ -78,6 +84,7 @@ public class Tab1Controller implements Initializable{
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
     @FXML private ComboBox currencyCombo;
+    @FXML private Menu editBtn;
 
     // Accordion
     @FXML private ListView onlineUsersList;
@@ -91,6 +98,7 @@ public class Tab1Controller implements Initializable{
     @FXML private CheckBox searchCoins;
     @FXML private CheckBox searchGlobalStats;
     @FXML private Text messageText;
+    @FXML private ToolBar bottomToolbar;
 
     // Table View
     @FXML public TableView<SingleCoin> tableViewT1;
@@ -170,17 +178,23 @@ public class Tab1Controller implements Initializable{
         }
     }
     
+    /**
+     * Reset to default currency.
+     */
     @FXML
-    private void handleTest(ActionEvent event) {
-        try {
-            FixerCurrencyApi cc = new FixerCurrencyApi();
-            System.out.println(cc.convert("USD", "JPY", 2093.32));
-        } catch (IOException ex) {
-            Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void handleResetCurr(ActionEvent event) {
+        resetCurrency();
     }
     
     // ========== HELPER METHODS ==========
+
+
+    /**
+     * Reset to default currency.
+     */
+    private void resetCurrency() {
+        this.selectedCurrency = "USD";
+    }
 
     /**
      * Display the api data to the screen.
@@ -421,10 +435,25 @@ public class Tab1Controller implements Initializable{
         try {
             FixerCurrencyApi fca = new FixerCurrencyApi();
             HashMap<String,String> map = fca.getSupportedSymbols();
-//            for (Map.Entry<String,String> entry : map.entrySet()){
-//                this.currencyCombo.getItems().add(entry.getKey() + ": " + entry.getValue());
-//            }
-            this.currencyCombo.setItems(FXCollections.observableArrayList(map));
+            // Initialize currencies observable array
+            this.currencies = FXCollections.observableArrayList();
+            // Loop through and add symbols to comboBox
+            for (Map.Entry<String,String> entry : map.entrySet()){
+                this.currencies.add(entry.getKey() + ": " + entry.getValue());
+            }
+            ComboBox cb = new ComboBox(FXCollections.observableArrayList(this.currencies));
+            cb.setTooltip(new Tooltip("Select the type of currency to convert data to."));
+            cb.setPromptText("Select Currency");
+            this.bottomToolbar.getItems().add(cb);
+            // Add event handler to combobox items
+            EventHandler<ActionEvent> event =
+                new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent e) {
+                        selectedCurrency = cb.getValue().toString().split(":")[0];
+                        System.out.println("default currency set to: " + selectedCurrency);
+                    }
+            };
+            cb.setOnAction(event);
         } catch (IOException ex) {
             Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -439,16 +468,17 @@ public class Tab1Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.uname = coinTrack.FXMLDocumentController.uname;
-        messageText.setText("Hello " + uname);
-        assistT1 = new Tab1AssistantController();
-        currencyCombo = new ComboBox();
+        this.messageText.setText("Hello " + uname);
+        this.assistT1 = new Tab1AssistantController();
+        this.editBtn = new Menu();
+        resetCurrency();
+        populateCurrencyDropdown();
         populateSavedCoins();
         createListCells();
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
-        populateCurrencyDropdown();
-        onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        this.onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY) {

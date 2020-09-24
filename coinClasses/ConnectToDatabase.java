@@ -553,7 +553,7 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-            System.out.println(query);
+//            System.out.println(query);
             while(result.next()) {
                 list.add(new UserCoin(result.getString("symbol"), result.getString("name"), result.getString("username"), result.getInt("coin_id"), result.getInt("user_id")));
             }
