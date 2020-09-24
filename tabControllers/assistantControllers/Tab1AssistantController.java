@@ -33,7 +33,7 @@ import javafx.util.Callback;
  */
 public class Tab1AssistantController {
 
-    public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1) {
+    public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, long currencyRate) {
         // Create columns
         TableColumn col1 = new TableColumn("Symbol");
         TableColumn col2 = new TableColumn("Name");
@@ -66,6 +66,23 @@ public class Tab1AssistantController {
                                 this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
                             }
                             setText(item);
+                        }
+                    }
+                };
+            }
+        });
+        col3.setCellFactory(new Callback<TableColumn, TableCell>() {
+            public TableCell call(TableColumn param) {
+                return new TableCell<SingleCoin, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        // Change color based on data
+                        if (!isEmpty()) {
+                            // This is a SUPER "hacky" way to change prices LOL
+                            String newPrice = String.format("%.5f", Float.parseFloat(item)*Float.parseFloat(""+currencyRate));
+                            setText(newPrice);
                         }
                     }
                 };

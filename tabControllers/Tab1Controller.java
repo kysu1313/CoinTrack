@@ -9,7 +9,7 @@ package tabControllers;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
-import coinClasses.FixerCurrencyApi;
+import coinClasses.FixerApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
 import coinClasses.SingleCoinHistory;
@@ -77,6 +77,9 @@ public class Tab1Controller implements Initializable{
     private LinkedList<UserCoin> savedCoins;
     private ObservableList<String> currencies;
     private String selectedCurrency;
+    private String previousCurrency;
+    private ComboBox cb;
+    private long currencyRate;
     Tab1AssistantController assistT1;
 
     protected Scene scene;
@@ -194,29 +197,15 @@ public class Tab1Controller implements Initializable{
      */
     private void resetCurrency() {
         this.selectedCurrency = "USD";
+        this.cb.setPromptText(this.selectedCurrency);
         System.out.println("selected currency: " + this.selectedCurrency);
     }
 
     /**
      * Display the api data to the screen.
-     *
-     * Currently this just posts it into the
-     * TextArea at the bottom of the page.
      */
     private void displayCoinText() {
-        cri = new CoinRankApi();
-        cri.join();
-        LinkedList<SingleCoin> temp = cri.getCoinList();
-        
-        /**
-         * Add coins to new database table all_coins
-         */
-//        cri.updateDatabaseCoins(temp);
-        
-        count = 50;
-        System.out.println(cri.getLimit());
-        coinNamePrice = cri.getNamePrice();
-        coinList = cri.getCoinList();
+//        coinList = cri.getCoinList();
         displayMultiCoinTable();
         createTableCells();
 
@@ -242,7 +231,35 @@ public class Tab1Controller implements Initializable{
      * This is done in Tab1AssistantController.java to reduce space used here.
      */
     private void displayMultiCoinTable() {
-        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1);
+        cri = new CoinRankApi();
+        cri.join();
+        this.coinList = cri.getCoinList();
+        /**
+         * Add coins to new database table all_coins
+         */
+        //cri.updateDatabaseCoins(temp);
+        
+        this.count = 50;
+        System.out.println(cri.getLimit());
+        this.coinNamePrice = this.cri.getNamePrice();
+        if (!selectedCurrency.equals("USD")) {
+            FixerApi fca;
+            long rate = 1;
+            try {
+                fca = new FixerApi();
+                rate = fca.getExchangeRate(this.previousCurrency, this.selectedCurrency);
+                System.out.println("Rate from " + this.previousCurrency + " to " + this.selectedCurrency + " is " + rate);
+            } catch (IOException ex) {
+                Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < this.coinList.size(); i++) {
+                double oldPrice = Double.parseDouble(this.coinList.get(i).getPrice());
+                double price = Double.parseDouble(this.coinList.get(i).getPrice()) * rate;
+                this.coinList.get(i).updatePrice("" + price);
+                System.out.println(rate + ", " + price + ", old: " + oldPrice + ", current: " + this.coinList.get(i).getPrice());
+            }
+        }
+        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.currencyRate);
     }
 
     /**
@@ -434,7 +451,7 @@ public class Tab1Controller implements Initializable{
     private void populateCurrencyDropdown() {
         
         try {
-            FixerCurrencyApi fca = new FixerCurrencyApi();
+            FixerApi fca = new FixerApi();
             HashMap<String,String> map = fca.getSupportedSymbols();
             // Initialize currencies observable array
             this.currencies = FXCollections.observableArrayList();
@@ -442,52 +459,24 @@ public class Tab1Controller implements Initializable{
             for (Map.Entry<String,String> entry : map.entrySet()){
                 this.currencies.add(entry.getKey() + ": " + entry.getValue());
             }
-            ComboBox cb = new ComboBox(FXCollections.observableArrayList(this.currencies));
-            cb.setTooltip(new Tooltip("Select the type of currency to convert data to."));
-            cb.setPromptText("Select Currency");
-            this.bottomToolbar.getItems().add(cb);
+            this.cb = new ComboBox(FXCollections.observableArrayList(this.currencies));
+            this.cb.setTooltip(new Tooltip("Select the type of currency to convert data to."));
+            this.cb.setPromptText("Select Currency");
+            this.bottomToolbar.getItems().add(this.cb);
             // Add event handler to combobox items
             EventHandler<ActionEvent> event =
                 new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent e) {
+                        previousCurrency = selectedCurrency;
                         selectedCurrency = cb.getValue().toString().split(":")[0];
+                        currencyRate = fca.getExchangeRate(previousCurrency, selectedCurrency);
                         System.out.println("default currency set to: " + selectedCurrency);
                     }
             };
-            cb.setOnAction(event);
+            this.cb.setOnAction(event);
         } catch (IOException ex) {
             Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }
-
-    /**
-     * Initialize the tab
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.uname = coinTrack.FXMLDocumentController.uname;
-        this.messageText.setText("Hello " + uname);
-        this.assistT1 = new Tab1AssistantController();
-        this.editBtn = new Menu();
-        resetCurrency();
-        populateCurrencyDropdown();
-        populateSavedCoins();
-        createListCells();
-        createFriendListCells();
-        addOnlineUsersToList();
-        addFriendsToList();
-        this.onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
-   addContextMenuToList();
     }
 
     private void addContextMenuToList() {
@@ -503,5 +492,35 @@ public class Tab1Controller implements Initializable{
            
             contextMenu.getItems().addAll(deleteCoin);
             savedCoinsList.setContextMenu(contextMenu);
+    }
+
+    /**
+     * Initialize the tab
+     * @param location
+     * @param resources
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.uname = coinTrack.FXMLDocumentController.uname;
+        this.messageText.setText("Hello " + uname);
+        this.assistT1 = new Tab1AssistantController();
+        this.editBtn = new Menu();
+        this.selectedCurrency = "USD";
+        this.currencyRate = 1;
+        populateCurrencyDropdown();
+        populateSavedCoins();
+        createListCells();
+        createFriendListCells();
+        addOnlineUsersToList();
+        addFriendsToList();
+        this.onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
+                }
+            }
+        });
+   addContextMenuToList();
     }
 }

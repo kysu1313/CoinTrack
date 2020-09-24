@@ -10,14 +10,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import org.json.JSONObject;
 
-public class FixerCurrencyApi implements interfaces.ConvertCurrencyInterface{
+public class FixerApi implements interfaces.ConvertCurrencyInterface{
     
     private final String ENDPOINT = "fixer-fixer-currency-v1.p.rapidapi.com";
     private final String KEY = "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc";
     private HashMap<String, String> map;
     private String[] symbolArr;
 
-    public FixerCurrencyApi() throws IOException {
+    public FixerApi() throws IOException {
         System.out.println("Calling Fixer API");
         this.map = new HashMap<>();
     }
@@ -65,9 +65,11 @@ public class FixerCurrencyApi implements interfaces.ConvertCurrencyInterface{
      */
     public long getExchangeRate(String _from, String _to) {
         String url = "https://fixer-fixer-currency-v1.p.rapidapi.com/latest?base=" 
-                    + _from + "&symbols=GBP%252C" + _to + "%252CEUR";
+                    + _from + "&symbols=" + _to; // GBP%252C + "%252CEUR"
+        System.out.println(url);
         ConnectToApi con = new ConnectToApi(url, this.ENDPOINT, this.KEY);
         JSONObject obj = con.getJsonObject();
+//        System.out.println(obj.getJSONObject("rates").getLong(_to));
         return obj.getJSONObject("rates").getLong(_to);
     }
     

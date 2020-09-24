@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -137,7 +136,8 @@
       </SplitPane>
       <ToolBar fx:id="bottomToolbar" layoutY="578.0" prefHeight="25.0" prefWidth="911.0">
         <items>
-          <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="Test" />
+            <Button fx:id="debugBtn" mnemonicParsing="false" text="Debug" />
+          <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="resetCurr" />
             <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="500.0">
                <font>
                   <Font name="System Bold" size="14.0" />
