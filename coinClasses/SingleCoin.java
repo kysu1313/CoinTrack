@@ -38,7 +38,6 @@ public class SingleCoin implements SingleCoinInterface{
     private double change;
     private int rank;
     private String stringChange;
-    
     private JSONArray object;
     private int coinId;
     private LinkedHashMap<Double, String> coinList2;
@@ -70,8 +69,7 @@ public class SingleCoin implements SingleCoinInterface{
     
     /**
      * Constructor for JSONArray.
-     * Used in CoinHistory class to pull data
-     * for a coin using its id.
+     * Used in CoinHistory class to pull data for a coin using its id.
      * @param jar 
      */
     public SingleCoin (JSONArray _jar, int _id) {
@@ -81,21 +79,21 @@ public class SingleCoin implements SingleCoinInterface{
             coinList2 = new LinkedHashMap<>();
         }
         // Loop that adds historical data to appropriate data vields
-        // this.object.length(), commented out b/c too long
         for (int i = 0; i < this.object.length(); i++) {
             JSONObject cn = this.object.getJSONObject(i);
             double price = Double.parseDouble(cn.getString("price"));
             String date = Integer.toString(cn.getInt("timestamp"));
-//            Date date = new Date((long)cn.getInt("timestamp") * 1000);
-//            System.out.println(date);
             this.coinList2.put(price, date);
         }
     }
     
+    // ========== SETTERS ==========
+    
+    public void updatePrice(String newPrice) {
+        this.price = newPrice;
+    }
     
     // ========== GETTERS ==========
-    
-//    public
     
     public LinkedHashMap<Double, String> getCoinHistory() {
         return this.coinList2;
