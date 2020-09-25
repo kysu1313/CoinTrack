@@ -136,7 +136,7 @@
       </SplitPane>
       <ToolBar fx:id="bottomToolbar" layoutY="578.0" prefHeight="25.0" prefWidth="911.0">
         <items>
-            <Button fx:id="debugBtn" mnemonicParsing="false" text="Debug" />
+            <CheckBox fx:id="debugBtn" mnemonicParsing="false" onAction="#handleDebug" text="Debug" />
           <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="resetCurr" />
             <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="500.0">
                <font>
