@@ -23,6 +23,7 @@ public class GetMarketsApi {
     private JSONArray markets;
     private JSONObject resp;
     private JSONObject data;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     public GetMarketsApi() {
 

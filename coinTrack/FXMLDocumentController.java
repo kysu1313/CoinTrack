@@ -40,6 +40,7 @@ public class FXMLDocumentController implements Initializable {
     protected Scene scene;
     private static String tempUsernameStorage;
     private String code;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -321,7 +322,6 @@ public class FXMLDocumentController implements Initializable {
                 this.scene = new Scene(root);
                 this.mainStage.setScene(this.scene);
                 this.mainStage.show();
-//                this.resetPassStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }

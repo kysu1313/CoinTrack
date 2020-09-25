@@ -32,6 +32,8 @@ import javafx.util.Callback;
  * @author Kyle
  */
 public class Tab1AssistantController {
+    
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, String currency, long currencyRate) {
         // Create columns

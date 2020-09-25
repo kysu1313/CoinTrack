@@ -16,6 +16,7 @@ public class GlobalCoinStats {
     private int totalExchanges;
     private int totalMarketCap;
     private int total24hVolume;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     public GlobalCoinStats() {
         

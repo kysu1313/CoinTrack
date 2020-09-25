@@ -41,6 +41,7 @@ public class SingleCoin implements SingleCoinInterface{
     private JSONArray object;
     private int coinId;
     private LinkedHashMap<Double, String> coinList2;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     /**
      * Constructor for JSONObject.

@@ -18,6 +18,7 @@ public class SingleCoinHistory {
     private JSONArray object;
     private int coinId;
     private LinkedHashMap<Double, String> coinList;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     /**
      * Constructor.

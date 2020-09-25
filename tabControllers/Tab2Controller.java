@@ -107,6 +107,7 @@ public class Tab2Controller implements Initializable{
     private XYChart.Series[] seriesArr;
     public HoveredThresholdNode node;
     private Tab currTab;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     Tab2AssistantController assistT2;
 
@@ -169,7 +170,7 @@ public class Tab2Controller implements Initializable{
     @FXML
     private void handleScanT2(ActionEvent event) {
         if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
-            System.out.println("bar chart selected");
+            if (DEBUG){System.out.println("bar chart selected");}
             barChart.getData().clear();
             barChart.layout();
             // Get the comboBox entry
@@ -184,14 +185,14 @@ public class Tab2Controller implements Initializable{
             displayMultiCoinGraph();
 
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
-            System.out.println("pie chart selected");
+            if (DEBUG){System.out.println("pie chart selected");}
             pieChart.getData().clear();
             pieChart.layout();
             coinList = new CoinRankApi();
             coinList.run();
             displayPieChart();
         } else {
-            System.out.println("bubble chart selected");
+            if (DEBUG){System.out.println("bubble chart selected");}
         }
 
     }
@@ -204,7 +205,7 @@ public class Tab2Controller implements Initializable{
     @FXML
     private void handleSearchT2(ActionEvent event) {
         if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
-            System.out.println("bar chart selected");
+            if (DEBUG){System.out.println("bar chart selected");}
             this.barChart.getData().clear();
             this.barChart.layout();
             this.barChartData.clear();
@@ -222,7 +223,7 @@ public class Tab2Controller implements Initializable{
             // Call method to search for coin and display its graph.
             displaySingleCoinGraph();
         } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
-            System.out.println("line chart selected");
+            if (DEBUG){System.out.println("line chart selected");}
             boolean isComboBoxEmpty = this.addRemoveComboBox.getSelectionModel().isEmpty();
             boolean isTimeBoxEmpty = this.comboBox.getSelectionModel().isEmpty();
             String arSelection = (String)this.addRemoveComboBox.getValue();
@@ -246,7 +247,7 @@ public class Tab2Controller implements Initializable{
                 removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
-            System.out.println("pie chart selected");
+            if (DEBUG){System.out.println("pie chart selected");}
         }
     }
 
@@ -270,30 +271,6 @@ public class Tab2Controller implements Initializable{
         clearLineChart();
         
     }
- 
-    /**
-     * Test button, might add it permanently.
-     * Shows the avaliable list of coins you can search for.
-     * @param event
-     */
-    @FXML
-    private void handleTest(ActionEvent event) {
-        File coinFile = new File("src\\coinClasses\\coinNamesIds.txt");
-        System.out.println(coinFile.toString());
-        try {
-            Scanner scanner = new Scanner(coinFile);
-            String lines = "";
-            // Scan the file
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] parts = line.split(" ");
-                lines += line + "\n";
-            }
-            this.txtAreaT2.setText(lines);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ParseCoinName.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     /**
      * Changes depending on what graph tab is open.
@@ -311,7 +288,7 @@ public class Tab2Controller implements Initializable{
      */
     @FXML
     private void handleLogOutT2(ActionEvent event) {
-        System.out.println("logging out");
+        if (DEBUG){System.out.println("logging out");}
         Parent root;
             try {
                 Tab2Controller.mainPage2 = new Stage();
@@ -341,7 +318,7 @@ public class Tab2Controller implements Initializable{
      * Display historical data for a single coin
      */
     private void displaySingleCoinGraph() {
-        System.out.println("displaying graph");
+        if (DEBUG){System.out.println("displaying graph");}
         String currCoin = "";
         // Get the string/int from the text field.
         if (this.searchFieldT2.getText().isEmpty()){
@@ -566,7 +543,7 @@ public class Tab2Controller implements Initializable{
      * Display / Rank all coin prices
      */
     private void displayMultiCoinGraph() {
-        System.out.println("displaying graph");
+        if (DEBUG){System.out.println("displaying graph");}
 //        coinHistory.join();
         this.historyMap = this.coinHistory.getPriceDate();
         int count = 0;
@@ -698,7 +675,7 @@ public class Tab2Controller implements Initializable{
                 new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab oldTab, Tab currentTab) {
-                System.out.println("Tab Change");
+                if (DEBUG){System.out.println("Tab Change");}
                 if (currentTab == barChartTab) {
                     currTab = barChartTab;
                     comboBox.setValue("Timeframe");
@@ -761,6 +738,8 @@ public class Tab2Controller implements Initializable{
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         this.uname = coinTrack.FXMLDocumentController.uname;
+//        this.DEBUG = Tab1Controller.DEBUG;
+        System.out.println(DEBUG);
         messageText.setText("Hello " + uname);
         linesToGraph = new LinkedList<>();
         seriesList = new LinkedList<>();
