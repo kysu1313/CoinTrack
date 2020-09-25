@@ -80,6 +80,7 @@ public class Tab1Controller implements Initializable{
     private String previousCurrency;
     private ComboBox cb;
     private long currencyRate;
+    private boolean debug;
     Tab1AssistantController assistT1;
 
     protected Scene scene;
@@ -96,6 +97,7 @@ public class Tab1Controller implements Initializable{
     @FXML private ContextMenu cm;
 
     // Bottom portion (button bar)
+    @FXML private CheckBox debugBtn;
     @FXML private TextArea txtAreaT1;
     @FXML private WebView webViewT1;
     @FXML private CheckBox searchCoins;
@@ -149,6 +151,7 @@ public class Tab1Controller implements Initializable{
         } else if (searchCoins.isSelected()) {
             tableViewT1.getItems().clear();
             tableViewT1.getColumns().clear();
+            if(debug){System.out.println("search coins");}
             displayCoinText();
         }
     }
@@ -166,7 +169,7 @@ public class Tab1Controller implements Initializable{
 
     @FXML
     private void handleLogOutT1(ActionEvent event) {
-        System.out.println("logging out");
+        if(this.debug){System.out.println("logging out");}
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
@@ -180,7 +183,7 @@ public class Tab1Controller implements Initializable{
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Reset to default currency.
      */
@@ -189,6 +192,14 @@ public class Tab1Controller implements Initializable{
         resetCurrency();
     }
     
+    @FXML
+    private void handleDebug(ActionEvent event) {
+        if (this.debugBtn.isArmed()) {
+            System.out.println("Debug mode enabled");
+            this.debug = true;
+        }
+    }
+
     // ========== HELPER METHODS ==========
 
 
@@ -198,13 +209,27 @@ public class Tab1Controller implements Initializable{
     private void resetCurrency() {
         this.selectedCurrency = "USD";
         this.cb.setPromptText(this.selectedCurrency);
-        System.out.println("selected currency: " + this.selectedCurrency);
+//        displayCoinText();
+        if(this.debug){System.out.println("selected currency: " + this.selectedCurrency);}
+        
     }
 
     /**
      * Display the api data to the screen.
      */
     private void displayCoinText() {
+        cri = new CoinRankApi();
+        cri.join();
+        this.coinList = cri.getCoinList();
+        /**
+         * Add coins to new database table all_coins
+         */
+        //cri.updateDatabaseCoins(temp);
+
+        this.count = 50;
+        if(this.debug){System.out.println("number of coins: " + cri.getCoinList().size());}
+        this.coinList = cri.getCoinList();
+        this.coinNamePrice = this.cri.getNamePrice();
 //        coinList = cri.getCoinList();
         displayMultiCoinTable();
         createTableCells();
@@ -231,35 +256,8 @@ public class Tab1Controller implements Initializable{
      * This is done in Tab1AssistantController.java to reduce space used here.
      */
     private void displayMultiCoinTable() {
-        cri = new CoinRankApi();
-        cri.join();
-        this.coinList = cri.getCoinList();
-        /**
-         * Add coins to new database table all_coins
-         */
-        //cri.updateDatabaseCoins(temp);
-        
-        this.count = 50;
-        System.out.println(cri.getLimit());
-        this.coinNamePrice = this.cri.getNamePrice();
-        if (!selectedCurrency.equals("USD")) {
-            FixerApi fca;
-            long rate = 1;
-            try {
-                fca = new FixerApi();
-                rate = fca.getExchangeRate(this.previousCurrency, this.selectedCurrency);
-                System.out.println("Rate from " + this.previousCurrency + " to " + this.selectedCurrency + " is " + rate);
-            } catch (IOException ex) {
-                Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            for (int i = 0; i < this.coinList.size(); i++) {
-                double oldPrice = Double.parseDouble(this.coinList.get(i).getPrice());
-                double price = Double.parseDouble(this.coinList.get(i).getPrice()) * rate;
-                this.coinList.get(i).updatePrice("" + price);
-                System.out.println(rate + ", " + price + ", old: " + oldPrice + ", current: " + this.coinList.get(i).getPrice());
-            }
-        }
-        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.currencyRate);
+        if(this.debug){System.out.println("current currency: " + this.selectedCurrency);}
+        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
     }
 
     /**
@@ -268,6 +266,7 @@ public class Tab1Controller implements Initializable{
      * @param _status
      */
     private void setOnlineStatus(String _uname, int _status) {
+        if(this.debug){System.out.println("Update " + _uname + "'s online status");}
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
@@ -281,6 +280,7 @@ public class Tab1Controller implements Initializable{
         this.onlineUsers = new LinkedList<>();
         this.onlineUsers = conn.getOnlineUsers();
         conn.close();
+        if(this.debug){System.out.println("total online users: " + this.onlineUsers.size());}
         for (int i = 0; i < this.onlineUsers.size(); i++) {
             onlineUsersList.getItems().add(this.onlineUsers.get(i));
         }
@@ -304,6 +304,7 @@ public class Tab1Controller implements Initializable{
                 } else {
                     conn.addFriend(this.uname, friendName);
                     addFriendsToList();
+                    if(this.debug){System.out.println("Added " + friendName + " to friend list");}
                     txtAreaT1.setText("Added " + friendName + " to friend list!");
                 }
                 conn.close();
@@ -335,6 +336,7 @@ public class Tab1Controller implements Initializable{
         mi1.setOnAction(event -> {
                 SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
                 saveCoin(this.uname, item.getId());
+                if(this.debug){System.out.println("Added " + item.getName() + " to saved coin list");}
                 populateSavedCoins();
             });
         ContextMenu menu = new ContextMenu();
@@ -398,6 +400,7 @@ public class Tab1Controller implements Initializable{
             sendMessageItem.setOnAction(event -> {
                 ConnectToDatabase conn = new ConnectToDatabase();
                 conn.removeFriend(cell.getText());
+                if(this.debug){System.out.println("Removed " + cell.getText() + " from friend list");}
                 addFriendsToList();
                 conn.close();
             });
@@ -437,9 +440,11 @@ public class Tab1Controller implements Initializable{
         savedCoinsList.getItems().clear();
         this.savedCoins = conn.getSavedCoins(this.uname);
         conn.close();
+        if (this.debug){System.out.println("Populating saved coin list");}
         if (this.savedCoins != null && this.savedCoins.size() > 0) {
             for (int i = 0; i < this.savedCoins.size(); i++) {
                 savedCoinsList.getItems().add(this.savedCoins.get(i));
+                if (this.debug){System.out.println("Adding: " + this.savedCoins.get(i));}
             }
         }
     }
@@ -463,6 +468,7 @@ public class Tab1Controller implements Initializable{
             this.cb.setTooltip(new Tooltip("Select the type of currency to convert data to."));
             this.cb.setPromptText("Select Currency");
             this.bottomToolbar.getItems().add(this.cb);
+            if (this.debug){System.out.println("Adding currencies to drop-down menu");}
             // Add event handler to combobox items
             EventHandler<ActionEvent> event =
                 new EventHandler<ActionEvent>() {
@@ -505,6 +511,7 @@ public class Tab1Controller implements Initializable{
         this.messageText.setText("Hello " + uname);
         this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();
+        // Set default currency
         this.selectedCurrency = "USD";
         this.currencyRate = 1;
         populateCurrencyDropdown();
@@ -521,6 +528,6 @@ public class Tab1Controller implements Initializable{
                 }
             }
         });
-   addContextMenuToList();
+        addContextMenuToList();
     }
 }

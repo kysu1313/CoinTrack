@@ -49,7 +49,7 @@ public class SingleCoin implements SingleCoinInterface{
      */
     public SingleCoin(JSONObject job) {
         coinList = job;
-        
+
         id = coinList.getInt("id");
         uuid = coinList.getString("uuid");
         slug = coinList.getString("slug");
@@ -63,14 +63,14 @@ public class SingleCoin implements SingleCoinInterface{
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
-        
+
         stringChange = "" + change;
     }
-    
+
     /**
      * Constructor for JSONArray.
      * Used in CoinHistory class to pull data for a coin using its id.
-     * @param jar 
+     * @param jar
      */
     public SingleCoin (JSONArray _jar, int _id) {
         this.object = _jar;
@@ -86,19 +86,19 @@ public class SingleCoin implements SingleCoinInterface{
             this.coinList2.put(price, date);
         }
     }
-    
+
     // ========== SETTERS ==========
-    
+
     public void updatePrice(String newPrice) {
         this.price = newPrice;
     }
-    
+
     // ========== GETTERS ==========
-    
+
     public LinkedHashMap<Double, String> getCoinHistory() {
         return this.coinList2;
     }
-    
+
     @Override
     public int getId() {
         return coinList.getInt("id");

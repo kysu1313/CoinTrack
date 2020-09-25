@@ -33,11 +33,11 @@ import javafx.util.Callback;
  */
 public class Tab1AssistantController {
 
-    public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, long currencyRate) {
+    public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, String currency, long currencyRate) {
         // Create columns
         TableColumn col1 = new TableColumn("Symbol");
         TableColumn col2 = new TableColumn("Name");
-        TableColumn col3 = new TableColumn("Price (USD)");
+        TableColumn col3 = new TableColumn("Price (" + currency + ")");
         TableColumn col4 = new TableColumn("Rank");
         TableColumn col5 = new TableColumn("Change");
         TableColumn col6 = new TableColumn("Volume");
