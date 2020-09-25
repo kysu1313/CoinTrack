@@ -34,6 +34,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     private int coinId;
     private HashMap<Integer, LinkedHashMap<Double, String>> allCoins;
     private String time;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     public CoinHistory() {
         start();
@@ -41,18 +42,21 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     
     /**
      * This constructor makes a single api call using
-     * the provided coin id. 
-     * @param _id 
+     * the provided coin id.
+     * @param _id
+     * @param _name
+     * @param _timeFrame
+     * @param debug
      */
     public CoinHistory(int _id, String _name, String _timeFrame) {
-        singleHistoryMap = new LinkedHashMap<>();
-        coinId = _id;
-        time = _timeFrame;
+        this.singleHistoryMap = new LinkedHashMap<>();
+        this.coinId = _id;
+        this.time = _timeFrame;
         if (!_name.equals("")){
             ParseCoinName newName = new ParseCoinName(_name);
             coinId = newName.getId();
         }
-            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";            
+            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
             // Call API connector class
             JSONObject resp = new ConnectToApi(url, 
                     "coinranking1.p.rapidapi.com",
@@ -76,6 +80,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     @Override
     public void run() {
         history = new LinkedList<>();
+        if (DEBUG){System.out.println("Calling coinRank history api");}
         // Increment the coin "id" for each call. Not sure how many coins there are though.
         for (int i = 1; i < 70; i++) {
             String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
@@ -106,7 +111,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
      * is not already started.
      */
     public void start() {
-        System.out.println("Starting Thread");
+        if (DEBUG){System.out.println("Starting Thread");}
         if (t == null) {
             t = new Thread(this);
             t.start();
@@ -120,6 +125,7 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
     public void join() {
         try {
             t.join();
+            if (DEBUG){System.out.println("Join Thread");}
         } catch (InterruptedException ex) {
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
         }

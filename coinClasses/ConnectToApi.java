@@ -18,6 +18,7 @@ public class ConnectToApi implements ApiInterface{
     
     private JSONObject job;
     private String response;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     // Constructor for all rapid apis
     public ConnectToApi(String _url, String _endpoint, String _key) {

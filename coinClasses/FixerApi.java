@@ -16,9 +16,10 @@ public class FixerApi implements interfaces.ConvertCurrencyInterface{
     private final String KEY = "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc";
     private HashMap<String, String> map;
     private String[] symbolArr;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     public FixerApi() throws IOException {
-        System.out.println("Calling Fixer API");
+        if (this.DEBUG) {System.out.println("Calling Fixer API");}
         this.map = new HashMap<>();
     }
 
@@ -66,10 +67,11 @@ public class FixerApi implements interfaces.ConvertCurrencyInterface{
     public long getExchangeRate(String _from, String _to) {
         String url = "https://fixer-fixer-currency-v1.p.rapidapi.com/latest?base=" 
                     + _from + "&symbols=" + _to; // GBP%252C + "%252CEUR"
-        System.out.println(url);
+        
         ConnectToApi con = new ConnectToApi(url, this.ENDPOINT, this.KEY);
         JSONObject obj = con.getJsonObject();
-//        System.out.println(obj.getJSONObject("rates").getLong(_to));
+        if (this.DEBUG){System.out.println(url);}
+        if (this.DEBUG){System.out.println(obj.getJSONObject("rates").getLong(_to));}
         return obj.getJSONObject("rates").getLong(_to);
     }
     

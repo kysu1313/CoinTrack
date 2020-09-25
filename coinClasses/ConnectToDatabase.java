@@ -18,7 +18,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -31,6 +30,7 @@ import tabControllers.AlertMessages;
 public class ConnectToDatabase {
     
     Connection con;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     /**
      * Makes a simple connection to the database.
@@ -42,7 +42,7 @@ public class ConnectToDatabase {
              */
             Class.forName("com.mysql.jdbc.Driver");
             this.con = DriverManager.getConnection("jdbc:mysql://sql9.freemysqlhosting.net:3306/sql9364184", "sql9364184", "vLIxP8hK8C");
-            System.out.println("DB connection successful");
+            if (DEBUG){System.out.println("DB connection successful");}
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }

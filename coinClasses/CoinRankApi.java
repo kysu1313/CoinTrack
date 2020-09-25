@@ -33,10 +33,12 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     private JSONArray coins;
     private LinkedList<SingleCoin> coinList;
     private LinkedHashMap<String, String> namePrice;
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     /**
      * Constructor, Automatically makes a call to the "coins" url and parses the
      * data into easily usable data;
+     * @param debugMode
      */
     public CoinRankApi() {
         start();
@@ -64,7 +66,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      * Create a new thread if the thread is not already started.
      */
     public void start() {
-        System.out.println("Starting Thread");
+        if (DEBUG){System.out.println("Starting Thread");}
         if (t == null) {
             t = new Thread(this);
             t.start();
@@ -77,7 +79,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     public void join() {
         try {
             t.join();
-            System.out.println("Closing thread");
+            if (DEBUG){System.out.println("Closing thread");}
         } catch (InterruptedException ex) {
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
         }
