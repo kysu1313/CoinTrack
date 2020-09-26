@@ -35,7 +35,7 @@ and open the template in the editor.
 }
 
 .root {
-    -fx-background-color: #5c5c5c;
+     -fx-background-image: url("Background.jpg");
 }
 
 .text {
@@ -48,6 +48,6 @@ and open the template in the editor.
 
 .text:after {
 	content: "Login";
-	position: absolute; left: 10px; top: 5px;
+	position: absolute; left: 10px; top: 20px;
 	color: rgba(255,0,0,0.5);
 }

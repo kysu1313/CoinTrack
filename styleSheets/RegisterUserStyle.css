@@ -8,6 +8,10 @@ and open the template in the editor.
     Author     : Kyle
 */
 
+.root {
+     -fx-background-image: url("Background.jpg");
+}
+
 .button {
     -fx-background-color: 
         #000000,
