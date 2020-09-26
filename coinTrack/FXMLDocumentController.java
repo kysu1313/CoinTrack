@@ -111,7 +111,8 @@ public class FXMLDocumentController implements Initializable {
      * @param event 
      */
     @FXML public void handleRegister(ActionEvent event) {
-        this.lblStatus.setText("Register User");
+        //This shows "Register User on the main login screen.
+        //this.lblStatus.setText("Register User");
         // After login is successful, you are taken to the main page
         Parent root;
         try {
