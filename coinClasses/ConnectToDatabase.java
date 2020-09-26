@@ -29,10 +29,11 @@ import tabControllers.AlertMessages;
 
 public class ConnectToDatabase {
     
-    Connection con;
+    private Connection con;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     /**
+     * CONSTRUCTOR
      * Makes a simple connection to the database.
      */
     public ConnectToDatabase() {
@@ -103,6 +104,31 @@ public class ConnectToDatabase {
     }
     
     /**
+     * Update price, change, and volume in the all_coins table in the database.
+     * @param _id
+     * @param _newPrice
+     * @param _newChange
+     * @param _newVolume 
+     */
+    public void updateCoinPrices(int _id, double _newPrice, double _newChange, int _newVolume) {
+        try {
+            // Insert statement, using prepared statements
+            String query = " UPDATE all_coins SET price = ?, changePrice = ?, volume = ? WHERE coinID = ?";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            preparedStmt.setDouble(1, _newPrice);
+            preparedStmt.setDouble(2, _newChange);
+            preparedStmt.setInt(3, _newVolume);
+            preparedStmt.setInt(4, _id);
+            // execute the preparedstatement
+            preparedStmt.execute();
+            if (DEBUG){System.out.println("Updated coin price: " + _id + " to: " + _newPrice);}
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    /**
      * Insert data into the "coins" table.
      * 
      * THIS TABLE IS AN OLD VERSION. USE all_coins FROM NOW ON.
@@ -148,13 +174,12 @@ public class ConnectToDatabase {
                 AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
                 return false;
             }
-
             String query = " INSERT INTO `user_coins` (`user_id`, `coin_id`) VALUES (?, ?)";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             preparedStmt.setInt(1, id);
             preparedStmt.setInt(2, _coin_id);
-//             System.out.println(preparedStmt.toString());
+            if (DEBUG){System.out.println(preparedStmt.toString());}
             // execute the preparedstatement
             preparedStmt.execute();
             return true;
@@ -190,7 +215,7 @@ public class ConnectToDatabase {
             preparedStmt.setString(4, hashedPass);
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Registration Success");
+            if (DEBUG){System.out.println("Registration Success");}
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -212,7 +237,7 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Updated live status");
+            if (DEBUG){System.out.println("Updated live status");}
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -233,7 +258,7 @@ public class ConnectToDatabase {
             while(result.next()) {
                 list.add(result.getString("username"));
             }
-            System.out.println("Got list of live members");
+            if (DEBUG){System.out.println("Got list of live members");}
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -261,7 +286,7 @@ public class ConnectToDatabase {
             preparedStmt.setInt(4, 1);
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Added Friend");
+            if (DEBUG){System.out.println("Added Friend");}
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -279,7 +304,7 @@ public class ConnectToDatabase {
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             preparedStmt.execute();
-            System.out.println(_username + " was removed from friend list");
+            if (DEBUG){System.out.println(_username + " was removed from friend list");}
         } catch (SQLException ex) {
             System.out.println(ex);
         }
@@ -467,7 +492,7 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             // execute the preparedstatement
             preparedStmt.execute();
-            System.out.println("Password reset success");
+            if (DEBUG){System.out.println("Password reset success");}
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -553,7 +578,7 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-//            System.out.println(query);
+            if (DEBUG){System.out.println(query);}
             while(result.next()) {
                 list.add(new UserCoin(result.getString("symbol"), result.getString("name"), result.getString("username"), result.getInt("coin_id"), result.getInt("user_id")));
             }
@@ -577,7 +602,7 @@ public class ConnectToDatabase {
 
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
-//            System.out.println("Query: " + query);
+            if (DEBUG){System.out.println("Query: " + query);}
             //while(!result.isBeforeFirst())
             while(result.next()== true){
                 return true;
@@ -592,11 +617,8 @@ public class ConnectToDatabase {
     public boolean deleteSavedCoin(UserCoin userCoin) {
         try {
             String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + userCoin.getUserID() + " AND `user_coins`.`coin_id` = " + userCoin.getCoinID();
-
             Statement stmt = con.createStatement();
-      
             stmt.executeUpdate(query);
-            
             return true;
         } catch (SQLException ex) {
             System.out.println("Error in DB Connection: " + ex);

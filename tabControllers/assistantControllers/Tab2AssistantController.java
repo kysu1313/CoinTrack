@@ -31,6 +31,9 @@ import javafx.scene.input.MouseEvent;
  */
 public class Tab2AssistantController {
 
+
+    private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
+
     /**
      * Creates a LinkedList of SingleCoins.
      *

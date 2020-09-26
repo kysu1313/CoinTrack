@@ -135,7 +135,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void handleRegisterSubmit(ActionEvent event) {
-        System.out.println("register");
+        if (DEBUG){System.out.println("register");}
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
                 Parent root;
@@ -223,7 +223,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void handleForgotPassword(ActionEvent event) {
-        System.out.println("Forgot your password already..");
+        if (DEBUG){System.out.println("Forgot your password already..");}
         Parent root;
         try {
             getCurrentStage().close();
@@ -249,7 +249,7 @@ public class FXMLDocumentController implements Initializable {
         ConnectToDatabase conn = new ConnectToDatabase();
         if (conn.emailExists(toEmail)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail);
-            System.out.println(tempUsernameStorage);
+            if (DEBUG){System.out.println(tempUsernameStorage);}
             conn.close();
             this.code = generateRecoveryCode();
             RecoveryEmail sendMail = new RecoveryEmail(toEmail, this.tempUsernameStorage, this.code);
@@ -295,8 +295,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void handleResetPassword(ActionEvent event) {
-        System.out.println("register");
-        System.out.println(tempUsernameStorage);
+        if (DEBUG){System.out.println("register " + tempUsernameStorage);}
         // Make sure new password is not empty
         if (this.resetPassword.getText().isEmpty()){
             this.resetPassword.setPromptText("Enter new password");

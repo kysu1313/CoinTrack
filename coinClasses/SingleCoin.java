@@ -52,7 +52,7 @@ public class SingleCoin implements SingleCoinInterface{
         coinList = job;
 
         id = coinList.getInt("id");
-        uuid = coinList.getString("uuid");
+        uuid = coinList.getString("uuid").replace("'", "");
         slug = coinList.getString("slug");
         symbol = coinList.getString("symbol");
         name = coinList.getString("name");
