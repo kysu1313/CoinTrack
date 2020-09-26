@@ -199,6 +199,17 @@ public class Tab1Controller implements Initializable{
             this.DEBUG = true;
         }
     }
+    
+    @FXML
+    private void handleTest(ActionEvent event) {
+        try {
+            FixerApi fa = new FixerApi();
+            System.out.println(fa.convert("CLP", "BSD", 10));
+        } catch (IOException ex) {
+            Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
     // ========== HELPER METHODS ==========
 
@@ -209,6 +220,11 @@ public class Tab1Controller implements Initializable{
     private void resetCurrency() {
         this.selectedCurrency = "USD";
         this.cb.setPromptText(this.selectedCurrency);
+        tableViewT1.getItems().clear();
+        tableViewT1.getColumns().clear();
+        txtAreaT1.setText("");
+        displayGlobalStats();
+        displayCoinText();
 //        displayCoinText();
         if(DEBUG){System.out.println("selected currency: " + this.selectedCurrency);}
         
@@ -218,9 +234,14 @@ public class Tab1Controller implements Initializable{
      * Display the api data to the screen.
      */
     private void displayCoinText() {
-        cri = new CoinRankApi();
-        cri.join();
-        this.coinList = cri.getCoinList();
+        this.cri = new CoinRankApi();
+        this.cri.join();
+        this.coinList = this.cri.getCoinList();
+        /**
+         * Update coins in database. probably not necessary to run here. 
+         * It already runs at launch.
+         */
+        //updateCoinPricesDB();
         /**
          * Add coins to new database table all_coins
          */
@@ -228,12 +249,30 @@ public class Tab1Controller implements Initializable{
 
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
-        this.coinList = cri.getCoinList();
+        this.coinList = this.cri.getCoinList();
         this.coinNamePrice = this.cri.getNamePrice();
 //        coinList = cri.getCoinList();
         displayMultiCoinTable();
         createTableCells();
 
+    }
+    
+    /**
+     * Update coin prices in the database.
+     */
+    private void updateCoinPricesDB() {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        if (this.coinList.isEmpty()) {
+            this.cri = new CoinRankApi();
+            this.cri.run();
+            this.cri.join();
+            this.coinList = this.cri.getCoinList();
+        }
+        this.coinList.forEach((item) -> {
+            conn.updateCoinPrices(item.getId(), Double.parseDouble(item.getPrice()),
+                    item.getChange(), item.getVolume());
+        });
+        conn.close();
     }
 
     /**
@@ -475,8 +514,10 @@ public class Tab1Controller implements Initializable{
                     public void handle(ActionEvent e) {
                         previousCurrency = selectedCurrency;
                         selectedCurrency = cb.getValue().toString().split(":")[0];
-                        currencyRate = fca.getExchangeRate(previousCurrency, selectedCurrency);
-                        System.out.println("default currency set to: " + selectedCurrency);
+                        currencyRate = fca.getExchangeRate("USD", selectedCurrency); //previousCurrency
+                        System.out.println(previousCurrency + " x " + currencyRate + " = " + selectedCurrency);
+                        if (currencyRate == 0){currencyRate = 1;}
+                        if (DEBUG){System.out.println("currency rate: " + currencyRate);}
                     }
             };
             this.cb.setOnAction(event);
@@ -511,6 +552,7 @@ public class Tab1Controller implements Initializable{
         this.messageText.setText("Hello " + uname);
         this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();
+        this.coinList = new LinkedList<>();
         // Set default currency
         this.selectedCurrency = "USD";
         this.currencyRate = 1;
@@ -520,6 +562,7 @@ public class Tab1Controller implements Initializable{
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
+        updateCoinPricesDB();
         this.onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {

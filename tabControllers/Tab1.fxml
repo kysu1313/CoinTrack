@@ -137,12 +137,13 @@
       <ToolBar fx:id="bottomToolbar" layoutY="578.0" prefHeight="25.0" prefWidth="911.0">
         <items>
             <CheckBox fx:id="debugBtn" mnemonicParsing="false" onAction="#handleDebug" text="Debug" />
-          <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="resetCurr" />
+          <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="Reset Currency" />
             <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " translateX="500.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
+            <Button fx:id="testBtn" mnemonicParsing="false" onAction="#handleTest" text="Test" />
         </items>
       </ToolBar>
     </children>

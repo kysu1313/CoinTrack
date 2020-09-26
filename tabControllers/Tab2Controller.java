@@ -84,7 +84,7 @@ public class Tab2Controller implements Initializable{
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private int coinsToGraph = 25;
-    private boolean isSingleCoinScan;
+//    private boolean isSingleCoinScan;
     private CoinRankApi coinList;
     private String timeSelection;
     private int tabSelection;
@@ -104,7 +104,7 @@ public class Tab2Controller implements Initializable{
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
-    private XYChart.Series[] seriesArr;
+//    private XYChart.Series[] seriesArr;
     public HoveredThresholdNode node;
     private Tab currTab;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
@@ -119,11 +119,11 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab barChartTab;
     @FXML private Tab pieChartTab;
     @FXML private Tab lineChartTab;
-    @FXML private ToolBar toolBarT2;
+//    @FXML private ToolBar toolBarT2;
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
     @FXML private VBox sideVBox;
-    @FXML private Label hoverLabel;
+//    @FXML private Label hoverLabel;
 
     // Accordion
     @FXML private ListView onlineUsersListT2;
@@ -330,12 +330,10 @@ public class Tab2Controller implements Initializable{
             char ch = currCoin.charAt(0);
             // Create CoinHistory object from given input.
             if (Character.isAlphabetic(ch)){
-                CoinHistory coinHist = new CoinHistory(0, currCoin, this.timeSelection);
-                this.singleHistoryMap = coinHist.getSingleHistory();
+                this.singleHistoryMap = new CoinHistory(0, currCoin, this.timeSelection).getSingleHistory();
             } else {
                 int temp = Integer.parseInt(currCoin);
-                CoinHistory coinHist = new CoinHistory(temp, "", this.timeSelection);
-                this.singleHistoryMap = coinHist.getSingleHistory();
+                this.singleHistoryMap = new CoinHistory(temp, "", this.timeSelection).getSingleHistory();
             }
         }
         // Prevent old data from showing back up  --  NOT WORKING
@@ -353,7 +351,7 @@ public class Tab2Controller implements Initializable{
         this.barChart.setTitle("Viewing the past " + this.timeSelection);
         this.barChartData2.add(this.series4);
         this.barChart.setData(this.barChartData2);
-        colorBarGraph();
+        colorBarChart("green", "red");
         scaleGraph();
     }
     
@@ -373,11 +371,10 @@ public class Tab2Controller implements Initializable{
                 }
             }
             // Add series1 to the barChartData, then add that to the barChart
-            this.barChart.setTitle("Viewing the past " + this.timeSelection);
-            this.barChartData2.add(this.series4);
-            this.barChart.setData(this.barChartData2);
-            colorBarChart("green", "red");
-            scaleGraph();
+//            this.barChart.setTitle("Viewing the past " + this.timeSelection);
+//            this.barChartData2.add(this.series4);
+//            this.barChart.setData(this.barChartData2);
+            
         }
     
     }
