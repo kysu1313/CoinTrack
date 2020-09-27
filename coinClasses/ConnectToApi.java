@@ -45,4 +45,8 @@ public class ConnectToApi implements ApiInterface{
         return this.response;
     }
     
+//    public String testing() {
+//        return
+//    }
+    
 }

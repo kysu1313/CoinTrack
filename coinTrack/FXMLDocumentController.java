@@ -193,7 +193,7 @@ public class FXMLDocumentController implements Initializable {
     
     /**
      * Checks if a username already exists in database.
-     * @return 
+     * @return
      */
     private boolean usernameAcceptable() {
         // Call DB connection class
@@ -216,11 +216,11 @@ public class FXMLDocumentController implements Initializable {
             return false;
         }
     }
-    
+
     /**
      * Change to the password recovery stage if the forgot password
      * button is clicked.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleForgotPassword(ActionEvent event) {
@@ -234,7 +234,6 @@ public class FXMLDocumentController implements Initializable {
             this.scene = new Scene(root);
             this.forgotPassStage.setScene(this.scene);
             this.forgotPassStage.show();
-//            coinTrack.CoinTrack.newStage.close();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -242,7 +241,7 @@ public class FXMLDocumentController implements Initializable {
     
     /**
      * Handles action of clicking the forgot password button.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleRecoveryEmail(ActionEvent event) {
@@ -259,11 +258,11 @@ public class FXMLDocumentController implements Initializable {
             this.forgotPasswordWarning.setFill(Color.RED);
         }
     }
-    
+
     /**
      * Send an email containing a code that the user will type
      * into the box to confirm their identity.
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleRecoveryCode(ActionEvent event) {
@@ -287,12 +286,12 @@ public class FXMLDocumentController implements Initializable {
             this.forgotPasswordWarning.setFill(Color.RED);
         }
     }
-    
+
     /**
-     * When the user presses the "reset password" button on 
-     * PasswordResetFXML.fxml page a connection to the database 
+     * When the user presses the "reset password" button on
+     * PasswordResetFXML.fxml page a connection to the database
      * is made submitting the updated password;
-     * @param event 
+     * @param event
      */
     @FXML
     private void handleResetPassword(ActionEvent event) {
