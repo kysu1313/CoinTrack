@@ -1,34 +1,16 @@
 package tabControllers;
 
-import coinClasses.CoinHistory;
-import coinClasses.CoinRankApi;
-import coinClasses.ConnectToDatabase;
-import coinClasses.SingleCoin;
-import coinClasses.UserCoin;
-import coinTrack.FXMLDocumentController;
-import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.TableView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import tabControllers.assistantControllers.Tab1AssistantController;
-import tabControllers.assistantControllers.Tab2AssistantController;
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 /**
- * This is the "Dashboard" tab. It contains data for all the users saved coins.
+ *
  * @author Kyle
  */
+
 public class Tab3Controller implements Initializable{
 
     private static final String USERNAME = FXMLDocumentController.uname;
