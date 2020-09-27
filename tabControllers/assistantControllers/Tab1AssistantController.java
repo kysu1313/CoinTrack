@@ -1,5 +1,3 @@
-
-
 package tabControllers.assistantControllers;
 
 import coinClasses.ConnectToDatabase;
@@ -118,48 +116,4 @@ public class Tab1AssistantController {
         });
     }
 
-    /**
-     * Display coin table on the Dsahboard
-     * @param tableViewT1
-     * @param coinList 
-     */
-    public void coinTableDash(TableView tableViewT1, LinkedList<SingleCoin> coinList) {
-        // Create columns
-        TableColumn col1 = new TableColumn("Name");
-        TableColumn col2 = new TableColumn("Symbol");
-        TableColumn col3 = new TableColumn("Price (USD)");
-        TableColumn col4 = new TableColumn("Change");
-        // Link columns to properties in SingleCoin class
-        col1.setCellValueFactory(new PropertyValueFactory<>("name"));
-        col2.setCellValueFactory(new PropertyValueFactory<>("symbol"));
-        col3.setCellValueFactory(new PropertyValueFactory<>("price"));
-        col4.setCellValueFactory(new PropertyValueFactory<>("stringChange"));
-        // Add columns to tableView
-        tableViewT1.getColumns().addAll(col1, col2, col3, col4);
-        ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
-        // Change text color of "change" column if positive or negative change.
-        col4.setCellFactory(new Callback<TableColumn, TableCell>() {
-            public TableCell call(TableColumn param) {
-                return new TableCell<SingleCoin, String>() {
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        // Change color based on data
-                        if (!isEmpty()) {
-                            this.setStyle("-fx-text-fill: #09de57;-fx-font-weight: bold;");
-                            if (item.contains("-")) {
-                                this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
-                            }
-                            setText(item);
-                        }
-                    }
-                };
-            }
-        });
-        tableViewT1.setItems(obvList);
-        tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    }
-
 }
-
