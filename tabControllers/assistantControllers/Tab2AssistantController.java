@@ -1,16 +1,25 @@
+
 package tabControllers.assistantControllers;
 
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Random;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -48,6 +57,57 @@ public class Tab2AssistantController {
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= pieChartCoins - 1; i++) {
             SingleCoin coin = temp.get(i);
+            double price = Double.parseDouble(coin.getPrice());
+            // Allow 5 decimal places
+            double rounded = (double) Math.round(price * 100000d) / 100000d;
+            pieChartData.add(new PieChart.Data(coin.getName(), rounded));
+        }
+        pieChart.setData(pieChartData);
+    }
+
+    public void multiBarChart(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap, int _numCoins) {
+        LinkedList<XYChart.Series> serLst = new LinkedList<>();
+        LinkedList<String> colors = new LinkedList<>();
+        int len = _linkedMap.size();
+        _linkedMap.forEach((item) -> {
+            XYChart.Series series = new XYChart.Series();
+            int count = 0;
+            for (Map.Entry<Double, String> entry : item.entrySet()) {
+                if (count > _numCoins){break;}
+                long tempLong = Long.parseLong(entry.getValue());
+                Date d = new Date(tempLong);
+                String date = "" + d;
+                double price = entry.getKey();
+                series.getData().add(new XYChart.Data("", price)); // date
+                count++;
+            }
+            serLst.add(series);
+            Random rand = new Random();
+            colors.add(String.format("#%06x", rand.nextInt(0xffffff + 1)));
+        });
+        _barChart.getData().addAll(serLst);
+        _linkedMap.forEach((item) -> {
+            int count = 0;
+            for (Map.Entry<Double, String> entry : item.entrySet()) {
+                if (count >= _numCoins) {break;}
+                double price = entry.getKey();
+                Node n = _barChart.lookup(".data" + count + ".chart-bar");
+                n.setStyle("-fx-bar-fill: " + colors.get(count));
+                count++;
+            }
+        });
+//        var labels = barChart.xAxis().labels();
+//        labels.enabled(false);
+    }
+
+    /**
+     * Creates a pie chart from given list of SingleCoins .
+     */
+    public void PieChartDashboard(LinkedList<SingleCoin> coinList, PieChart pieChart) {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        // Loops over SingleCoin list and adds data to pieChart
+        for (int i = 0; i <= coinList.size() - 1; i++) {
+            SingleCoin coin = coinList.get(i);
             double price = Double.parseDouble(coin.getPrice());
             // Allow 5 decimal places
             double rounded = (double) Math.round(price * 100000d) / 100000d;
@@ -215,3 +275,4 @@ public class Tab2AssistantController {
         return cursorCoords;
     }
 }
+
