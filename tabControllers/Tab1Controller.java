@@ -6,8 +6,10 @@ package tabControllers;
  *
  * - Kyle
  */
+import coinClasses.AlphaVantage;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
+import coinClasses.ConnectToApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.FixerApi;
 import coinClasses.GlobalCoinStats;
@@ -202,12 +204,9 @@ public class Tab1Controller implements Initializable{
     
     @FXML
     private void handleTest(ActionEvent event) {
-        try {
-            FixerApi fa = new FixerApi();
-            System.out.println(fa.convert("CLP", "BSD", 10));
-        } catch (IOException ex) {
-            Logger.getLogger(Tab1Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        AlphaVantage av = new AlphaVantage();
+        String test = av.getWeekly();
+        
         
     }
 
@@ -220,6 +219,7 @@ public class Tab1Controller implements Initializable{
     private void resetCurrency() {
         this.selectedCurrency = "USD";
         this.cb.setPromptText(this.selectedCurrency);
+        this.currencyRate = 1;
         tableViewT1.getItems().clear();
         tableViewT1.getColumns().clear();
         txtAreaT1.setText("");

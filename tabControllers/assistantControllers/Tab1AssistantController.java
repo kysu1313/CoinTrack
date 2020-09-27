@@ -21,6 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import tabControllers.Tab1Controller;
 
 /**
  * This Class contains additional methods used in Tab1 to display data to the
@@ -36,6 +37,7 @@ public class Tab1AssistantController {
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, String currency, long currencyRate) {
+        
         // Create columns
         TableColumn col1 = new TableColumn("Symbol");
         TableColumn col2 = new TableColumn("Name");

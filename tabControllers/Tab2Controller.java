@@ -8,25 +8,21 @@ package tabControllers;
 
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
+import coinClasses.ConnectToApi;
 import coinClasses.ConnectToDatabase;
-import coinClasses.ParseCoinName;
-import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -47,14 +43,11 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SplitMenuButton;
@@ -62,7 +55,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -71,7 +63,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.HoveredThresholdNode;
-import tabControllers.assistantControllers.ShowCoordinates;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
 /**
@@ -119,6 +110,7 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab barChartTab;
     @FXML private Tab pieChartTab;
     @FXML private Tab lineChartTab;
+    @FXML private Tab webTab;
 //    @FXML private ToolBar toolBarT2;
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
@@ -427,7 +419,7 @@ public class Tab2Controller implements Initializable{
             count++;
         }
     }
-    
+
     /**
      * Display coin historical prices in a line chart.
      */
@@ -436,7 +428,7 @@ public class Tab2Controller implements Initializable{
         XYChart.Series newSeries = new XYChart.Series();
         // Get the string/int from the text field.
         if (this.searchFieldT2.getText().isEmpty()){
-            AlertMessages.showInformationMessage("Coin Name", 
+            AlertMessages.showInformationMessage("Coin Name",
                             "You must enter the name, symbol, or id"
                             + "of the coin you would like to view.");
         } else {
@@ -454,8 +446,6 @@ public class Tab2Controller implements Initializable{
         // Add series1 to the barChartData, then add that to the barChart
         this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
         this.lineChart.setData(this.lineChartData);
-        
-        
     }
 
     /**
@@ -489,6 +479,7 @@ public class Tab2Controller implements Initializable{
                 
                 this.dataList.add(new XYChart.Data(date, price));
             });
+//            if (newSeries.getName() == null){newSeries.setName(line);}
             this.seriesList.add(newSeries);
             for (Data<Number, String> entry : newSeries.getData()) {
                 Tooltip t = new Tooltip(entry.getExtraValue().toString());
@@ -496,7 +487,11 @@ public class Tab2Controller implements Initializable{
             }
             this.lineChartData.add(newSeries);
         }
-//        return this.seriesList;
+        Iterator<XYChart.Series<Number, String>> it1 = lineChartData.iterator();
+        Iterator<String> it2 = lines.iterator();
+        while (it1.hasNext() && it2.hasNext()) {
+            it1.next().setName(it2.next());
+        }
     }
     
     /**
@@ -700,7 +695,6 @@ public class Tab2Controller implements Initializable{
                     setMouseLineChart();
                     addRemoveComboBox.setValue("Add / Remove");
                     lineChart.setAnimated(false);
-//                    addRemoveComboBox.setTranslateX(-125);
                 }
             }
         });
