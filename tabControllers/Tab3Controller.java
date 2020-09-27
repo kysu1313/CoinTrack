@@ -1,5 +1,28 @@
 package tabControllers;
 
+import coinClasses.SingleCoin;
+import coinClasses.CoinHistory;
+import coinClasses.CoinRankApi;
+import coinClasses.ConnectToDatabase;
+import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
+import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.ResourceBundle;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import tabControllers.assistantControllers.Tab1AssistantController;
+import tabControllers.assistantControllers.Tab2AssistantController;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -173,14 +196,5 @@ public class Tab3Controller implements Initializable{
         populateSavedCoins();
         addFriendsToList();
         createFriendListCells();
-        this.onlineUsersListT3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    ContextMenu cm = new ContextMenu();
-                    cm.show(onlineUsersListT3, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
     }
 }
