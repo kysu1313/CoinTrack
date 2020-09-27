@@ -1,3 +1,4 @@
+
 package tabControllers.assistantControllers;
 
 import coinClasses.CoinRankApi;
@@ -274,3 +275,4 @@ public class Tab2AssistantController {
         return cursorCoords;
     }
 }
+
