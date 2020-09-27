@@ -57,7 +57,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="onlineUsersListT2" layoutX="-13.0" layoutY="83.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="onlineUsersListT3" layoutX="-13.0" layoutY="83.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -65,7 +65,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="savedCoinsListT2" layoutX="-19.0" layoutY="52.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="savedCoinsListT3" layoutX="-19.0" layoutY="52.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -73,7 +73,7 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <ListView fx:id="friendsListT2" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <ListView fx:id="friendsListT3" layoutX="-19.0" layoutY="77.0" prefHeight="354.0" prefWidth="161.0" style="-fx-background-color: #858585;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children></AnchorPane>
                                     </content>
                                   </TitledPane>
@@ -107,10 +107,6 @@
                                                 </BarChart>
                                                 <PieChart fx:id="pieChartDash" />
                                                 <TableView fx:id="tableDash" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                  <columns>
-                                                    <TableColumn prefWidth="75.0" text="C1" />
-                                                    <TableColumn prefWidth="75.0" text="C2" />
-                                                  </columns>
                                                 </TableView>
                                                 <ListView fx:id="listDash" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
                                              </children>
