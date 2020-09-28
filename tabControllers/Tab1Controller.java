@@ -204,8 +204,10 @@ public class Tab1Controller implements Initializable{
     
     @FXML
     private void handleTest(ActionEvent event) {
-        AlphaVantage av = new AlphaVantage();
-        String test = av.getWeekly();
+        AlphaVantage av = new AlphaVantage("BTC");
+        av.getDaily().forEach((item) -> {
+            System.out.println(item.keySet());
+        });
         
         
     }
