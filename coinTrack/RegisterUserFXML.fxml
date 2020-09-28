@@ -40,5 +40,6 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
+      <Button fx:id="BackBtn" mnemonicParsing="false" onAction="#handleBackToMain" text="Back" />
    </children>
 </AnchorPane>
