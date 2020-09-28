@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,9 +25,11 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
@@ -62,9 +66,31 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView friendsListT3;
     @FXML private ListView onlineUsersListT3;
     @FXML private VBox vbox;
+    @FXML private TextField searchField;
     
     @FXML private void handleSearch(ActionEvent event) {
         
+    }
+
+    private void installTextFieldEvent() {
+        this.searchField.textProperty().addListener(new ChangeListener<String>() {
+            
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                System.out.println(" Text Changed to  " + newValue + ")\n");
+                LinkedList<Text> temp = new LinkedList<>();
+                coinList.forEach((item) -> {
+                    if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())){
+                        temp.add(new Text(item.getSymbol() + ": " + item.getName()));
+                    }
+                });
+                vbox.getChildren().clear();
+                for (int i = 0; i < temp.size(); i++) {
+                    Label tmp = new Label(temp.get(i).getText());
+                    vbox.getChildren().add(tmp);
+                }
+            }
+        });
     }
 
     /**
@@ -185,15 +211,9 @@ public class Tab3Controller implements Initializable{
     private void populateSearch() {
         System.out.println(coinList.size());
         for (int i = 0; i < coinList.size(); i++) {
-            System.out.println(coinList.get(i).getName());
-            Label tmp = new Label(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
+            Text tmp = new Text(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
             this.vbox.getChildren().add(tmp);
         }
-        System.out.println(this.vbox.getChildren());
-//        coinList.forEach((item) -> {
-//            Label tmp = new Label(item.getSymbol() + ": " + item.getName());
-//            this.vbox.getChildren().add(tmp);
-//        });
     }
 
     /**
@@ -222,5 +242,6 @@ public class Tab3Controller implements Initializable{
         populateSavedCoins();
         addFriendsToList();
         createFriendListCells();
+        installTextFieldEvent();
     }
 }
