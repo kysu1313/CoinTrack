@@ -127,17 +127,17 @@ public class ConnectToDatabase {
             System.out.println(ex);
         }
     }
-    
+
     /**
      * Insert data into the "coins" table.
-     * 
+     *
      * THIS TABLE IS AN OLD VERSION. USE all_coins FROM NOW ON.
-     * 
+     *
      * @param _uuid
      * @param _symbol
      * @param _name
      * @param _price
-     * @param _date 
+     * @param _date
      */
     public void coinDatabase(String _uuid, String _symbol, String _name, String _price, Date _date) {
         try {
@@ -159,16 +159,16 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
     }
+
     /**
      * Insert data to the "user_coins" table
-     * 
+     *
      * @param userName
-     * @param _coin_id 
+     * @param _coin_id
      */
     public boolean insertSavedCoin(String userName, int _coin_id) {
          try {
             // Insert statement, using prepared statements
-
             int id = getIdFromUsername(userName);
             if (checkSavedCoinsForDuplication(id, _coin_id)) {
                 AlertMessages.showErrorMessage("Save Coin", "This coin already exists in the user saved coins.");
@@ -186,10 +186,10 @@ public class ConnectToDatabase {
         } catch (SQLException ex) {
             ex.printStackTrace();
             AlertMessages.showErrorMessage("Save COin", "Coin saving failed against users.");
-
             return false;
         }
     }
+
     /**
      * Insert data to the "users" table.
      *
@@ -226,7 +226,7 @@ public class ConnectToDatabase {
      * Online : 1
      * Offline : 0
      * @param _username
-     * @param _isOnline 
+     * @param _isOnline
      */
     public void setUserOnlineStatus(String _username, int _isOnline) {
         try {
@@ -242,10 +242,32 @@ public class ConnectToDatabase {
             System.out.println(ex);
         }
     }
-    
+
+    /**
+     * Get a coins ID given its symbol. The ID comes from the api.
+     * @param _symbol
+     * @return
+     */
+    public int getCoinID(String _symbol) {
+        int res = 0;
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from all_coins where symbol = '" + _symbol + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            if (DEBUG){System.out.println(query);}
+            ResultSet result = preparedStmt.executeQuery(query);
+            res = result.getInt("coinID");
+            if (DEBUG){System.out.println("Got list of live members");}
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return res;
+    }
+
     /**
      * Returns a linked list of all users currently online.
-     * @return 
+     * @return
      */
     public LinkedList<String> getOnlineUsers() {
         LinkedList<String> list = new LinkedList<>();
