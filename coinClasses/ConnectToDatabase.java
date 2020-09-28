@@ -582,13 +582,35 @@ public class ConnectToDatabase {
             while(result.next()) {
                 list.add(new UserCoin(result.getString("symbol"), result.getString("name"), result.getString("username"), result.getInt("coin_id"), result.getInt("user_id")));
             }
-            System.out.println("Got list of coins of user logged in.");
+            if (DEBUG){System.out.println("Got list of coins of user logged in.");}
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }
         return list;
-    }  
+    }
+    
+    /**
+     * Returns a list of all coins in the database.
+     * @return
+     */
+    public LinkedList<String> getAllCoins() {
+        LinkedList<String> temp = new LinkedList<>();
+        try {
+            String query = "SELECT * FROM `all_coins`";
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            if (DEBUG){System.out.println("Query: " + query);}
+            //while(!result.isBeforeFirst())
+            while(result.next()== true){
+                temp.add(result.getString("symbol") + ": " + result.getString("name"));
+            }
+            return temp;
+        } catch (SQLException ex) {
+            System.out.println("Error in DB Connection: " + ex);
+        }
+        return temp;
+    }
 
     /**
      * This method checks that the coin user is saving, is saved previously or not. 

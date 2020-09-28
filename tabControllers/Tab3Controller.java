@@ -10,16 +10,22 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
@@ -39,7 +45,7 @@ public class Tab3Controller implements Initializable{
     private static final String USERNAME = FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
     private LinkedList<UserCoin> userCoinList;
-    private LinkedList<SingleCoin> coinList;
+    protected static LinkedList<SingleCoin> coinList;
     private LinkedList<SingleCoin> userSingleCoins;
     private LinkedList<UserCoin> savedCoins;
     private LinkedList<String> friendList;
@@ -55,6 +61,11 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView savedCoinsListT3;
     @FXML private ListView friendsListT3;
     @FXML private ListView onlineUsersListT3;
+    @FXML private VBox vbox;
+    
+    @FXML private void handleSearch(ActionEvent event) {
+        
+    }
 
     /**
      * Get users saved coins from database then create SingleCoin objects
@@ -69,8 +80,8 @@ public class Tab3Controller implements Initializable{
         CoinRankApi cri = new CoinRankApi();
         cri.run();
         cri.join();
-        this.coinList = cri.getCoinList();
-        this.coinList.forEach((item) -> {
+        coinList = cri.getCoinList();
+        coinList.forEach((item) -> {
             userCoinList.forEach((entry) -> {
                 if (item.getName().equalsIgnoreCase(entry.getName())){
                     userSingleCoins.add(item);
@@ -170,6 +181,20 @@ public class Tab3Controller implements Initializable{
             }
         }
     }
+    
+    private void populateSearch() {
+        System.out.println(coinList.size());
+        for (int i = 0; i < coinList.size(); i++) {
+            System.out.println(coinList.get(i).getName());
+            Label tmp = new Label(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
+            this.vbox.getChildren().add(tmp);
+        }
+        System.out.println(this.vbox.getChildren());
+//        coinList.forEach((item) -> {
+//            Label tmp = new Label(item.getSymbol() + ": " + item.getName());
+//            this.vbox.getChildren().add(tmp);
+//        });
+    }
 
     /**
      * Initialize tab3, "dashboard".
@@ -179,7 +204,7 @@ public class Tab3Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.userCoinList = new LinkedList<>();
-        this.coinList = new LinkedList<>();
+        coinList = new LinkedList<>();
         this.userSingleCoins = new LinkedList<>();
         this.singleHistoryMap = new LinkedHashMap<>();
         this.userHistoryMap = new LinkedHashMap<>();
@@ -188,6 +213,7 @@ public class Tab3Controller implements Initializable{
         this.onlineUserList = new LinkedList<>();
         this.savedCoins = new LinkedList<>();
         getCoinList();
+        populateSearch();
         createTable();
         createPieChart();
         createBarChart();
