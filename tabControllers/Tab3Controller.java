@@ -16,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
@@ -24,12 +25,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
@@ -78,16 +81,21 @@ public class Tab3Controller implements Initializable{
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 //                System.out.println(" Text Changed to  " + newValue + ")\n");
-                LinkedList<Text> temp = new LinkedList<>();
+                LinkedList<Label> temp = new LinkedList<>();
                 coinList.forEach((item) -> {
-                    if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())){
-                        temp.add(new Text(item.getSymbol() + ": " + item.getName()));
+                    if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())) {
+                        Label txt = new Label(item.getSymbol() + ": " + item.getName());
+                        temp.add(txt);
+                        addListListener(txt);
+                        txt.setMaxWidth(Double.MAX_VALUE);
                     }
                 });
                 vbox.getChildren().clear();
                 for (int i = 0; i < temp.size(); i++) {
                     Label tmp = new Label(temp.get(i).getText());
                     vbox.getChildren().add(tmp);
+                    addListListener(tmp);
+                    tmp.setMaxWidth(Double.MAX_VALUE);
                 }
             }
         });
@@ -208,11 +216,55 @@ public class Tab3Controller implements Initializable{
         }
     }
     
+    /**
+     * Save coin using coinID and username.
+     * @param userName
+     * @param coinID 
+     */
+    private void saveCoin(String userName, int coinID) {
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(userName, coinID)) {
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
+        }
+        dbConn.close();
+    }
+    
+    /**
+     * Adds mouse handler for search VBox labels.
+     *
+     * @param _lbl
+     */
+    private void addListListener(Label _lbl) {
+        _lbl.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            _lbl.setStyle("-fx-background-color: #bababa;");
+        });
+        _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
+            _lbl.setStyle("-fx-background-color: white;");
+        });
+//        _lbl.setOnMouseClicked((MouseEvent mouseEvent) -> {
+//            if (mouseEvent.isSecondaryButtonDown()){
+//                System.out.println("right click");
+//            }
+//        });
+        ContextMenu cm = new ContextMenu();
+        MenuItem m1 = new MenuItem("Save Coin");
+        m1.setOnAction((event) -> {
+            if (DEBUG) {System.out.println("Choice 1 clicked!");}
+            ConnectToDatabase conn = new ConnectToDatabase();
+            System.out.println(_lbl.getText().split(":")[0]+" " +conn.getCoinID(_lbl.getText().split(":")[0]));
+            saveCoin(USERNAME, conn.getCoinID(_lbl.getText().split(":")[0]));
+        });
+        cm.getItems().addAll(m1);
+        _lbl.setContextMenu(cm);
+    }
+
     private void populateSearch() {
         System.out.println(coinList.size());
         for (int i = 0; i < coinList.size(); i++) {
-            Text tmp = new Text(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
+            Label tmp = new Label(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
             this.vbox.getChildren().add(tmp);
+            addListListener(tmp);
+            tmp.setMaxWidth(Double.MAX_VALUE);
         }
     }
 

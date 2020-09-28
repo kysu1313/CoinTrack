@@ -465,6 +465,11 @@ public class Tab1Controller implements Initializable{
         coinTrack.FXMLDocumentController.mainStage.close();
     }
     
+    /**
+     * Save coin using coinID and username.
+     * @param userName
+     * @param coinID 
+     */
     private void saveCoin(String userName, int coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(userName, coinID)) {
