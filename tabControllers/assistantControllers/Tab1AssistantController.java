@@ -24,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import tabControllers.Tab1Controller;
+import static tabControllers.Tab1Controller.DEBUG;
 
 /**
  * This Class contains additional methods used in Tab1 to display data to the
@@ -159,6 +160,18 @@ public class Tab1AssistantController {
         });
         tableViewT1.setItems(obvList);
         tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+    
+    /**
+     * Change a users online status. i.e. when they log on/off .
+     * @param _uname
+     * @param _status
+     */
+    public void setOnlineStatus(String _uname, int _status) {
+        if(DEBUG){System.out.println("Update " + _uname + "'s online status");}
+        ConnectToDatabase conn = new ConnectToDatabase();
+        conn.setUserOnlineStatus(_uname, _status);
+        conn.close();
     }
 
 }

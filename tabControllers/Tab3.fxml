@@ -3,7 +3,6 @@
 <?import java.net.URL?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Accordion?>
@@ -25,8 +24,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="566.0" prefWidth="897.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab3Controller">
+<AnchorPane id="AnchorPane" prefHeight="566.0" prefWidth="897.0" stylesheets="styleSheets/tab3.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab3Controller">
     <stylesheets>
         <URL value="@styleSheets/tab3.css" />
     </stylesheets>
@@ -115,7 +116,7 @@
                                                 <PieChart fx:id="pieChartDash" />
                                                 <TableView fx:id="tableDash" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                 </TableView>
-                                                <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.rowIndex="1">
                                                    <top>
                                                       <HBox prefHeight="29.0" prefWidth="375.0" BorderPane.alignment="CENTER">
                                                          <children>
@@ -125,7 +126,7 @@
                                                       </HBox>
                                                    </top>
                                                    <center>
-                                                      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
                                                         <content>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="216.0" prefWidth="365.0">
                                                                <children>
@@ -153,7 +154,13 @@
       </SplitPane>
       <ToolBar layoutY="526.0" prefHeight="40.0" prefWidth="897.0">
         <items>
-          <Button mnemonicParsing="false" text="Refresh" />
+          <Button mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hello" translateX="500.0">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Text>
+            <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#handleLogout" text="Logout" translateX="650.0" />
         </items>
       </ToolBar>
     </children>

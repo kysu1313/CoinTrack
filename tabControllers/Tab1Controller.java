@@ -175,7 +175,7 @@ public class Tab1Controller implements Initializable{
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            this.assistT1.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             Tab1Controller.mainPage1.setScene(this.scene);
@@ -306,12 +306,12 @@ public class Tab1Controller implements Initializable{
      * @param _uname
      * @param _status
      */
-    private void setOnlineStatus(String _uname, int _status) {
-        if(DEBUG){System.out.println("Update " + _uname + "'s online status");}
-        ConnectToDatabase conn = new ConnectToDatabase();
-        conn.setUserOnlineStatus(_uname, _status);
-        conn.close();
-    }
+//    private void setOnlineStatus(String _uname, int _status) {
+//        if(DEBUG){System.out.println("Update " + _uname + "'s online status");}
+//        ConnectToDatabase conn = new ConnectToDatabase();
+//        conn.setUserOnlineStatus(_uname, _status);
+//        conn.close();
+//    }
 
     /**
      * Call database returning a list of all users who are online.

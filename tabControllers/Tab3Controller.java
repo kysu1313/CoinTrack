@@ -6,10 +6,13 @@ import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
+import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,7 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
@@ -32,6 +38,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
@@ -60,6 +67,9 @@ public class Tab3Controller implements Initializable{
     private LinkedHashMap<Double, String> singleHistoryMap;
     private LinkedHashMap<Double, String> userHistoryMap;
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
+    private Scene scene;
+    Tab1AssistantController assistT1;
+    Tab2AssistantController assistT2;
 
     @FXML private BarChart barChartDash;
     @FXML private PieChart pieChartDash;
@@ -70,17 +80,67 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView onlineUsersListT3;
     @FXML private VBox vbox;
     @FXML private TextField searchField;
-    
+
     @FXML private void handleSearch(ActionEvent event) {
-        
+
+    }
+
+    @FXML private void handleRefresh(ActionEvent event) {
+        this.userCoinList.clear();
+        coinList.clear();
+        this.userSingleCoins.clear();
+        this.singleHistoryMap = new LinkedHashMap<>();
+        this.userHistoryMap = new LinkedHashMap<>();
+        this.linkedUserHistoryMap = new LinkedList<>();
+        this.friendList.clear();
+        this.onlineUserList.clear();
+        this.savedCoins.clear();
+        getCoinList();
+        populateSearch();
+        createTable();
+        createPieChart();
+        createBarChart();
+        createListCells();
+        addOnlineUsersToList();
+        populateSavedCoins();
+        addFriendsToList();
+        createFriendListCells();
+        installTextFieldEvent();
+    }
+
+    /**
+     * Handle log out button click.
+     * Takes you back to log in screen.
+     * @param event
+     */
+    @FXML
+    private void handleLogout(ActionEvent event) {
+        if(DEBUG){System.out.println("logging out");}
+        Parent root;
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            this.assistT1.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            Tab1Controller.mainPage1.setScene(this.scene);
+            Tab1Controller.mainPage1.show();
+            closeOldStage();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Returns and closes the main stage from the class where it was created
+     */
+    private void closeOldStage() {
+        coinTrack.FXMLDocumentController.mainStage.close();
     }
 
     private void installTextFieldEvent() {
         this.searchField.textProperty().addListener(new ChangeListener<String>() {
-            
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                System.out.println(" Text Changed to  " + newValue + ")\n");
                 LinkedList<Label> temp = new LinkedList<>();
                 coinList.forEach((item) -> {
                     if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())) {
@@ -127,7 +187,6 @@ public class Tab3Controller implements Initializable{
             userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
             linkedUserHistoryMap.add(userHistoryMap);
         });
-        
     }
 
     /**
@@ -138,20 +197,29 @@ public class Tab3Controller implements Initializable{
         Tab1AssistantController tas1 = new Tab1AssistantController();
         tas1.coinTableDash(this.tableDash, this.userSingleCoins);
     }
-    
+
+    /**
+     * Create the pie chart.
+     * Uses Tab2AssistantController.
+     */
     private void createPieChart() {
         Tab2AssistantController tas2 = new Tab2AssistantController();
         tas2.PieChartDashboard(this.userSingleCoins, this.pieChartDash);
     }
-    
+
+    /**
+     * Create the bar chart.
+     * Uses Tab2AssistantController.
+     */
     private void createBarChart() {
         Tab2AssistantController tas2 = new Tab2AssistantController();
         tas2.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
         this.barChartDash.setLegendVisible(true);
     }
-    
+
     /**
      * Call database returning a list of all users who are online.
+     * Uses Tab2AssistantController.
      */
     private void addOnlineUsersToList() {
         Tab2AssistantController tas2 = new Tab2AssistantController();
@@ -182,7 +250,11 @@ public class Tab3Controller implements Initializable{
         Tab2AssistantController tas2 = new Tab2AssistantController();
         tas2.friendListCells(this.friendsListT3);
     }
-    
+
+    /**
+     * Add event listeners to the vbox that contains the search results.
+     * Highlights selected when mouse enters and adds combobox for right clicks.
+     */
     private void addListEvents() {
         onlineUsersListT3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
             ContextMenu cmu = new ContextMenu();
@@ -204,6 +276,9 @@ public class Tab3Controller implements Initializable{
         });
     }
 
+    /**
+     *          @Parth, can you add this
+     */
     private void populateSavedCoins() {
         ConnectToDatabase conn = new ConnectToDatabase();
         savedCoinsListT3.getItems().clear();
@@ -215,11 +290,11 @@ public class Tab3Controller implements Initializable{
             }
         }
     }
-    
+
     /**
      * Save coin using coinID and username.
      * @param userName
-     * @param coinID 
+     * @param coinID
      */
     private void saveCoin(String userName, int coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
@@ -228,7 +303,7 @@ public class Tab3Controller implements Initializable{
         }
         dbConn.close();
     }
-    
+
     /**
      * Adds mouse handler for search VBox labels.
      *
@@ -241,11 +316,6 @@ public class Tab3Controller implements Initializable{
         _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
             _lbl.setStyle("-fx-background-color: white;");
         });
-//        _lbl.setOnMouseClicked((MouseEvent mouseEvent) -> {
-//            if (mouseEvent.isSecondaryButtonDown()){
-//                System.out.println("right click");
-//            }
-//        });
         ContextMenu cm = new ContextMenu();
         MenuItem m1 = new MenuItem("Save Coin");
         m1.setOnAction((event) -> {
@@ -258,6 +328,10 @@ public class Tab3Controller implements Initializable{
         _lbl.setContextMenu(cm);
     }
 
+    /**
+     * Add coins to the search vbox.
+     * This is updated when the user types something in the search field.
+     */
     private void populateSearch() {
         System.out.println(coinList.size());
         for (int i = 0; i < coinList.size(); i++) {
@@ -275,6 +349,8 @@ public class Tab3Controller implements Initializable{
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        assistT2 = new Tab2AssistantController();
+        assistT1 = new Tab1AssistantController();
         this.userCoinList = new LinkedList<>();
         coinList = new LinkedList<>();
         this.userSingleCoins = new LinkedList<>();

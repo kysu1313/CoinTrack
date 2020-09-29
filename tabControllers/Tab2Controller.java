@@ -63,6 +63,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.HoveredThresholdNode;
+import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 
 /**
@@ -101,6 +102,7 @@ public class Tab2Controller implements Initializable{
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     Tab2AssistantController assistT2;
+    Tab1AssistantController assistT1;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -284,7 +286,7 @@ public class Tab2Controller implements Initializable{
         Parent root;
             try {
                 Tab2Controller.mainPage2 = new Stage();
-                setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+                this.assistT1.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
                 root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
                 this.scene = new Scene(root);
                 Tab2Controller.mainPage2.setScene(this.scene);
@@ -300,11 +302,11 @@ public class Tab2Controller implements Initializable{
      * @param _uname
      * @param _status
      */
-    private void setOnlineStatus(String _uname, int _status) {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        conn.setUserOnlineStatus(_uname, _status);
-        conn.close();
-    }
+//    private void setOnlineStatus(String _uname, int _status) {
+//        ConnectToDatabase conn = new ConnectToDatabase();
+//        conn.setUserOnlineStatus(_uname, _status);
+//        conn.close();
+//    }
 
     /**
      * Display historical data for a single coin
@@ -725,6 +727,7 @@ public class Tab2Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assistT2 = new Tab2AssistantController();
+        assistT1 = new Tab1AssistantController();
         // Save uname from login page.
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
