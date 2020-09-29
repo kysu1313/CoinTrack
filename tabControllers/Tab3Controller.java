@@ -46,7 +46,7 @@ import tabControllers.assistantControllers.Tab2AssistantController;
 
 public class Tab3Controller implements Initializable{
 
-    private static final String USERNAME = FXMLDocumentController.uname;
+    private static final String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
     private LinkedList<UserCoin> userCoinList;
     protected static LinkedList<SingleCoin> coinList;
@@ -202,8 +202,8 @@ public class Tab3Controller implements Initializable{
         this.userCoinList = conn.getSavedCoins(USERNAME);
         conn.close();
         if (this.userCoinList != null && this.userCoinList.size() > 0) {
-            for (int i = 0; i < this.savedCoins.size(); i++) {
-                savedCoinsListT3.getItems().add(this.savedCoins.get(i));
+            for (int i = 0; i < this.userCoinList.size(); i++) {
+                savedCoinsListT3.getItems().add(this.userCoinList.get(i));
             }
         }
     }
@@ -243,5 +243,10 @@ public class Tab3Controller implements Initializable{
         addFriendsToList();
         createFriendListCells();
         installTextFieldEvent();
+    }
+    
+    @FXML
+    private void refresh(ActionEvent event) {
+        populateSavedCoins();
     }
 }

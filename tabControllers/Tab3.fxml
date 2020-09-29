@@ -153,7 +153,7 @@
       </SplitPane>
       <ToolBar layoutY="526.0" prefHeight="40.0" prefWidth="897.0">
         <items>
-          <Button mnemonicParsing="false" text="Refresh" />
+          <Button mnemonicParsing="false"  onAction="#refresh" text="Refresh" />
         </items>
       </ToolBar>
     </children>
