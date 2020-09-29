@@ -31,7 +31,7 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Button fx:id="forgotPassword" disable="false" layoutX="197.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleForgotPassword" text="Forgot Password">
+      <Button fx:id="forgotPassword" disable="false" layoutX="100.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleForgotPassword" text="Forgot Password">
          <font>
             <Font size="14.0" />
          </font>
@@ -46,5 +46,6 @@
             <Font name="SansSerif Bold" size="18.0" />
          </font>
       </Label>
+      <Button fx:id="forgotUsername" layoutX="280.0" layoutY="267.0" mnemonicParsing="false" onAction="#handleForgotUsername" prefHeight="30.0" prefWidth="137.0" text="Forgot Username" />
    </children>
 </AnchorPane>
