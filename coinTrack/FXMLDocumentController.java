@@ -221,7 +221,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Checks if a username already exists in database.
-     *
+
      * @return
      */
     private boolean usernameAcceptable() {
@@ -247,9 +247,11 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
+
      * Change to the password recovery stage if the forgot password button is
      * clicked.
      *
+
      * @param event
      */
     @FXML
@@ -325,7 +327,7 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * Handles action of clicking the forgot password button.
-     *
+
      * @param event
      */
     @FXML
@@ -345,8 +347,9 @@ public class FXMLDocumentController implements Initializable {
             this.forgotWarning.setFill(Color.RED);
         }
     }
-    
+
     /**
+
      * Send an email containing a welcome message
      *
      * @param event
@@ -372,6 +375,7 @@ public class FXMLDocumentController implements Initializable {
      * Send an email containing a code that the user will type into the box to
      * confirm their identity.
      *
+
      * @param event
      */
     @FXML
@@ -399,9 +403,11 @@ public class FXMLDocumentController implements Initializable {
 
     /**
      * When the user presses the "reset password" button on
+
      * PasswordResetFXML.fxml page a connection to the database is made
      * submitting the updated password;
      *
+
      * @param event
      */
     @FXML
