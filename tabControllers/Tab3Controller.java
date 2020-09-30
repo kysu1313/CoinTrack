@@ -114,7 +114,7 @@ public class Tab3Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleLogout(ActionEvent event) {
+    private void handleLogout(ActionEvent event) { 
         if(DEBUG){System.out.println("logging out");}
         Parent root;
         try {
