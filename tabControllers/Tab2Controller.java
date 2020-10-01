@@ -68,6 +68,7 @@ import tabControllers.assistantControllers.HoveredThresholdNode;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 import tabControllers.assistantControllers.graphs.BarChartClass;
+import tabControllers.assistantControllers.graphs.LineChartClass;
 
 /**
  *
@@ -103,6 +104,7 @@ public class Tab2Controller implements Initializable{
     public HoveredThresholdNode node;
     private Tab currTab;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
+    private LineChartClass lcc;
     
     Tab2AssistantController assistT2;
     Tab1AssistantController assistT1;
@@ -243,7 +245,8 @@ public class Tab2Controller implements Initializable{
                     }
                 }
             } else {
-                removeCoinFromLineChart(this.searchFieldT2.getText());
+                this.lcc.removeCoin(this.searchFieldT2.getText());
+//                removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
             if (DEBUG){System.out.println("pie chart selected");}
@@ -267,7 +270,11 @@ public class Tab2Controller implements Initializable{
         this.barChartData2.clear();
         this.series4.getData().clear();
         this.dataList.clear();
-        clearLineChart();
+        if (this.linesToGraph != null) {
+            this.lcc.clearChart();              // TODO: fix clear
+        }
+        
+//        clearLineChart();
         
     }
 
@@ -336,8 +343,8 @@ public class Tab2Controller implements Initializable{
             }
         }
         // Create a new BarChart object passing appropriate values.
-        BarChartClass bcc = new BarChartClass(this.barChartData2, this.series4,
-                        this.singleHistoryMap, this.timeSelection, this.barChart);
+        BarChartClass bcc = new BarChartClass(this.series4, this.singleHistoryMap,
+                                              this.timeSelection, this.barChart);
         bcc.displaySingleGraph();
     }
 
@@ -346,7 +353,7 @@ public class Tab2Controller implements Initializable{
      */
     private void displayLineGraph() {
         System.out.println("displaying line graph");
-        XYChart.Series newSeries = new XYChart.Series();
+//        XYChart.Series newSeries = new XYChart.Series();
         // Get the string/int from the text field.
         if (this.searchFieldT2.getText().isEmpty()){
             AlertMessages.showInformationMessage("Coin Name",
@@ -363,94 +370,93 @@ public class Tab2Controller implements Initializable{
                 this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
-        getSeriesForChart2(this.linesToGraph);
-        // Add series1 to the barChartData, then add that to the barChart
-        this.lineChart.setTitle("Viewing the past 1y of: " + this.searchFieldT2.getText());
-        this.lineChart.setData(this.lineChartData);
+        // Create line chart object to display graphs.
+        this.lcc = new LineChartClass(this.lineChart, this.linesToGraph, this.timeSelection);
+        this.lcc.displayGraph();
     }
 
-    /**
-     * This creates a linkedList of Series that will be added to the
-     * Line Chart.
-     *
-     * I'm not sure what the best way to do this is...
-     *
-     * @param lines
-     * @return
-     */
-    private void getSeriesForChart2(LinkedList<String> lines) {
-        // For every coin entered, create a new CoinHistory object.
-        for (String line : lines) {
-            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
-            this.singleHistoryMap = coinHist.getSingleHistory();
-//            XYChart.Series newSeries = new XYChart.Series();
-            XYChart.Series<Number, String> newSeries = new XYChart.Series();
-            double previousPrice = 0;
-            // Create the datapoints for the line chart.
-            this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
-                long tempLong = Long.parseLong(entry.getValue());
-                Date d = new Date(tempLong);
-                String date = "" + d;
-                double price = entry.getKey();
-                XYChart.Data item = new XYChart.Data(date, price);
-                item.setExtraValue(line + ": " + price);
-                newSeries.getData().add(item);
-                newSeries.getNode();
-//                Tooltip.install(item.getNode(), new Tooltip(line + ": " + item.getYValue()));
-                
-                this.dataList.add(new XYChart.Data(date, price));
-            });
-//            if (newSeries.getName() == null){newSeries.setName(line);}
-            this.seriesList.add(newSeries);
-            for (Data<Number, String> entry : newSeries.getData()) {
-                Tooltip t = new Tooltip(entry.getExtraValue().toString());
-                Tooltip.install(entry.getNode(), t);
-            }
-            this.lineChartData.add(newSeries);
-        }
-        Iterator<XYChart.Series<Number, String>> it1 = lineChartData.iterator();
-        Iterator<String> it2 = lines.iterator();
-        while (it1.hasNext() && it2.hasNext()) {
-            it1.next().setName(it2.next());
-        }
-    }
-    
-    /**
-     * Create the different series for each coin the user adds.
-     * Returns a linkedList of the XYChart.Series to add to the chart.
-     * @param lines
-     * @return 
-     */
-    
-    private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
-        dataLst.forEach((data) -> {
-            Tooltip t = new Tooltip(data.getYValue().toString());
-            Tooltip.install(data.getNode(), t);
-        });
-    }
-
-    /**
-     * Remove all coins from the line chart.
-     */
-    private void clearLineChart() {
-        this.seriesMap.clear();
-//        this.lineChart.getData().clear();
-        this.lineChart.layout();
-//        this.lineChartData.clear();
-        this.seriesList.forEach((entry) -> {
-            entry.getData().removeAll();
-        });
-    }
-
-    /**
-     * Remove the given coin from the line chart.
-     * @param coin
-     */
-    private void removeCoinFromLineChart(String coin) {
-        XYChart.Series toRemove = this.seriesMap.get(coin);
-        this.seriesMap.remove(coin);
-        this.lineChartData.remove(toRemove);
-    }
+//    /**
+//     * This creates a linkedList of Series that will be added to the
+//     * Line Chart.
+//     *
+//     * I'm not sure what the best way to do this is...
+//     *
+//     * @param lines
+//     * @return
+//     */
+//    private void getSeriesForChart2(LinkedList<String> lines) {
+//        // For every coin entered, create a new CoinHistory object.
+//        for (String line : lines) {
+//            CoinHistory coinHist = new CoinHistory(0, line, this.timeSelection);
+//            this.singleHistoryMap = coinHist.getSingleHistory();
+////            XYChart.Series newSeries = new XYChart.Series();
+//            XYChart.Series<Number, String> newSeries = new XYChart.Series();
+//            double previousPrice = 0;
+//            // Create the datapoints for the line chart.
+//            this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
+//                long tempLong = Long.parseLong(entry.getValue());
+//                Date d = new Date(tempLong);
+//                String date = "" + d;
+//                double price = entry.getKey();
+//                XYChart.Data item = new XYChart.Data(date, price);
+//                item.setExtraValue(line + ": " + price);
+//                newSeries.getData().add(item);
+//                newSeries.getNode();
+////                Tooltip.install(item.getNode(), new Tooltip(line + ": " + item.getYValue()));
+//                
+//                this.dataList.add(new XYChart.Data(date, price));
+//            });
+////            if (newSeries.getName() == null){newSeries.setName(line);}
+//            this.seriesList.add(newSeries);
+//            for (Data<Number, String> entry : newSeries.getData()) {
+//                Tooltip t = new Tooltip(entry.getExtraValue().toString());
+//                Tooltip.install(entry.getNode(), t);
+//            }
+//            this.lineChartData.add(newSeries);
+//        }
+//        Iterator<XYChart.Series<Number, String>> it1 = lineChartData.iterator();
+//        Iterator<String> it2 = lines.iterator();
+//        while (it1.hasNext() && it2.hasNext()) {
+//            it1.next().setName(it2.next());
+//        }
+//    }
+//    
+//    /**
+//     * Create the different series for each coin the user adds.
+//     * Returns a linkedList of the XYChart.Series to add to the chart.
+//     * @param lines
+//     * @return 
+//     */
+//    
+//    private void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst) {
+//        dataLst.forEach((data) -> {
+//            Tooltip t = new Tooltip(data.getYValue().toString());
+//            Tooltip.install(data.getNode(), t);
+//        });
+//    }
+//
+//    /**
+//     * Remove all coins from the line chart.
+//     */
+//    private void clearLineChart() {
+//        this.seriesMap.clear();
+////        this.lineChart.getData().clear();
+//        this.lineChart.layout();
+////        this.lineChartData.clear();
+//        this.seriesList.forEach((entry) -> {
+//            entry.getData().removeAll();
+//        });
+//    }
+//
+//    /**
+//     * Remove the given coin from the line chart.
+//     * @param coin
+//     */
+//    private void removeCoinFromLineChart(String coin) {
+//        XYChart.Series toRemove = this.seriesMap.get(coin);
+//        this.seriesMap.remove(coin);
+//        this.lineChartData.remove(toRemove);
+//    }
 
     /**
      * Display / Rank all coin prices
@@ -582,6 +588,9 @@ public class Tab2Controller implements Initializable{
         });
     }
     
+    /**
+     * Detect tab changed within Tab 2.
+     */
     private void tabChanges() {
         // Tab listener. Detects which graph tab is selected
         graphTabPane.getSelectionModel().selectedItemProperty().addListener(
@@ -641,6 +650,38 @@ public class Tab2Controller implements Initializable{
             }
         });
     }
+    
+    @FXML
+    private void refresh(ActionEvent event) {
+        populateSavedCoins();
+    }
+    
+    /** Savec coin graph in graph tab**/
+    
+    private LinkedHashMap<Double, String> userHistoryMap;
+
+    private void addContextMenuToList() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem graphCoin = new MenuItem("Graph Coin");
+        graphCoin.setOnAction(event -> createGraphsForSavedCoins());
+        contextMenu.getItems().addAll(graphCoin);
+        savedCoinsListT2.setContextMenu(contextMenu);
+    }
+
+    private void createGraphsForSavedCoins() {
+        if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
+            if (DEBUG){System.out.println("bar chart selected");}
+            this.barChart.getData().clear();
+            this.series2 = new BarChart.Series<>();
+            if (this.timeSelection == null){this.timeSelection = "24h";}
+            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
+            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
+            // Create new bar chart object
+            BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart);
+            bcc.displaySingleGraph();
+            bcc.alternateColors("green", "red");
+        }
+    }
 
 
     @Override
@@ -689,44 +730,5 @@ public class Tab2Controller implements Initializable{
         addContextMenuToList(); //add this line as well
     }
     
-    @FXML
-    private void refresh(ActionEvent event) {
-        populateSavedCoins();
-    }
     
-    /** Savec coin graph in graph tab**/
-    
-    private LinkedHashMap<Double, String> userHistoryMap;
-
-    private void addContextMenuToList() {
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem graphCoin = new MenuItem("Graph Coin");
-        graphCoin.setOnAction(event -> createGraphsForSavedCoins());
-
-        contextMenu.getItems().addAll(graphCoin);
-        savedCoinsListT2.setContextMenu(contextMenu);
-    }
-
-    private void createGraphsForSavedCoins() {
-        if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
-            if (DEBUG){System.out.println("bar chart selected");}
-            this.barChart.getData().clear();
-            this.series2 = new BarChart.Series<>();;
-            
-            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
-            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), "24h").getSingleHistory();
-            
-            for (Map.Entry<Double, String> entry : this.userHistoryMap.entrySet()) {
-                long tempLong = Long.parseLong(entry.getValue());
-                Date d = new Date(tempLong);
-                String date = "" + d;
-                double price = entry.getKey();
-                this.series2.getData().add(new XYChart.Data(date, price));
-            }
-
-            this.barChart.setTitle("Viewing the past 24h");
-            this.barChart.getData().add(this.series2);
-//            scaleGraph();
-        }
-    }
 }
