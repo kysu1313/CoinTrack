@@ -65,6 +65,7 @@ import javafx.stage.Stage;
 import tabControllers.assistantControllers.HoveredThresholdNode;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
+import tabControllers.assistantControllers.graphs.BarChartClass;
 
 /**
  *
@@ -330,96 +331,10 @@ public class Tab2Controller implements Initializable{
                 this.singleHistoryMap = new CoinHistory(temp, "", this.timeSelection).getSingleHistory();
             }
         }
-        // Prevent old data from showing back up  --  NOT WORKING
-        this.barChartData2.clear();
-        this.series4.getData().clear();
-        // Add entries from singleHistoryMap into series1
-        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
-            long tempLong = Long.parseLong(entry.getValue());
-            Date d = new Date(tempLong);
-            String date = "" + d;
-            double price = entry.getKey();
-            this.series4.getData().add(new XYChart.Data(date, price));
-        }
-        // Add series1 to the barChartData, then add that to the barChart
-        this.barChart.setTitle("Viewing the past " + this.timeSelection);
-        this.barChartData2.add(this.series4);
-        this.barChart.setData(this.barChartData2);
-        colorBarChart("green", "red");
-        scaleGraph();
-    }
-    
-    private void colorBarGraph() {
-        double lastPrice = 0;
-        int count = 0;
-        // A way to color the bars in the bargraph green or red.
-        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
-            double price = entry.getKey();
-            if (count < this.singleHistoryMap.size()){
-                if (price > lastPrice) {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: green");
-                } else {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: red");
-                }
-            }
-            // Add series1 to the barChartData, then add that to the barChart
-//            this.barChart.setTitle("Viewing the past " + this.timeSelection);
-//            this.barChartData2.add(this.series4);
-//            this.barChart.setData(this.barChartData2);
-            
-        }
-    
-    }
-    
-    /**
-    * THIS IS FOR TESTING.
-    * THIS IS NOT MY CODE.
-    *
-    * Implements scrolling using the mouse wheel on the graph.
-    */
-    private void scaleGraph() {
-        double delta = 1.1;
-        this.barChart.setOnScroll((ScrollEvent event) -> {
-            event.consume();
-            if (event.getDeltaY() == 0) {
-                return;
-            }
-            // Keep the scale ratio as you zoom in/out
-            double factor = (event.getDeltaY() > 0) ? delta : 1 / delta;
-            barChart.setScaleX(barChart.getScaleX() * factor);
-            barChart.setScaleY(barChart.getScaleY() * factor);
-        });
-        this.barChart.setOnMousePressed((MouseEvent event) -> {
-            if (event.getClickCount() == 2) {
-                barChart.setScaleX(1.0);
-                barChart.setScaleY(1.0);
-            }
-        });
-    }
-    
-    /**
-     * Color barChart bars the given colors.
-     * 
-     * This only takes basic colors, red, greed, blue, etc.
-     */
-    private void colorBarChart(String upPrice, String downPrice) {
-        double lastPrice = 0;
-        int count = 0;
-        // A way to color the bars in the bargraph green or red.
-        for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
-            double price = entry.getKey();
-            if (count < this.singleHistoryMap.size() && price > lastPrice) {
-                Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                n.setStyle("-fx-bar-fill: " + upPrice);
-            } else if (count < this.singleHistoryMap.size()){
-                Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                n.setStyle("-fx-bar-fill: " + downPrice);
-            }
-            lastPrice = price;
-            count++;
-        }
+        // Create a new BarChart object passing appropriate values.
+        BarChartClass bcc = new BarChartClass(this.barChartData2, this.series4,
+                        this.singleHistoryMap, this.timeSelection, this.barChart);
+        bcc.displaySingleGraph();
     }
 
     /**
