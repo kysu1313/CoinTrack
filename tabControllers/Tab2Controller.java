@@ -46,6 +46,8 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
@@ -104,7 +106,7 @@ public class Tab2Controller implements Initializable{
     
     Tab2AssistantController assistT2;
     Tab1AssistantController assistT1;
-
+    ContextMenu cm3;
     protected Scene scene;
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
@@ -141,6 +143,8 @@ public class Tab2Controller implements Initializable{
     @FXML private BarChart barChart;
     private XYChart.Series series1;
     private XYChart.Series series4;
+    private XYChart.Series series2; //add this line
+
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
@@ -670,9 +674,11 @@ public class Tab2Controller implements Initializable{
         seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
+        series2 = new BarChart.Series<>(); //add this line
         dataList = new LinkedList<>();
         series1.setName("Data");
         series4.setName("Prices");
+        series2.setName("Prices");
         addRemoveComboBox.setItems(ADDREMOVE);
         tabChanges();
         // Set the default comboBox values
@@ -680,10 +686,47 @@ public class Tab2Controller implements Initializable{
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
         addRemoveComboBox.setVisible(false);
+        addContextMenuToList(); //add this line as well
     }
     
     @FXML
     private void refresh(ActionEvent event) {
         populateSavedCoins();
+    }
+    
+    /** Savec coin graph in graph tab**/
+    
+    private LinkedHashMap<Double, String> userHistoryMap;
+
+    private void addContextMenuToList() {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem graphCoin = new MenuItem("Graph Coin");
+        graphCoin.setOnAction(event -> createGraphsForSavedCoins());
+
+        contextMenu.getItems().addAll(graphCoin);
+        savedCoinsListT2.setContextMenu(contextMenu);
+    }
+
+    private void createGraphsForSavedCoins() {
+        if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
+            if (DEBUG){System.out.println("bar chart selected");}
+            this.barChart.getData().clear();
+            this.series2 = new BarChart.Series<>();;
+            
+            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
+            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), "24h").getSingleHistory();
+            
+            for (Map.Entry<Double, String> entry : this.userHistoryMap.entrySet()) {
+                long tempLong = Long.parseLong(entry.getValue());
+                Date d = new Date(tempLong);
+                String date = "" + d;
+                double price = entry.getKey();
+                this.series2.getData().add(new XYChart.Data(date, price));
+            }
+
+            this.barChart.setTitle("Viewing the past 24h");
+            this.barChart.getData().add(this.series2);
+            scaleGraph();
+        }
     }
 }
