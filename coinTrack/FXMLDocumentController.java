@@ -28,6 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.AlertMessages;
 import tabControllers.Tab1Controller;
 
 /**
@@ -125,7 +126,8 @@ public class FXMLDocumentController implements Initializable {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            this.lblStatus.setText("Login Failed");
+           // this.lblStatus.setText("Login Failed");
+            AlertMessages.showErrorMessage("Login","Incorrect Username or Password");
         }
     }
 
