@@ -1,3 +1,4 @@
+
 package coinTrack;
 
 /**
@@ -28,7 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tabControllers.AlertMessages;
 import tabControllers.Tab1Controller;
 
 /**
@@ -42,54 +42,30 @@ public class FXMLDocumentController implements Initializable {
     private static String tempUsernameStorage;
     private String code;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
-    @FXML
-    protected TextField username;
-    @FXML
-    protected PasswordField txtPassword;
-    @FXML
-    protected Label lblStatus;
-    @FXML
-    private Label registerLabel;
-    @FXML
-    private TextField emailEntry;
-    @FXML
-    private TextField usernameEntry;
-    @FXML
-    private PasswordField passwordEntry;
-    @FXML
-    private PasswordField passwordRepeatEntry;
-    @FXML
-    private Button registerSubmitBtn;
-    @FXML
-    public static Stage mainStage;           // Need to make getters for public stuff
-    @FXML
-    private static Stage forgotPassStage;
-    @FXML
-    private static Stage forgotUserStage;
-    @FXML
-    private static Stage resetPassStage;
-    @FXML
-    private static Stage loginStage;
-    @FXML
-    private static Stage registerStage;
-    @FXML
-    private static Stage currentStage;
-    @FXML
-    private Text registerInfo;
-    @FXML
-    private TextField recoveryEmail;
-    @FXML
-    private TextField recoveryCode;
-    @FXML
-    private Button recoveryEmailBtn;
-    @FXML
-    private Text forgotWarning;
-    @FXML
-    private PasswordField resetPassword;
-    @FXML
-    private PasswordField resetPasswordRepeat;
-    @FXML
-    private Text passwordResetWarning;
+    @FXML protected TextField username;
+    @FXML protected PasswordField txtPassword;
+    @FXML protected Label lblStatus;
+    @FXML private Label registerLabel;
+    @FXML private TextField emailEntry;
+    @FXML private TextField usernameEntry;
+    @FXML private PasswordField passwordEntry;
+    @FXML private PasswordField passwordRepeatEntry;
+    @FXML private Button registerSubmitBtn;
+    @FXML public static Stage mainStage;           // Need to make getters for public stuff
+    @FXML private static Stage forgotPassStage;
+    @FXML private static Stage forgotUserStage;
+    @FXML private static Stage resetPassStage;
+    @FXML private static Stage loginStage;
+    @FXML private static Stage registerStage;
+    @FXML private static Stage currentStage;
+    @FXML private Text registerInfo;
+    @FXML private TextField recoveryEmail;
+    @FXML private TextField recoveryCode;
+    @FXML private Button recoveryEmailBtn;
+    @FXML private Text forgotWarning;
+    @FXML private PasswordField resetPassword;
+    @FXML private PasswordField resetPasswordRepeat;
+    @FXML private Text passwordResetWarning;
 
     //========== Action Handlers ==========
     /**
@@ -126,8 +102,7 @@ public class FXMLDocumentController implements Initializable {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-           // this.lblStatus.setText("Login Failed");
-            AlertMessages.showErrorMessage("Login","Incorrect Username or Password");
+            this.lblStatus.setText("Login Failed");
         }
     }
 
@@ -309,7 +284,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleBackToMain(ActionEvent event) {
         if (DEBUG) {
-            System.out.println("Misclicking already..");
+            System.out.println("Misclicking already..");  // lol Haj
         }
         Parent root;
         try {

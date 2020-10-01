@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tabControllers.assistantControllers;
+package tabControllers.assistantControllers.graphs;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

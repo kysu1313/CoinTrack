@@ -30,6 +30,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import tabControllers.assistantControllers.graphs.PieChartClass;
 
 /**
  * This Class contains additional methods used in Tab2 to display data to the
@@ -44,6 +45,19 @@ public class Tab2AssistantController {
 
 
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
+    
+    /**
+     * Testing this method using piechart class. 
+     * @param coinList
+     * @param pieChartCoins
+     * @param comboBox
+     * @param pieChartData
+     * @param pieChart 
+     */
+    public void MakePieChart(CoinRankApi coinList, int pieChartCoins, ComboBox<String> comboBox, ObservableList<PieChart.Data> pieChartData, PieChart pieChart) {
+        PieChartClass pcc = new PieChartClass(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
+        pcc.displayGraph();
+    }
 
     /**
      * Creates a LinkedList of SingleCoins.
@@ -106,6 +120,11 @@ public class Tab2AssistantController {
         });
 //        var labels = barChart.xAxis().labels();
 //        labels.enabled(false);
+    }
+    
+    public void PieChartDash(LinkedList<SingleCoin> coinList, PieChart pieChart){
+        PieChartClass pcc = new PieChartClass(coinList, pieChart);
+        pcc.displayGraph();
     }
 
     /**
