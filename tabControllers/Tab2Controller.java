@@ -726,7 +726,7 @@ public class Tab2Controller implements Initializable{
 
             this.barChart.setTitle("Viewing the past 24h");
             this.barChart.getData().add(this.series2);
-            scaleGraph();
+//            scaleGraph();
         }
     }
 }
