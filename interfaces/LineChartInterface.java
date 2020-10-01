@@ -14,9 +14,9 @@ import javafx.scene.chart.XYChart;
  */
 public interface LineChartInterface {
     
-    public void addCoin(LinkedList<String> lines);
-    public void removeCoin(LinkedList<String> lines);
+    public void addCoin(String _coin);
+    public void removeCoin(String _coin);
     public void clearChart();
-    public void addToolTips(LinkedList<XYChart.Data<String, Number>> dataLst);
+    public void addToolTips();
     
 }
