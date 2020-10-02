@@ -7,7 +7,6 @@ package tabControllers.assistantControllers.graphs;
 
 import coinClasses.CoinRankApi;
 import coinClasses.SingleCoin;
-import interfaces.GraphInterface;
 import java.util.LinkedList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +17,7 @@ import javafx.scene.control.ComboBox;
  *
  * @author Kyle
  */
-public class PieChartClass implements GraphInterface{
+public class PieChartClass implements interfaces.GraphInterface{
 
     private CoinRankApi coinList;
     private LinkedList<SingleCoin> singleCoinList;
@@ -99,6 +98,11 @@ public class PieChartClass implements GraphInterface{
             double rounded = (double) Math.round(price * 100000d) / 100000d;
             this.pieChartData.add(new PieChart.Data(coin.getName(), rounded));
         }
+    }
+
+    @Override
+    public void scaleGraph() {
+        // TODO: implement
     }
 
 }

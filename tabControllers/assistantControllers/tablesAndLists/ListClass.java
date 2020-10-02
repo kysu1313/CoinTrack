@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces;
+package tabControllers.assistantControllers.tablesAndLists;
 
 /**
  *
  * @author Kyle
  */
-public interface AlphaVantageInterface {
-    
-    public String getInformation();
+public class ListClass {
     
 }

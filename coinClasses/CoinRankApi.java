@@ -1,13 +1,8 @@
 package coinClasses;
 
-import interfaces.CoinRankInterface;
-import interfaces.SingleCoinInterface;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -22,7 +17,7 @@ import org.json.JSONObject;
  *
  * @author Kyle
  */
-public class CoinRankApi implements Runnable, CoinRankInterface {
+public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
 
     private Thread t;
     private HttpResponse<JsonNode> response;
@@ -65,6 +60,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     /**
      * Create a new thread if the thread is not already started.
      */
+    @Override
     public void start() {
         if (DEBUG){System.out.println("Starting Thread");}
         if (t == null) {
@@ -76,6 +72,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     /**
      * Wait for the thread to complete before calling the methods for data.
      */
+    @Override
     public void join() {
         try {
             t.join();
@@ -85,6 +82,11 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
         }
     }
 
+    /**
+     * Checks if the thread is alive.
+     * @return
+     */
+    @Override
     public boolean isAlive() {
         return t.isAlive();
     }
@@ -92,6 +94,11 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
     
     // ========== GETTERS ==========
     
+    /**
+     * Update the coins in the database to their current prices, volume, etc.
+     * @param coinList
+     */
+    @Override
     public void updateDatabaseCoins(LinkedList<SingleCoin> coinList) {
 //        Timestamp ts = new Timestamp(System.currentTimeMillis());
 //        Date date = new Date ();
@@ -111,6 +118,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      *
      * @return
      */
+    @Override
     public LinkedList<SingleCoin> getCoinList() {
         LinkedList<SingleCoin> tmpList = new LinkedList<>();
         for (int i = 0; i < this.coins.length(); i++) {
@@ -121,6 +129,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
         return tmpList;
     }
     
+    @Override
     public LinkedList<SingleCoin> getSortedCoinList() {
         LinkedList<SingleCoin> temp = this.getCoinList();
         Collections.sort(temp, (SingleCoin o1, SingleCoin o2) -> {
@@ -142,6 +151,7 @@ public class CoinRankApi implements Runnable, CoinRankInterface {
      * their prices.
      * @return 
      */
+    @Override
     public LinkedHashMap<String, String> getNamePrice() {
         this.namePrice = new LinkedHashMap<>();
         for (int i = 0; i < 45; i++) {  // coinList.size()

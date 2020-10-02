@@ -6,13 +6,14 @@ package coinClasses;
  * @author Kyle
  */
 
+import interfaces.DailyWeeklyInterface;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import org.json.JSONObject;
 
 
-public class AlphaVantage{
+public class AlphaVantage implements DailyWeeklyInterface{
 
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private final String ENDPOINT = "alpha-vantage.p.rapidapi.com";
@@ -34,6 +35,7 @@ public class AlphaVantage{
      * Returns linked list of daily (open, high, low, and close) values.
      * @return
      */
+    @Override
     public LinkedList<LinkedHashMap<String, String>> getDaily() {
         String url = "https://alpha-vantage.p.rapidapi.com/query?market=CNY&symbol=" + this.symbol + "&function=DIGITAL_CURRENCY_DAILY";
         ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);
@@ -58,6 +60,7 @@ public class AlphaVantage{
      * Returns linked list of weekly (open, high, low, and close) values.
      * @return
      */
+    @Override
     public LinkedList<LinkedHashMap<String, String>> getWeekly() {
         String url = "https://alpha-vantage.p.rapidapi.com/query?function=DIGITAL_CURRENCY_WEEKLY&symbol=" + this.symbol + "&market=CNY";
         ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);

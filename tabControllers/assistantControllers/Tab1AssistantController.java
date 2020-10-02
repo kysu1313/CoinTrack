@@ -5,26 +5,19 @@ package tabControllers.assistantControllers;
 import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
 import java.util.LinkedList;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
-import tabControllers.Tab1Controller;
-import static tabControllers.Tab1Controller.DEBUG;
+import tabControllers.assistantControllers.tablesAndLists.TableClass;
 
 /**
  * This Class contains additional methods used in Tab1 to display data to the
@@ -40,6 +33,17 @@ public class Tab1AssistantController {
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
     public void coinTable(TableView tableViewT1, LinkedList<SingleCoin> coinList, WebView webViewT1, String currency, long currencyRate) {
+//        LinkedList<String> colNames = new LinkedList<>();
+//        colNames.add("Symbol");
+//        colNames.add("Name");
+//        colNames.add("Price");
+//        colNames.add("Rank");
+//        colNames.add("Change");
+//        colNames.add("Volume");
+//        TableClass tbl = new TableClass(tableViewT1, coinList, webViewT1, colNames, currency, currencyRate);
+//        tbl.displayTable();
+        
+        
         
         // Create columns
         TableColumn col1 = new TableColumn("Symbol");
@@ -121,47 +125,23 @@ public class Tab1AssistantController {
 
     /**
      * Display coin table on the Dsahboard
-     * @param tableViewT1
-     * @param coinList 
+     * @param tableView
+     * @param coinList
      */
-    public void coinTableDash(TableView tableViewT1, LinkedList<SingleCoin> coinList) {
+    public void coinTableDash(TableView tableView, LinkedList<SingleCoin> coinList) {
         // Create columns
-        TableColumn col1 = new TableColumn("Name");
-        TableColumn col2 = new TableColumn("Symbol");
-        TableColumn col3 = new TableColumn("Price (USD)");
-        TableColumn col4 = new TableColumn("Change");
-        // Link columns to properties in SingleCoin class
-        col1.setCellValueFactory(new PropertyValueFactory<>("name"));
-        col2.setCellValueFactory(new PropertyValueFactory<>("symbol"));
-        col3.setCellValueFactory(new PropertyValueFactory<>("price"));
-        col4.setCellValueFactory(new PropertyValueFactory<>("stringChange"));
-        // Add columns to tableView
-        tableViewT1.getColumns().addAll(col1, col2, col3, col4);
-        ObservableList<SingleCoin> obvList = FXCollections.observableArrayList(coinList);
-        // Change text color of "change" column if positive or negative change.
-        col4.setCellFactory(new Callback<TableColumn, TableCell>() {
-            public TableCell call(TableColumn param) {
-                return new TableCell<SingleCoin, String>() {
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        // Change color based on data
-                        if (!isEmpty()) {
-                            this.setStyle("-fx-text-fill: #09de57;-fx-font-weight: bold;");
-                            if (item.contains("-")) {
-                                this.setStyle("-fx-text-fill: #ff0000;-fx-font-weight: bold;");
-                            }
-                            setText(item);
-                        }
-                    }
-                };
-            }
-        });
-        tableViewT1.setItems(obvList);
-        tableViewT1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        SingleCoin sc = new SingleCoin();
+        LinkedList<String> colNames = new LinkedList<>();
+        // Add single coin param names for column names.
+        colNames.add("Name");
+        colNames.add("Symbol");
+        colNames.add("Price");
+        colNames.add("Change");
+        TableClass tbl = new TableClass(tableView, coinList, colNames);
+        tbl.displayTable();
+//        tbl.setColor("#09de57", "#ff0000");
     }
-    
+
     /**
      * Change a users online status. i.e. when they log on/off .
      * @param _uname
@@ -173,6 +153,4 @@ public class Tab1AssistantController {
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
     }
-
 }
-
