@@ -1,5 +1,9 @@
 package interfaces;
 
+import coinClasses.SingleCoin;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+
 /**
  * Interface for a coin's "stats".
  * Stats is the name of a JSONObject
@@ -7,8 +11,15 @@ package interfaces;
  * in the api response.
  * @author Kyle
  */
-public interface CoinRankInterface {
+public interface CoinDataInterface {
     
+    public void start();
+    public void join();
+    public boolean isAlive();
+    public void updateDatabaseCoins(LinkedList<SingleCoin> coinList);
+    public LinkedList<SingleCoin> getCoinList();
+    public LinkedList<SingleCoin> getSortedCoinList();
+    public LinkedHashMap<String, String> getNamePrice();
     public int getTotal();
     public int getOffset();
     public int getLimit();

@@ -6,7 +6,6 @@
 package tabControllers.assistantControllers.graphs;
 
 import coinClasses.UserCoin;
-import interfaces.GraphInterface;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ import javafx.scene.input.ScrollEvent;
  *
  * @author Kyle
  */
-public class BarChartClass implements GraphInterface{
+public class BarChartClass implements interfaces.GraphInterface, interfaces.BarChartInterface{
     
     private BarChart barChart;
     private LinkedList<LinkedHashMap<Double, String>> linkedMap;
@@ -175,7 +174,8 @@ public class BarChartClass implements GraphInterface{
     /**
     * Implements scrolling using the mouse wheel on the graph.
     */
-    private void scaleGraph() {
+    @Override
+    public void scaleGraph() {
         double delta = 1.1;
         this.barChart.setOnScroll((ScrollEvent event) -> {
             event.consume();

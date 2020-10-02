@@ -46,7 +46,7 @@ public class SingleCoin implements SingleCoinInterface{
     /**
      * Constructor for JSONObject.
      * Used in CoinRankApi class
-     * @param job 
+     * @param job
      */
     public SingleCoin(JSONObject job) {
         coinList = job;
@@ -67,6 +67,8 @@ public class SingleCoin implements SingleCoinInterface{
 
         stringChange = "" + change;
     }
+    
+    public SingleCoin() {}
 
     /**
      * Constructor for JSONArray.

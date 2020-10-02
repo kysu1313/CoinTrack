@@ -1,13 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tabControllers.assistantControllers.graphs;
 
 import coinClasses.CoinHistory;
-import interfaces.GraphInterface;
-import interfaces.LineChartInterface;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -20,10 +13,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 
 /**
- *
+ * General class for making / displaying LineCharts.
  * @author Kyle
  */
-public class LineChartClass implements GraphInterface, LineChartInterface{
+public class LineChartClass implements interfaces.GraphInterface, interfaces.LineChartInterface{
 
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private final LineChart LINE_CHART;
@@ -35,7 +28,7 @@ public class LineChartClass implements GraphInterface, LineChartInterface{
     private ObservableList<XYChart.Series<Number, String>> lineChartData;
 
     /**
-     * 
+     * CONSTRUCTOR.
      * @param _lineChart: line chart to be graphed.
      * @param _lines: names of coins to be added to graph.
      * @param _timeSelection: 24h, 7d, 30d, 1y, 5y.
@@ -125,11 +118,11 @@ public class LineChartClass implements GraphInterface, LineChartInterface{
             }
             this.lineChartData.add(newSeries);
         }
-//        Iterator<XYChart.Series<Number, String>> it1 = lineChartData.iterator();
-//        Iterator<String> it2 = this.LINES.iterator();
-//        while (it1.hasNext() && it2.hasNext()) {
-//            it1.next().setName(it2.next());
-//        }
+    }
+
+    @Override
+    public void scaleGraph() {
+        // TODO: implement
     }
     
 }
