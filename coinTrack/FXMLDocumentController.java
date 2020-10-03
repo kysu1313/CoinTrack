@@ -76,13 +76,12 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     public void login(ActionEvent event) {
-//        loginStage = CoinTrack.newStage;
         ConnectToDatabase conn = new ConnectToDatabase();
         // If statement for testing purposes
         if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
             this.lblStatus.setText("Login Success");
             conn.setUserOnlineStatus(this.username.getText(), 1);
-            conn.close();
+//            conn.close();
             this.uname = this.username.getText();
             // After login is successful, you are taken to the main page
             Parent root;
@@ -104,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
         } else {
             this.lblStatus.setText("Login Failed");
         }
+        conn.close();
     }
 
     /**
@@ -205,7 +205,7 @@ public class FXMLDocumentController implements Initializable {
         // Call DB connection class
         ConnectToDatabase conn = new ConnectToDatabase();
         // Check is username exists in DB
-        if (!conn.usernameExists(this.usernameEntry.getText())) { // TODO: invert  boolean ???
+        if (!conn.usernameExists(this.usernameEntry.getText())) {
             String email = this.emailEntry.getText();
             String uname = this.usernameEntry.getText();
             String pass = this.passwordEntry.getText();

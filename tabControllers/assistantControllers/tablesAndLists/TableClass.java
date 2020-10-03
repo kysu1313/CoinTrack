@@ -1,6 +1,7 @@
 package tabControllers.assistantControllers.tablesAndLists;
 
 import coinClasses.SingleCoin;
+import coinClasses.UserCoin;
 import interfaces.TableInterface;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -12,15 +13,22 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import tabControllers.Tab1Controller;
+import static tabControllers.Tab1Controller.DEBUG;
+import tabControllers.assistantControllers.Tab1AssistantController;
 
 /**
  * General class for making & displaying tables.
@@ -39,12 +47,19 @@ public class TableClass implements TableInterface{
     private LinkedList<TableColumn> cols;
     private ObservableList<SingleCoin> obvList;
     private TableColumn changeCol;
-    private TableColumn col2;
-    private TableColumn col3;
-    private TableColumn col4;
-    private TableColumn col5;
-    private TableColumn col6;
 
+    /**
+     * The table created by this constructor includes a WebView that displays
+     * the logo of the coin when it is double clicked.
+     *
+     * Mainly used in Tab 1
+     * @param _tableViewT1
+     * @param _coinList
+     * @param _webView
+     * @param _columnNames
+     * @param _currency
+     * @param _currencyRate
+     */
     public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webView, LinkedList<String> _columnNames, String _currency, long _currencyRate) {
         this.TABLE_VIEW = _tableViewT1;
         this.CURRENCY = _currency;
@@ -56,7 +71,14 @@ public class TableClass implements TableInterface{
         buildTable();
     }
 
-    public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, LinkedList<String> _columnNames) {
+    /**
+     * This table is a slimmed down version that does not include a WebView.
+     * Currently it is used on the dashboard.
+     * @param _tableViewT1
+     * @param _coinList
+     * @param _columnNames
+     */
+    public TableClass(TableView<SingleCoin> _tableViewT1, LinkedList<SingleCoin> _coinList, LinkedList<String> _columnNames) {
         this.TABLE_VIEW = _tableViewT1;
         this.COLUMN_NAMES = _columnNames;
         this.CURRENCY = "USD";
@@ -146,7 +168,7 @@ public class TableClass implements TableInterface{
                                 super.updateItem(item, empty);
                                 // Change color based on data
                                 if (!isEmpty()) {
-                                    // This is a SUPER "hacky" way to change prices LOL
+                                    // This is a SUPER hacky way to change prices LOL
                                     String newPrice = String.format("%.5f", Float.parseFloat(item) * Float.parseFloat("" + CURRENCY_RATE));
                                     setText(newPrice);
                                 }
@@ -184,7 +206,45 @@ public class TableClass implements TableInterface{
             return row;
         });
     }
+    
+    /**
+     * This creates the right click menu on the onlineUsers list.
+     * It also maps each button to an action.
+     */
+    @Override
+    public void createTableCells(String _username, ListView _savedCoinsList, LinkedList<UserCoin> _savedCoins) {
+        ContextMenu cm2 = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Save Coin");
+        Tab1AssistantController tas = new Tab1AssistantController();
+        mi1.setOnAction(event -> {
+                SingleCoin item = (SingleCoin) TABLE_VIEW.getSelectionModel().getSelectedItem();
+                tas.saveCoin(_username, item.getId());
+                if(DEBUG){System.out.println("Added " + item.getName() + " to saved coin list");}
+                tas.populateSavedCoins(_savedCoinsList, _savedCoins);
+            });
+        ContextMenu menu = new ContextMenu();
+        menu.getItems().add(mi1);
+        this.TABLE_VIEW.setContextMenu(menu);
+        tas.populateSavedCoins(_savedCoinsList, _savedCoins);
 
+        cm2.getItems().add(mi1);
+        MenuItem mi2 = new MenuItem("Share Coin");
+        cm2.getItems().add(mi2);
+        MenuItem mi3 = new MenuItem("Track Coin");
+        cm2.getItems().add(mi3);
+        this.TABLE_VIEW.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                if (t.getButton() == MouseButton.SECONDARY) {
+                    cm2.show(TABLE_VIEW, t.getScreenX(), t.getScreenY());
+                }
+            }
+        });
+    }
+
+    /**
+     * Display the table.
+     */
     @Override
     public void displayTable() {
         this.TABLE_VIEW.setItems(this.obvList);

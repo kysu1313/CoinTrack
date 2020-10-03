@@ -59,6 +59,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.Tab1AssistantController;
+import tabControllers.assistantControllers.tablesAndLists.TableClass;
 
 /**
  *
@@ -193,7 +194,7 @@ public class Tab1Controller implements Initializable{
     private void handleResetCurr(ActionEvent event) {
         resetCurrency();
     }
-    
+
     @FXML
     private void handleDebug(ActionEvent event) {
         if (this.debugBtn.isArmed()) {
@@ -201,15 +202,13 @@ public class Tab1Controller implements Initializable{
             this.DEBUG = true;
         }
     }
-    
+
     @FXML
     private void handleTest(ActionEvent event) {
         AlphaVantage av = new AlphaVantage("BTC");
         av.getDaily().forEach((item) -> {
             System.out.println(item.keySet());
         });
-        
-        
     }
 
     // ========== HELPER METHODS ==========
@@ -222,14 +221,12 @@ public class Tab1Controller implements Initializable{
         this.selectedCurrency = "USD";
         this.cb.setPromptText(this.selectedCurrency);
         this.currencyRate = 1;
-        tableViewT1.getItems().clear();
-        tableViewT1.getColumns().clear();
-        txtAreaT1.setText("");
+        this.tableViewT1.getItems().clear();
+        this.tableViewT1.getColumns().clear();
+        this.txtAreaT1.setText("");
         displayGlobalStats();
         displayCoinText();
-//        displayCoinText();
         if(DEBUG){System.out.println("selected currency: " + this.selectedCurrency);}
-        
     }
 
     /**
@@ -240,14 +237,14 @@ public class Tab1Controller implements Initializable{
         this.cri.join();
         this.coinList = this.cri.getCoinList();
         /**
-         * Update coins in database. probably not necessary to run here. 
+         * Update coins in database. probably not necessary to run here.
          * It already runs at launch.
          */
         //updateCoinPricesDB();
         /**
          * Add coins to new database table all_coins
          */
-        //cri.updateDatabaseCoins(temp);
+        cri.updateDatabaseCoins(this.coinList);
 
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
@@ -255,7 +252,7 @@ public class Tab1Controller implements Initializable{
         this.coinNamePrice = this.cri.getNamePrice();
 //        coinList = cri.getCoinList();
         displayMultiCoinTable();
-        createTableCells();
+//        createTableCells();
 
     }
     
@@ -298,7 +295,9 @@ public class Tab1Controller implements Initializable{
      */
     private void displayMultiCoinTable() {
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
-        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        Tab1AssistantController ast1 = new Tab1AssistantController();
+        ast1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        ast1.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }
 
     /**
@@ -365,38 +364,6 @@ public class Tab1Controller implements Initializable{
                 }
             });
             return cell ;
-        });
-    }
-    /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
-     */
-    private void createTableCells() {
-        ContextMenu cm2 = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Save Coin");
-        mi1.setOnAction(event -> {
-                SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
-                saveCoin(this.uname, item.getId());
-                if(DEBUG){System.out.println("Added " + item.getName() + " to saved coin list");}
-                populateSavedCoins();
-            });
-        ContextMenu menu = new ContextMenu();
-        menu.getItems().add(mi1);
-        tableViewT1.setContextMenu(menu);
-        populateSavedCoins();
-
-        cm2.getItems().add(mi1);
-        MenuItem mi2 = new MenuItem("Share Coin");
-        cm2.getItems().add(mi2);
-        MenuItem mi3 = new MenuItem("Track Coin");
-        cm2.getItems().add(mi3);
-        tableViewT1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if (t.getButton() == MouseButton.SECONDARY) {
-                    cm2.show(tableViewT1, t.getScreenX(), t.getScreenY());
-                }
-            }
         });
     }
 
@@ -481,7 +448,7 @@ public class Tab1Controller implements Initializable{
     /**
      * Pull saved coin data from database and add it to the accordion.
      */
-    private void populateSavedCoins() {
+    public void populateSavedCoins() {
         ConnectToDatabase conn = new ConnectToDatabase();
         savedCoinsList.getItems().clear();
         this.savedCoins = conn.getSavedCoins(this.uname);

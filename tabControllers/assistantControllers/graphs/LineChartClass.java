@@ -68,7 +68,12 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
 
     @Override
     public void removeCoin(String _coin) {
-        this.LINES.removeFirstOccurrence(_coin);
+        this.LINE_CHART.getData().clear();
+        for (int i = 0; i < this.LINES.size(); i++) {
+            if (this.LINES.get(i).equalsIgnoreCase(_coin)) {
+                this.LINES.remove(i);
+            }
+        }
         createData();
     }
 
@@ -123,6 +128,11 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
     @Override
     public void scaleGraph() {
         // TODO: implement
+    }
+
+    @Override
+    public LinkedList<String> getElements() {
+        return this.LINES;
     }
     
 }

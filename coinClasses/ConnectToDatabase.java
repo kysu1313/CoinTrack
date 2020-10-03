@@ -94,11 +94,38 @@ public class ConnectToDatabase {
             preparedStmt.setString(10, _price);
             preparedStmt.setDouble(11, _change);
             preparedStmt.setInt(12, _coinRank);
-            // execute the preparedstatement
-            preparedStmt.execute();
+            // execute the preparedstatement if coin is not already in table.
+            if (DEBUG){System.out.println("checking coin in db " + _name);}
+            if (!checkIfCoinExists(_uuid)) {
+                if (DEBUG){System.out.println("Adding coin: " + _coinID + " exists. ");}
+                if (DEBUG){System.out.println("adding " + _name);}
+                preparedStmt.execute();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    /**
+     * Check if a coin already exists in the database.
+     * @param _uuid
+     * @return 
+     */
+    public boolean checkIfCoinExists(String _uuid) {
+        boolean doesExist = false;
+        try {
+            // Insert statement, using prepared statements
+            String query = " SELECT * FROM all_coins WHERE uuid = '" + _uuid + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            // execute the preparedstatement
+            ResultSet result = preparedStmt.executeQuery(query);
+            doesExist = result.next();
+            if (DEBUG){System.out.println("Checking if coin: " + _uuid + " exists. ");}
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return doesExist;
     }
 
     /**
