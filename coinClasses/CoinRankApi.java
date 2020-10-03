@@ -110,6 +110,7 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
                             coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
                             coin.getVolume(), coin.getMarketCap(), coin.getPrice(), 
                             coin.getChange(), coin.getRank());
+            
         });
     }
     

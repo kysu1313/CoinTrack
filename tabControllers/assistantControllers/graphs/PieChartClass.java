@@ -105,4 +105,13 @@ public class PieChartClass implements interfaces.GraphInterface{
         // TODO: implement
     }
 
+    @Override
+    public LinkedList<String> getElements() {
+        LinkedList<String> temp = new LinkedList<>();
+        this.singleCoinList.forEach(item -> {
+            temp.add(item.getName());
+        });
+        return temp;
+    }
+
 }

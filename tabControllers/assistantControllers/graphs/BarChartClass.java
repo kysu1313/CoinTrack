@@ -194,5 +194,10 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
             }
         });
     }
+
+    @Override
+    public LinkedList<String> getElements() {
+        return null;
+    }
     
 }

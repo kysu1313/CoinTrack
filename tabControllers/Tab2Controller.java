@@ -246,6 +246,7 @@ public class Tab2Controller implements Initializable{
                 }
             } else {
                 this.lcc.removeCoin(this.searchFieldT2.getText());
+                this.lcc.displayGraph();
 //                removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
@@ -270,12 +271,10 @@ public class Tab2Controller implements Initializable{
         this.barChartData2.clear();
         this.series4.getData().clear();
         this.dataList.clear();
+        this.sideVBox.getChildren().clear();
         if (this.linesToGraph != null) {
             this.lcc.clearChart();              // TODO: fix clear
         }
-        
-//        clearLineChart();
-        
     }
 
     /**
@@ -370,9 +369,14 @@ public class Tab2Controller implements Initializable{
                 this.singleHistoryMap = coinHist.getSingleHistory();
             }
         }
+        this.sideVBox.getChildren().clear();
         // Create line chart object to display graphs.
         this.lcc = new LineChartClass(this.lineChart, this.linesToGraph, this.timeSelection);
         this.lcc.displayGraph();
+        this.lcc.getElements().forEach((item) -> {
+            this.sideVBox.getChildren().add(new Label(item));
+        });
+        
     }
 
     /**
@@ -567,14 +571,14 @@ public class Tab2Controller implements Initializable{
             }
         });
     }
-    
+
     @FXML
     private void refresh(ActionEvent event) {
         populateSavedCoins();
     }
-    
-    /** Savec coin graph in graph tab**/
-    
+
+    /** Save coin graph in graph tab**/
+
     private LinkedHashMap<Double, String> userHistoryMap;
 
     private void addContextMenuToList() {
@@ -646,6 +650,4 @@ public class Tab2Controller implements Initializable{
         addRemoveComboBox.setVisible(false);
         addContextMenuToList(); //add this line as well
     }
-    
-    
 }
