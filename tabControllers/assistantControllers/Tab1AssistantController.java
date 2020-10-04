@@ -5,6 +5,7 @@ package tabControllers.assistantControllers;
 import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
 import java.util.LinkedList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +36,7 @@ import tabControllers.assistantControllers.tablesAndLists.TableClass;
 public class Tab1AssistantController {
 
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
-    private static String uname;
+    private final static String UNAME = FXMLDocumentController.uname;
     private TableClass tbl;
 
     public void coinTable(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webViewT1, String _currency, long _currencyRate) {
@@ -93,9 +94,8 @@ public class Tab1AssistantController {
      * @param coinID
      */
     public void saveCoin(String userName, int coinID) {
-        uname = userName;
         ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
+        if (dbConn.insertSavedCoin(UNAME, coinID)) {
             AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
         }
         dbConn.close();
@@ -107,7 +107,7 @@ public class Tab1AssistantController {
     public void populateSavedCoins(ListView savedCoinsList, LinkedList<UserCoin> savedCoins) {
         ConnectToDatabase conn = new ConnectToDatabase();
         savedCoinsList.getItems().clear();
-        savedCoins = conn.getSavedCoins(uname);
+        savedCoins = conn.getSavedCoins(UNAME);
         conn.close();
         if (savedCoins != null && savedCoins.size() > 0) {
             for (int i = 0; i < savedCoins.size(); i++) {

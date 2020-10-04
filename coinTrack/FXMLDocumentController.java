@@ -16,6 +16,8 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +27,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -38,6 +42,7 @@ import tabControllers.Tab1Controller;
 public class FXMLDocumentController implements Initializable {
 
     public static String uname;
+    public static Tab currTab;
     protected Scene scene;
     private static String tempUsernameStorage;
     private String code;
@@ -66,6 +71,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML private PasswordField resetPassword;
     @FXML private PasswordField resetPasswordRepeat;
     @FXML private Text passwordResetWarning;
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab dashboard;
+    @FXML private Tab tab1;
+    @FXML private Tab tab2;
 
     //========== Action Handlers ==========
     /**
@@ -462,8 +471,29 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
+     * Detect tab changed within Tab 2.
+     */
+    private void tabChanges() {
+        // Tab listener. Detects which graph tab is selected
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab oldTab, Tab currentTab) {
+                if (DEBUG){System.out.println("Tab Change");}
+                if (currentTab == dashboard) {
+                    currTab = dashboard;
+                } else if (currentTab == tab1) {
+                    currTab = tab1;
+                } else if (currentTab == tab2) {
+                    currTab = tab2;
+                }
+            }
+        });
+    }
+
+    /**
      * This is supposed to return the current stage so it can be closed. But I
-     * don't think it works... idk.
+     * don't think it works...
      *
      * @return
      */

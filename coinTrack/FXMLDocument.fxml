@@ -8,7 +8,7 @@
     <children>
       <TabPane fx:id="mainTabPane" prefHeight="647.0" prefWidth="897.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-            <Tab text="Dashboard">
+            <Tab text="Dashboard" fx:id="dashboard">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -17,7 +17,7 @@
                   </AnchorPane>
               </content>
             </Tab>
-          <Tab text="Tables">
+          <Tab text="Tables" fx:id="tab1">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -25,7 +25,7 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Graphs">
+            <Tab text="Graphs" fx:id="tab2">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

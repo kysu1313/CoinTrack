@@ -9,6 +9,7 @@ import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import javafx.collections.ObservableList;
@@ -32,7 +33,7 @@ import tabControllers.assistantControllers.tablesAndLists.TableClass;
 public class TabAssistantController {
     
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
-    private static String uname;
+    private static final String UNAME = FXMLDocumentController.uname;
     private TableClass tbl;
     
     public void coinTable(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webViewT1, String _currency, long _currencyRate) {
@@ -90,9 +91,8 @@ public class TabAssistantController {
      * @param coinID
      */
     public void saveCoin(String userName, int coinID) {
-        uname = userName;
         ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
+        if (dbConn.insertSavedCoin(UNAME, coinID)) {
             AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
         }
         dbConn.close();
@@ -100,17 +100,12 @@ public class TabAssistantController {
     
     /**
      * Pull saved coin data from database and add it to the accordion.
+     * @param savedCoinsList
+     * @param savedCoins
      */
     public void populateSavedCoins(ListView savedCoinsList, LinkedList<UserCoin> savedCoins) {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        savedCoinsList.getItems().clear();
-        savedCoins = conn.getSavedCoins(uname);
-        conn.close();
-        if (savedCoins != null && savedCoins.size() > 0) {
-            for (int i = 0; i < savedCoins.size(); i++) {
-                savedCoinsList.getItems().add(savedCoins.get(i));
-            }
-        }
+        ListClass lc = new ListClass(UNAME);
+        lc.populateSavedCoins(savedCoinsList);
     }
 
     /**
@@ -173,16 +168,10 @@ public class TabAssistantController {
     /**
      * Call database returning a list of all users who are online.
      */
-    public void addOnlineUsers(LinkedList<String> onlineUsers, ListView onlineUsersListT2) {
-        ListClass lcc = new ListClass(uname);
-        lcc.populateOnlineUsers(onlineUsersListT2);
-        
-//        ConnectToDatabase conn = new ConnectToDatabase();
-//        onlineUsers = conn.getOnlineUsers();
-//        conn.close();
-//        for (int i = 0; i < onlineUsers.size(); i++) {
-//            onlineUsersListT2.getItems().add(onlineUsers.get(i));
-//        }
+    public void addOnlineUsers(LinkedList<String> onlineUsers, ListView onlineUsersList) {
+        onlineUsersList.getItems().clear();
+        ListClass lcc = new ListClass(UNAME);
+        lcc.populateOnlineUsers(onlineUsersList);
     }
     
     /**
@@ -201,9 +190,23 @@ public class TabAssistantController {
         BarChartClass bcc = new BarChartClass(_barChart, _linkedMap, _numCoins, _userCoinList);
         bcc.displayGraph();
     }
-    
-    public void listCells(ListView onlineUsersListT2, String uname, TextArea txtAreaT2) {
+
+    /**
+     * This creates the right click menu on the onlineUsers list. 
+     * It also maps each button to an action.
+     */
+    public void listCells(ListView onlineUsersListT2, String uname) {
         ListClass lcc = new ListClass(uname);
         lcc.populateFriends(onlineUsersListT2);
+    }
+    
+    public void createTable(TableView _tableDash, LinkedList<SingleCoin> _userSingleCoins) {
+        TabAssistantController tas = new TabAssistantController();
+        tas.coinTableDash(_tableDash, _userSingleCoins);
+    }
+    
+    public void createFriendList(ListView friendsListT2) {
+        ListClass lc = new ListClass(UNAME);
+        lc.populateFriends(friendsListT2);
     }
 }

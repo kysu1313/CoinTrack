@@ -64,6 +64,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.HoveredThresholdNode;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
@@ -378,7 +379,6 @@ public class Tab2Controller implements Initializable{
         this.lcc.getElements().forEach((item) -> {
             this.sideVBox.getChildren().add(new Label(item));
         });
-        
     }
 
     /**
@@ -405,27 +405,21 @@ public class Tab2Controller implements Initializable{
         dbConn.close();
     }
 
+    /**
+     * Populate saved coin side area.
+     */
     private void populateSavedCoins() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        savedCoinsListT2.getItems().clear();
-        this.savedCoins = conn.getSavedCoins(this.uname);
-        conn.close();
-        if (this.savedCoins != null && this.savedCoins.size() > 0) {
-            for (int i = 0; i < this.savedCoins.size(); i++) {
-                savedCoinsListT2.getItems().add(this.savedCoins.get(i));
-            }
-        }
+        this.tas.populateSavedCoins(savedCoinsListT2, savedCoins);
     }
-    
+
     /**
      * Creates a LinkedList of SingleCoins.
-     * 
+     *
      * This method has been moved to Tab2AssistantController
      * in an effort to keep this controller as clean as possible.
      */
     private void displayPieChart() {
         this.tas.MakePieChart(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
-//        assistT2.PieChart(this.coinList, this.pieChartCoins, this.comboBox, this.pieChartData, this.pieChart);
     }
 
     /**
@@ -440,7 +434,7 @@ public class Tab2Controller implements Initializable{
      * It also maps each button to an action.
      */
     private void createListCells() {
-        tas.listCells(this.onlineUsersListT2, this.uname, this.txtAreaT2);
+        tas.listCells(this.onlineUsersListT2, this.uname);
     }
 
     /**
@@ -451,67 +445,12 @@ public class Tab2Controller implements Initializable{
     }
 
     /**
-     * Creates right-clickable cells in the friends list in the accordion.
-     */
-//    private void createFriendListCells() {
-//        tas.friendListCells(this.friendsListT2);
-//    }
- 
-    /**
      * Returns and closes the main stage from the class where it was created
      */
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
-    
-//    private void setMouseLineChart() {
-//        final Axis<String> xAx = lineChart.getXAxis();
-//        final Axis<Number> yAx = lineChart.getYAxis();
-//        final Label cursorCoords = new Label();
-//        sideVBox.getChildren().add(cursorCoords);
-//        final Node chartBackground = lineChart.lookup(".chart-plot-background");
-//        for (Node n : chartBackground.getParent().getChildrenUnmodifiable()) {
-//            if (n != chartBackground && n != xAx && n != yAx) {
-//                n.setMouseTransparent(true);
-//            }
-//        }
-//        lineChart.setOnMouseEntered((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(true);
-//        });
-//        lineChart.setOnMouseMoved((MouseEvent mouseEvent) -> {
-//            String x = mouseEvent.getX() + "";
-//            String xy = x + ", " + yAx.getValueForDisplay(mouseEvent.getY());
-//            cursorCoords.setText(xy);
-//        });
-//        lineChart.setOnMouseExited((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(false);
-//        });
-//        xAx.setOnMouseEntered((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(true);
-//        });
-//        xAx.setOnMouseMoved((MouseEvent mouseEvent) -> {
-//            cursorCoords.setText( xAx.getValueForDisplay(mouseEvent.getX()));
-//        });
-//        xAx.setOnMouseExited((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(false);
-//        });
-//
-//        yAx.setOnMouseEntered((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(true);
-//        });
-//        yAx.setOnMouseMoved((MouseEvent mouseEvent) -> {
-//            cursorCoords.setText(
-//                    String.format(
-//                            "y = %.2f",
-//                            yAx.getValueForDisplay(mouseEvent.getY())
-//                    )
-//            );
-//        });
-//        yAx.setOnMouseExited((MouseEvent mouseEvent) -> {
-//            cursorCoords.setVisible(false);
-//        });
-//    }
-    
+
     /**
      * Detect tab changed within Tab 2.
      */
@@ -546,36 +485,12 @@ public class Tab2Controller implements Initializable{
                     scanBtnT2.setDisable(true);
                     addRemoveComboBox.setVisible(true);
                     comboBox.setItems(TIMES);
-                    
-//                    setMouseLineChart();
-                    
                     addRemoveComboBox.setValue("Add / Remove");
                     lineChart.setAnimated(false);
                 }
             }
         });
     }
-    
-//    private void addListEvents() {
-//        onlineUsersListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-//            ContextMenu cmu = new ContextMenu();
-//            @Override
-//            public void handle(MouseEvent event) {
-//                if (event.getButton() == MouseButton.SECONDARY) {
-//                    cmu.show(onlineUsersListT2, event.getScreenX(), event.getScreenY());
-//                }
-//            }
-//        });
-//        savedCoinsListT2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-//            ContextMenu cmu = new ContextMenu();
-//            @Override
-//            public void handle(MouseEvent event) {
-//                if (event.getButton() == MouseButton.SECONDARY) {
-//                    cmu.show(savedCoinsListT2, event.getScreenX(), event.getScreenY());
-//                }
-//            }
-//        });
-//    }
 
     @FXML
     private void refresh(ActionEvent event) {
@@ -601,7 +516,7 @@ public class Tab2Controller implements Initializable{
             this.series2 = new BarChart.Series<>();
             if (this.timeSelection == null){this.timeSelection = "24h";}
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
-            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
+            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
             // Create new bar chart object
             BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart);
             bcc.displaySingleGraph();
@@ -612,36 +527,52 @@ public class Tab2Controller implements Initializable{
             this.series2 = new BarChart.Series<>();
             if (this.timeSelection == null){this.timeSelection = "24h";}
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
-//            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
             // Create new bar chart object
             this.sideVBox.getChildren().clear();
-//            ConnectToDatabase conn = new ConnectToDatabase();
-//            conn.getSavedCoins(this.uname).forEach(element -> {
-//                this.linesToGraph.add(element.getName());
-//            });
-//            conn.close();
             this.linesToGraph.add(item.getName());
             // Create line chart object to display graphs.
             this.lcc = new LineChartClass(this.lineChart, this.linesToGraph, this.timeSelection);
             this.lcc.displayGraph();
             this.lcc.getElements().forEach((coin) -> {
-                this.sideVBox.getChildren().add(new Label(coin));
+                Label lbl = new Label(coin);
+                this.sideVBox.getChildren().add(lbl);
+                addListListener(lbl);
+                lbl.setMaxWidth(Double.MAX_VALUE);
             });
             lcc.displayGraph();
         }
+    }
+    
+    /**
+     * Adds mouse handler for search VBox labels.
+     *
+     * @param _lbl
+     */
+    private void addListListener(Label _lbl) {
+        _lbl.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            _lbl.setStyle("-fx-background-color: #bababa;");
+        });
+        _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
+            _lbl.setStyle("-fx-background-color: white;");
+        });
+        ContextMenu cm = new ContextMenu();
+        MenuItem m1 = new MenuItem("Remove");
+        m1.setOnAction((event) -> {
+            if (DEBUG) {System.out.println("Choice 1 clicked!");}
+            this.lcc.removeCoin(_lbl.getText());
+        });
+        cm.getItems().addAll(m1);
+        _lbl.setContextMenu(cm);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        assistT2 = new Tab2AssistantController();
-//        assistT1 = new Tab1AssistantController();
         this.tas = new TabAssistantController();
         // Save uname from login page.
         String uname = coinTrack.FXMLDocumentController.uname;
         messageText.setText("Hello " + uname);
         this.uname = coinTrack.FXMLDocumentController.uname;
-//        this.DEBUG = Tab1Controller.DEBUG;
         System.out.println(DEBUG);
         messageText.setText("Hello " + uname);
         linesToGraph = new LinkedList<>();
@@ -653,9 +584,6 @@ public class Tab2Controller implements Initializable{
         createListCells();
         addOnlineUsersToList();
         addFriendsToList();
-        
-//        addListEvents();
-
         // Initialize the barChart & lineChart arrays they will pull data from.
         barChartData = FXCollections.observableArrayList();
         barChartData2 = FXCollections.observableArrayList();
