@@ -6,7 +6,6 @@
 package tabControllers.assistantControllers.graphs;
 
 import coinClasses.UserCoin;
-import interfaces.GraphInterface;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ import javafx.scene.input.ScrollEvent;
  *
  * @author Kyle
  */
-public class BarChartClass implements GraphInterface{
+public class BarChartClass implements interfaces.GraphInterface, interfaces.BarChartInterface{
     
     private BarChart barChart;
     private LinkedList<LinkedHashMap<Double, String>> linkedMap;
@@ -31,7 +30,6 @@ public class BarChartClass implements GraphInterface{
     private LinkedList<UserCoin> userCoinList;
     private LinkedList<String> colors;
     private LinkedList<XYChart.Series> serLst;
-    private ObservableList<XYChart.Series<String, Number>> barChartData;
     private XYChart.Series series;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private String timeSelection;
@@ -51,6 +49,7 @@ public class BarChartClass implements GraphInterface{
         this.linkedMap = _linkedMap;
         this.numCoins = _numCoins;
         this.userCoinList = _userCoinList;
+        this.barChart.getData().clear();
         multiCoinData();
     }
     
@@ -59,17 +58,16 @@ public class BarChartClass implements GraphInterface{
      * @param _barChartData
      * @param _series
      * @param _singleHistoryMap
-     * @param _timeSelection 
-     * @param _bc 
+     * @param _timeSelection
+     * @param _bc
      */
-    public BarChartClass(ObservableList<XYChart.Series<String, Number>> _barChartData, 
-            XYChart.Series _series, LinkedHashMap<Double, String> _singleHistoryMap, 
-            String _timeSelection, BarChart _bc) {
-        this.barChartData = _barChartData;
+    public BarChartClass(XYChart.Series _series, LinkedHashMap<Double, String> _singleHistoryMap,
+                            String _timeSelection, BarChart _bc) {
         this.series = _series;
         this.singleHistoryMap = _singleHistoryMap;
         this.timeSelection = _timeSelection;
         this.barChart = _bc;
+        this.barChart.getData().clear();
         singleCoinData();
     }
 
@@ -85,8 +83,9 @@ public class BarChartClass implements GraphInterface{
      * Display single coin graph.
      */
     public void displaySingleGraph() {
-        this.barChartData.add(this.series);
-        this.barChart.setData(this.barChartData);
+//        this.barChartData.add(this.series);
+//        this.barChart.setData(this.barChartData);
+        this.barChart.getData().add(this.series);
         alternateColors("green", "red");
         scaleGraph();
     }
@@ -96,8 +95,6 @@ public class BarChartClass implements GraphInterface{
      * Used on Tab 2.
      */
     private void singleCoinData() {
-        // Prevent old data from showing back up  --  NOT WORKING (sometimes)
-        this.barChartData.clear();
         this.series.getData().clear();
         // Add entries from singleHistoryMap into series1
         for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
@@ -177,7 +174,8 @@ public class BarChartClass implements GraphInterface{
     /**
     * Implements scrolling using the mouse wheel on the graph.
     */
-    private void scaleGraph() {
+    @Override
+    public void scaleGraph() {
         double delta = 1.1;
         this.barChart.setOnScroll((ScrollEvent event) -> {
             event.consume();
@@ -195,6 +193,11 @@ public class BarChartClass implements GraphInterface{
                 barChart.setScaleY(1.0);
             }
         });
+    }
+
+    @Override
+    public LinkedList<String> getElements() {
+        return null;
     }
     
 }

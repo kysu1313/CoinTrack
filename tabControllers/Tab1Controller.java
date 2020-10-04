@@ -59,6 +59,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.Tab1AssistantController;
+import tabControllers.assistantControllers.tablesAndLists.ListClass;
+import tabControllers.assistantControllers.tablesAndLists.TableClass;
 
 /**
  *
@@ -193,7 +195,7 @@ public class Tab1Controller implements Initializable{
     private void handleResetCurr(ActionEvent event) {
         resetCurrency();
     }
-    
+
     @FXML
     private void handleDebug(ActionEvent event) {
         if (this.debugBtn.isArmed()) {
@@ -201,15 +203,13 @@ public class Tab1Controller implements Initializable{
             this.DEBUG = true;
         }
     }
-    
+
     @FXML
     private void handleTest(ActionEvent event) {
         AlphaVantage av = new AlphaVantage("BTC");
         av.getDaily().forEach((item) -> {
             System.out.println(item.keySet());
         });
-        
-        
     }
 
     // ========== HELPER METHODS ==========
@@ -222,14 +222,12 @@ public class Tab1Controller implements Initializable{
         this.selectedCurrency = "USD";
         this.cb.setPromptText(this.selectedCurrency);
         this.currencyRate = 1;
-        tableViewT1.getItems().clear();
-        tableViewT1.getColumns().clear();
-        txtAreaT1.setText("");
+        this.tableViewT1.getItems().clear();
+        this.tableViewT1.getColumns().clear();
+        this.txtAreaT1.setText("");
         displayGlobalStats();
         displayCoinText();
-//        displayCoinText();
         if(DEBUG){System.out.println("selected currency: " + this.selectedCurrency);}
-        
     }
 
     /**
@@ -240,14 +238,15 @@ public class Tab1Controller implements Initializable{
         this.cri.join();
         this.coinList = this.cri.getCoinList();
         /**
-         * Update coins in database. probably not necessary to run here. 
+         * Update coins in database. probably not necessary to run here.
          * It already runs at launch.
          */
         //updateCoinPricesDB();
         /**
          * Add coins to new database table all_coins
+         * If there is a new coin it will be added here.
          */
-        //cri.updateDatabaseCoins(temp);
+        cri.updateDatabaseCoins(this.coinList);
 
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
@@ -255,7 +254,7 @@ public class Tab1Controller implements Initializable{
         this.coinNamePrice = this.cri.getNamePrice();
 //        coinList = cri.getCoinList();
         displayMultiCoinTable();
-        createTableCells();
+//        createTableCells();
 
     }
     
@@ -298,7 +297,9 @@ public class Tab1Controller implements Initializable{
      */
     private void displayMultiCoinTable() {
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
-        assistT1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        Tab1AssistantController ast1 = new Tab1AssistantController();
+        ast1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        ast1.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }
 
     /**
@@ -317,14 +318,8 @@ public class Tab1Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        this.onlineUsers = new LinkedList<>();
-        this.onlineUsers = conn.getOnlineUsers();
-        conn.close();
-        if(DEBUG){System.out.println("total online users: " + this.onlineUsers.size());}
-        for (int i = 0; i < this.onlineUsers.size(); i++) {
-            onlineUsersList.getItems().add(this.onlineUsers.get(i));
-        }
+        ListClass lc = new ListClass(this.uname);
+        lc.populateOnlineUsers(onlineUsersList);
     }
 
     /**
@@ -332,85 +327,49 @@ public class Tab1Controller implements Initializable{
      * It also maps each button to an action.
      */
     private void createListCells() {
-        onlineUsersList.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem addFriendItem = new MenuItem();
-            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
-            addFriendItem.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                String friendName = cell.getItem();
-                if (friendName.equals(this.uname)) {
-                    txtAreaT1.setText("Wow, so lonely. Can't add yourself as a friend..");
-                } else {
-                    conn.addFriend(this.uname, friendName);
-                    addFriendsToList();
-                    if(DEBUG){System.out.println("Added " + friendName + " to friend list");}
-                    txtAreaT1.setText("Added " + friendName + " to friend list!");
-                }
-                conn.close();
-            });
-            MenuItem sendMessageItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-            sendMessageItem.setOnAction(event -> {
-                // Send a message to a friend
-            });
-            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
-            cell.textProperty().bind(cell.itemProperty());
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if (isNowEmpty) {
-                    cell.setContextMenu(null);
-                } else {
-                    cell.setContextMenu(contextMenu);
-                }
-            });
-            return cell ;
-        });
-    }
-    /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
-     */
-    private void createTableCells() {
-        ContextMenu cm2 = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Save Coin");
-        mi1.setOnAction(event -> {
-                SingleCoin item = tableViewT1.getSelectionModel().getSelectedItem();
-                saveCoin(this.uname, item.getId());
-                if(DEBUG){System.out.println("Added " + item.getName() + " to saved coin list");}
-                populateSavedCoins();
-            });
-        ContextMenu menu = new ContextMenu();
-        menu.getItems().add(mi1);
-        tableViewT1.setContextMenu(menu);
-        populateSavedCoins();
-
-        cm2.getItems().add(mi1);
-        MenuItem mi2 = new MenuItem("Share Coin");
-        cm2.getItems().add(mi2);
-        MenuItem mi3 = new MenuItem("Track Coin");
-        cm2.getItems().add(mi3);
-        tableViewT1.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if (t.getButton() == MouseButton.SECONDARY) {
-                    cm2.show(tableViewT1, t.getScreenX(), t.getScreenY());
-                }
-            }
-        });
+        
+//        onlineUsersList.setCellFactory(lv -> {
+//            ListCell<String> cell = new ListCell<>();
+//            ContextMenu contextMenu = new ContextMenu();
+//            MenuItem addFriendItem = new MenuItem();
+//            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
+//            addFriendItem.setOnAction(event -> {
+//                ConnectToDatabase conn = new ConnectToDatabase();
+//                String friendName = cell.getItem();
+//                if (friendName.equals(this.uname)) {
+//                    txtAreaT1.setText("Wow, so lonely. Can't add yourself as a friend..");
+//                } else {
+//                    conn.addFriend(this.uname, friendName);
+//                    addFriendsToList();
+//                    if(DEBUG){System.out.println("Added " + friendName + " to friend list");}
+//                    txtAreaT1.setText("Added " + friendName + " to friend list!");
+//                }
+//                conn.close();
+//            });
+//            MenuItem sendMessageItem = new MenuItem();
+//            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+//            sendMessageItem.setOnAction(event -> {
+//                // Send a message to a friend
+//            });
+//            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
+//            cell.textProperty().bind(cell.itemProperty());
+//            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+//                if (isNowEmpty) {
+//                    cell.setContextMenu(null);
+//                } else {
+//                    cell.setContextMenu(contextMenu);
+//                }
+//            });
+//            return cell ;
+//        });
     }
 
     /**
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        this.friendList = new LinkedList<>();
-        this.friendList = conn.getFriendList(this.uname);
-        conn.close();
-        for (int i = 0; i < this.friendList.size(); i++) {
-            friendsList.getItems().add(this.friendList.get(i));
-        }
+        ListClass lc = new ListClass(this.uname);
+        lc.populateFriends(friendsList);
     }
 
     /**
@@ -420,42 +379,44 @@ public class Tab1Controller implements Initializable{
      * remove the friend.
      */
     private void createFriendListCells() {
-        friendsList.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>();
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem addFriendItem = new MenuItem();
-            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
-            addFriendItem.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                String friendName = cell.getItem();
-                // Do stuff
-                conn.close();
-            });
-            MenuItem sendMessageItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-            sendMessageItem.setOnAction(event -> {
-                // Send a message to a friend
-            });
-            MenuItem removeFriendItem = new MenuItem();
-            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
-            sendMessageItem.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                conn.removeFriend(cell.getText());
-                if(DEBUG){System.out.println("Removed " + cell.getText() + " from friend list");}
-                addFriendsToList();
-                conn.close();
-            });
-            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
-            cell.textProperty().bind(cell.itemProperty());
-            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                if (isNowEmpty) {
-                    cell.setContextMenu(null);
-                } else {
-                    cell.setContextMenu(contextMenu);
-                }
-            });
-            return cell ;
-        });
+        ListClass lc = new ListClass(this.uname);
+        lc.populateFriends(friendsList);
+//        friendsList.setCellFactory(lv -> {
+//            ListCell<String> cell = new ListCell<>();
+//            ContextMenu contextMenu = new ContextMenu();
+//            MenuItem addFriendItem = new MenuItem();
+//            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
+//            addFriendItem.setOnAction(event -> {
+//                ConnectToDatabase conn = new ConnectToDatabase();
+//                String friendName = cell.getItem();
+//                // Do stuff
+//                conn.close();
+//            });
+//            MenuItem sendMessageItem = new MenuItem();
+//            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
+//            sendMessageItem.setOnAction(event -> {
+//                // Send a message to a friend
+//            });
+//            MenuItem removeFriendItem = new MenuItem();
+//            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
+//            sendMessageItem.setOnAction(event -> {
+//                ConnectToDatabase conn = new ConnectToDatabase();
+//                conn.removeFriend(cell.getText());
+//                if(DEBUG){System.out.println("Removed " + cell.getText() + " from friend list");}
+//                addFriendsToList();
+//                conn.close();
+//            });
+//            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
+//            cell.textProperty().bind(cell.itemProperty());
+//            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+//                if (isNowEmpty) {
+//                    cell.setContextMenu(null);
+//                } else {
+//                    cell.setContextMenu(contextMenu);
+//                }
+//            });
+//            return cell ;
+//        });
     }
 
     /**
@@ -481,18 +442,10 @@ public class Tab1Controller implements Initializable{
     /**
      * Pull saved coin data from database and add it to the accordion.
      */
-    private void populateSavedCoins() {
+    public void populateSavedCoins() {
         ConnectToDatabase conn = new ConnectToDatabase();
-        savedCoinsList.getItems().clear();
-        this.savedCoins = conn.getSavedCoins(this.uname);
-        conn.close();
-        if (DEBUG){System.out.println("Populating saved coin list");}
-        if (this.savedCoins != null && this.savedCoins.size() > 0) {
-            for (int i = 0; i < this.savedCoins.size(); i++) {
-                savedCoinsList.getItems().add(this.savedCoins.get(i));
-                if (DEBUG){System.out.println("Adding: " + this.savedCoins.get(i));}
-            }
-        }
+        ListClass lc = new ListClass(this.uname);
+        lc.populateSavedCoins(savedCoinsList);
     }
     
     /**
@@ -533,21 +486,6 @@ public class Tab1Controller implements Initializable{
         }
     }
 
-    private void addContextMenuToList() {
-        ContextMenu contextMenu = new ContextMenu();
-            MenuItem deleteCoin = new MenuItem();
-            deleteCoin.textProperty().bind(Bindings.format("Delete"));
-            deleteCoin.setOnAction(event -> {
-                ConnectToDatabase conn = new ConnectToDatabase();
-                conn.deleteSavedCoin((UserCoin)savedCoinsList.getSelectionModel().getSelectedItem());
-                populateSavedCoins();
-                conn.close();
-            });
-           
-            contextMenu.getItems().addAll(deleteCoin);
-            savedCoinsList.setContextMenu(contextMenu);
-    }
-
     /**
      * Initialize the tab
      * @param location
@@ -565,20 +503,10 @@ public class Tab1Controller implements Initializable{
         this.currencyRate = 1;
         populateCurrencyDropdown();
         populateSavedCoins();
-        createListCells();
+//        createListCells();
         createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
         updateCoinPricesDB();
-        this.onlineUsersList.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cm = new ContextMenu();
-                    cm.show(onlineUsersList, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
-        addContextMenuToList();
     }
 }

@@ -2,12 +2,14 @@ package coinClasses;
 /**
  * Database connection class.
  * The database is hosted on freemysqlhosting.net
- * 
+ *
  * Constructor just opens a connection.
  * The methods allow interaction with specific tables.
- * 
+ *
+ * TODO: create interface?
+ *
  * If you open it. You MUST close it!
- * 
+ *
  * - Kyle, Parth
  */
 
@@ -28,19 +30,16 @@ import java.util.LinkedList;
 import tabControllers.AlertMessages;
 
 public class ConnectToDatabase {
-    
+
     private Connection con;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
-    
+
     /**
      * CONSTRUCTOR
      * Makes a simple connection to the database.
      */
     public ConnectToDatabase() {
         try {
-            /**
-             * This works
-             */
             Class.forName("com.mysql.jdbc.Driver");
             this.con = DriverManager.getConnection("jdbc:mysql://sql9.freemysqlhosting.net:3306/sql9364184", "sql9364184", "vLIxP8hK8C");
             if (DEBUG){System.out.println("DB connection successful");}
@@ -48,10 +47,10 @@ public class ConnectToDatabase {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Insert data into the "all_coins" table.
-     * 
+     *
      * @param _coinID
      * @param _uuid
      * @param _slug
@@ -95,20 +94,46 @@ public class ConnectToDatabase {
             preparedStmt.setString(10, _price);
             preparedStmt.setDouble(11, _change);
             preparedStmt.setInt(12, _coinRank);
-//            preparedStmt.setDate(15, _date);
-            // execute the preparedstatement
-            preparedStmt.execute();
+            // execute the preparedstatement if coin is not already in table.
+            if (DEBUG){System.out.println("checking coin in db " + _name);}
+            if (!checkIfCoinExists(_uuid)) {
+                if (DEBUG){System.out.println("Adding coin: " + _coinID + " exists. ");}
+                if (DEBUG){System.out.println("adding " + _name);}
+                preparedStmt.execute();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
     
     /**
+     * Check if a coin already exists in the database.
+     * @param _uuid
+     * @return 
+     */
+    public boolean checkIfCoinExists(String _uuid) {
+        boolean doesExist = false;
+        try {
+            // Insert statement, using prepared statements
+            String query = " SELECT * FROM all_coins WHERE uuid = '" + _uuid + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            // execute the preparedstatement
+            ResultSet result = preparedStmt.executeQuery(query);
+            doesExist = result.next();
+            if (DEBUG){System.out.println("Checking if coin: " + _uuid + " exists. ");}
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return doesExist;
+    }
+
+    /**
      * Update price, change, and volume in the all_coins table in the database.
      * @param _id
      * @param _newPrice
      * @param _newChange
-     * @param _newVolume 
+     * @param _newVolume
      */
     public void updateCoinPrices(int _id, double _newPrice, double _newChange, int _newVolume) {
         try {
@@ -286,12 +311,12 @@ public class ConnectToDatabase {
         }
         return list;
     }
-    
+
     /**
      * Create a connection between two users and add
-     * it to the table: friend. 
+     * it to the table: friend.
      * @param _username
-     * @param _friendUsername 
+     * @param _friendUsername
      */
     public void addFriend(String _username, String _friendUsername) {
         int fid = getIdFromUsername(_friendUsername);
@@ -313,11 +338,11 @@ public class ConnectToDatabase {
             System.out.println(ex);
         }
     }
-    
+
     /**
      * Remove the user friend connection. Delete the row
      * from the friend table.
-     * @param _username 
+     * @param _username
      */
     public void removeFriend(String _username) {
         try {
@@ -331,11 +356,11 @@ public class ConnectToDatabase {
             System.out.println(ex);
         }
     }
-    
+
     /**
      * Returns a list of friends for a given user ID.
      * @param _username
-     * @return 
+     * @return
      */
     public LinkedList<String> getFriendList(String _username) {
         LinkedList<String> friendList = new LinkedList<>();
@@ -358,7 +383,7 @@ public class ConnectToDatabase {
     /**
      * Get the id of a user given their username.
      * @param _username
-     * @return 
+     * @return
      */
     public int getIdFromUsername(String _username) {
         int id = -1;
@@ -376,13 +401,13 @@ public class ConnectToDatabase {
         }
         return id;
     }
-    
+
     /**
      * Validate the login information submitted by the user.
-     * 
+     *
      * @param _userName
      * @param _userPass
-     * @return 
+     * @return
      */
     public boolean validateLogin(String _userName, String _userPass) {
         boolean isValid = false;
@@ -410,12 +435,12 @@ public class ConnectToDatabase {
         }
         return isValid;
     }
-    
+
     /**
      * Check if the entered username already exists
      * in the database.
      * @param _userName
-     * @return 
+     * @return
      */
     public boolean usernameExists(String _userName) {
         boolean isValid = true;
@@ -428,17 +453,16 @@ public class ConnectToDatabase {
 //            preparedStmt.execute();
             ResultSet result = preparedStmt.executeQuery(query);
             return result.next();
-            
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return isValid;
     }
-    
+
     /**
      * Checks if the given email exists in the database.
      * @param _userEmail
-     * @return 
+     * @return
      */
     public boolean emailExists(String _userEmail) {
         boolean isValid = false;
@@ -449,17 +473,17 @@ public class ConnectToDatabase {
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             return result.next();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return isValid;
     }
-    
+
     /**
      * Return the email associated with the given username
      * @param _username
-     * @return 
+     * @return
      */
     public String getEmailFromUsername(String _username) {
         boolean isValid = true;
@@ -478,11 +502,11 @@ public class ConnectToDatabase {
         }
         return email;
     }
-    
+
     /**
      * Finds the username associated with the given email address.
      * @param _email
-     * @return 
+     * @return
      */
     public String getUsernameFromEmail(String _email) {
         boolean isValid = true;
@@ -501,15 +525,13 @@ public class ConnectToDatabase {
         }
         return username;
     }
-    
+
     public void changePassword(String _uname, String _newPassword) {
         try {
             String hashedPass = getSHA256(_newPassword);
             // Update row value
             String query = " UPDATE users SET userPassword = " + "'" + hashedPass + "'" 
                     + " WHERE username = " + "'" + _uname + "'";
-
-            
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             // execute the preparedstatement
@@ -519,23 +541,23 @@ public class ConnectToDatabase {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Use this to get user info inside the app.
      * @param _userName
      * @param _userPass
-     * @return 
+     * @return
      */
     public boolean getUserInfo(String _userName, String _userPass) {
         return false;
     }
-    
+
     /**
      * This method generates a SHA-256 hash from
      * a given string input.
-     * 
+     *
      * Yea I know it's not salted. Who even asked you.
-     * 
+     *
      * @param _input
      * @return
      */
@@ -557,17 +579,17 @@ public class ConnectToDatabase {
         }
         return hexStr.toString();
     }
-    
+
     /**
      * Hash the input and compare to a database hash.
      * @param _password
      * @param _dbHash
-     * @return 
+     * @return
      */
     private boolean validatePassword(String _password, String _dbHash) {
         return getSHA256(_password).equals(_dbHash);
     }
-    
+
     /**
      * Close the database connection.
      *
@@ -581,11 +603,11 @@ public class ConnectToDatabase {
             Logger.getLogger(ConnectToDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Return the coins a user has saved.
      * @param username
-     * @return 
+     * @return
      */
      public LinkedList<UserCoin> getSavedCoins(String username) {
         LinkedList<UserCoin> list = new LinkedList<>();
@@ -611,7 +633,7 @@ public class ConnectToDatabase {
         }
         return list;
     }
-    
+
     /**
      * Returns a list of all coins in the database.
      * @return
@@ -638,7 +660,7 @@ public class ConnectToDatabase {
      * This method checks that the coin user is saved previously or not. 
      * @param id
      * @param _coin_id
-     * @return 
+     * @return
      */
     private boolean checkSavedCoinsForDuplication(int id, int _coin_id) {
         try {
@@ -657,7 +679,7 @@ public class ConnectToDatabase {
             return false;
         }
     }
-    
+
     public boolean deleteSavedCoin(UserCoin userCoin) {
         try {
             String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + userCoin.getUserID() + " AND `user_coins`.`coin_id` = " + userCoin.getCoinID();
@@ -671,5 +693,5 @@ public class ConnectToDatabase {
     }
 }
 
-    
+
 
