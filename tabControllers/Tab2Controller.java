@@ -606,6 +606,28 @@ public class Tab2Controller implements Initializable{
             BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart);
             bcc.displaySingleGraph();
             bcc.alternateColors("green", "red");
+        } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
+            if (DEBUG){System.out.println("bar chart selected");}
+            this.lineChart.getData().clear();
+            this.series2 = new BarChart.Series<>();
+            if (this.timeSelection == null){this.timeSelection = "24h";}
+            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
+//            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
+            // Create new bar chart object
+            this.sideVBox.getChildren().clear();
+//            ConnectToDatabase conn = new ConnectToDatabase();
+//            conn.getSavedCoins(this.uname).forEach(element -> {
+//                this.linesToGraph.add(element.getName());
+//            });
+//            conn.close();
+            this.linesToGraph.add(item.getName());
+            // Create line chart object to display graphs.
+            this.lcc = new LineChartClass(this.lineChart, this.linesToGraph, this.timeSelection);
+            this.lcc.displayGraph();
+            this.lcc.getElements().forEach((coin) -> {
+                this.sideVBox.getChildren().add(new Label(coin));
+            });
+            lcc.displayGraph();
         }
     }
 
