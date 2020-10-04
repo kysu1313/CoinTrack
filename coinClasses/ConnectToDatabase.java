@@ -635,7 +635,7 @@ public class ConnectToDatabase {
     }
 
     /**
-     * This method checks that the coin user is saving, is saved previously or not. 
+     * This method checks that the coin user is saved previously or not. 
      * @param id
      * @param _coin_id
      * @return 
