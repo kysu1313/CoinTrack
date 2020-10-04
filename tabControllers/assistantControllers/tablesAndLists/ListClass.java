@@ -7,6 +7,7 @@ package tabControllers.assistantControllers.tablesAndLists;
 
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
 import interfaces.ListClassInterface;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import tabControllers.AlertMessages;
@@ -27,20 +29,24 @@ import static tabControllers.Tab1Controller.DEBUG;
  * @author Kyle
  */
 public class ListClass implements ListClassInterface{
-    
-    private final String UNAME;
+
+    private final static Tab CURR_TAB = FXMLDocumentController.currTab;
+    private static final String UNAME = FXMLDocumentController.uname;
     private ListView list;
     private LinkedList<UserCoin> savedCoins;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
-    
+
+    /**
+     * Constructor, just initializes stuff.
+     * @param _username
+     */
     public ListClass(String _username) {
-        this.UNAME = _username;
         this.friendList = new LinkedList<>();
         this.savedCoins = new LinkedList<>();
         this.friendList = new LinkedList<>();
     }
-    
+
     @Override
     public void populateList(ListView _list, LinkedList<String> _items) {
         if (_items != null && _items.size() > 0) {
@@ -56,7 +62,7 @@ public class ListClass implements ListClassInterface{
         this.list = _savedCoinList;
         ConnectToDatabase conn = new ConnectToDatabase();
         _savedCoinList.getItems().clear();
-        this.savedCoins = conn.getSavedCoins(this.UNAME);
+        this.savedCoins = conn.getSavedCoins(UNAME);
         conn.close();
         if (DEBUG){System.out.println("Populating saved coin list");}
         if (this.savedCoins != null && this.savedCoins.size() > 0) {
@@ -72,6 +78,7 @@ public class ListClass implements ListClassInterface{
     @Override
     public void populateOnlineUsers(ListView _onlineUserList) {
         this.list = _onlineUserList;
+        _onlineUserList.getItems().clear();
         ConnectToDatabase conn = new ConnectToDatabase();
         this.onlineUsers = new LinkedList<>();
         this.onlineUsers = conn.getOnlineUsers();
@@ -99,7 +106,7 @@ public class ListClass implements ListClassInterface{
         ConnectToDatabase conn = new ConnectToDatabase();
         this.friendList.clear();
         _friendList.getItems().clear();
-        this.friendList = conn.getFriendList(this.UNAME);
+        this.friendList = conn.getFriendList(UNAME);
         conn.close();
         for (int i = 0; i < this.friendList.size(); i++) {
             _friendList.getItems().add(this.friendList.get(i));
@@ -107,7 +114,7 @@ public class ListClass implements ListClassInterface{
         createFriendListCells(_friendList);
         addRightClick(_friendList);
     }
-    
+
     private void createFriendListCells(ListView _list) {
         _list.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<>();
@@ -166,10 +173,10 @@ public class ListClass implements ListClassInterface{
             addFriendItem.setOnAction(event -> {
                 ConnectToDatabase conn = new ConnectToDatabase();
                 String friendName = cell.getItem();
-                if (friendName.equals(this.UNAME)) {
+                if (friendName.equals(UNAME)) {
                     AlertMessages.showErrorMessage("Add FAIL", "WOW, really? Trying to add yourself as a friend?");
                 } else {
-                    conn.addFriend(this.UNAME, friendName);
+                    conn.addFriend(UNAME, friendName);
                     populateFriends(_list);
                     if(DEBUG){System.out.println("Added " + friendName + " to friend list");}
                     AlertMessages.showInformationMessage("Add Success", "Added " + friendName + " to friend list!");

@@ -59,6 +59,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.Tab1AssistantController;
+import tabControllers.assistantControllers.TabAssistantController;
 import tabControllers.assistantControllers.tablesAndLists.ListClass;
 import tabControllers.assistantControllers.tablesAndLists.TableClass;
 
@@ -85,7 +86,7 @@ public class Tab1Controller implements Initializable{
     private ComboBox cb;
     private long currencyRate;
     public static boolean DEBUG;
-    Tab1AssistantController assistT1;
+    TabAssistantController tas;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
@@ -177,7 +178,7 @@ public class Tab1Controller implements Initializable{
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            this.assistT1.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             Tab1Controller.mainPage1.setScene(this.scene);
@@ -247,15 +248,14 @@ public class Tab1Controller implements Initializable{
          * If there is a new coin it will be added here.
          */
         cri.updateDatabaseCoins(this.coinList);
-
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
         this.coinList = this.cri.getCoinList();
         this.coinNamePrice = this.cri.getNamePrice();
-//        coinList = cri.getCoinList();
-        displayMultiCoinTable();
-//        createTableCells();
-
+        if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
+        TabAssistantController ast = new TabAssistantController();
+        ast.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }
     
     /**
@@ -292,17 +292,6 @@ public class Tab1Controller implements Initializable{
     }
 
     /**
-     * Add data to tableView.
-     * This is done in Tab1AssistantController.java to reduce space used here.
-     */
-    private void displayMultiCoinTable() {
-        if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
-        Tab1AssistantController ast1 = new Tab1AssistantController();
-        ast1.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
-        ast1.createCells(this.uname, this.savedCoinsList, this.savedCoins);
-    }
-
-    /**
      * Change a users online status. i.e. when they log on/off .
      * @param _uname
      * @param _status
@@ -323,53 +312,10 @@ public class Tab1Controller implements Initializable{
     }
 
     /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
-     */
-    private void createListCells() {
-        
-//        onlineUsersList.setCellFactory(lv -> {
-//            ListCell<String> cell = new ListCell<>();
-//            ContextMenu contextMenu = new ContextMenu();
-//            MenuItem addFriendItem = new MenuItem();
-//            addFriendItem.textProperty().bind(Bindings.format("Add Friend"));
-//            addFriendItem.setOnAction(event -> {
-//                ConnectToDatabase conn = new ConnectToDatabase();
-//                String friendName = cell.getItem();
-//                if (friendName.equals(this.uname)) {
-//                    txtAreaT1.setText("Wow, so lonely. Can't add yourself as a friend..");
-//                } else {
-//                    conn.addFriend(this.uname, friendName);
-//                    addFriendsToList();
-//                    if(DEBUG){System.out.println("Added " + friendName + " to friend list");}
-//                    txtAreaT1.setText("Added " + friendName + " to friend list!");
-//                }
-//                conn.close();
-//            });
-//            MenuItem sendMessageItem = new MenuItem();
-//            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-//            sendMessageItem.setOnAction(event -> {
-//                // Send a message to a friend
-//            });
-//            contextMenu.getItems().addAll(addFriendItem, sendMessageItem);
-//            cell.textProperty().bind(cell.itemProperty());
-//            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-//                if (isNowEmpty) {
-//                    cell.setContextMenu(null);
-//                } else {
-//                    cell.setContextMenu(contextMenu);
-//                }
-//            });
-//            return cell ;
-//        });
-    }
-
-    /**
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        ListClass lc = new ListClass(this.uname);
-        lc.populateFriends(friendsList);
+        tas.createFriendList(this.friendsList);
     }
 
     /**
@@ -378,46 +324,9 @@ public class Tab1Controller implements Initializable{
      * Allow the user to share coins, send messages, and
      * remove the friend.
      */
-    private void createFriendListCells() {
-        ListClass lc = new ListClass(this.uname);
-        lc.populateFriends(friendsList);
-//        friendsList.setCellFactory(lv -> {
-//            ListCell<String> cell = new ListCell<>();
-//            ContextMenu contextMenu = new ContextMenu();
-//            MenuItem addFriendItem = new MenuItem();
-//            addFriendItem.textProperty().bind(Bindings.format("Share coin"));
-//            addFriendItem.setOnAction(event -> {
-//                ConnectToDatabase conn = new ConnectToDatabase();
-//                String friendName = cell.getItem();
-//                // Do stuff
-//                conn.close();
-//            });
-//            MenuItem sendMessageItem = new MenuItem();
-//            sendMessageItem.textProperty().bind(Bindings.format("Send Message"));
-//            sendMessageItem.setOnAction(event -> {
-//                // Send a message to a friend
-//            });
-//            MenuItem removeFriendItem = new MenuItem();
-//            sendMessageItem.textProperty().bind(Bindings.format("Remove Friend"));
-//            sendMessageItem.setOnAction(event -> {
-//                ConnectToDatabase conn = new ConnectToDatabase();
-//                conn.removeFriend(cell.getText());
-//                if(DEBUG){System.out.println("Removed " + cell.getText() + " from friend list");}
-//                addFriendsToList();
-//                conn.close();
-//            });
-//            contextMenu.getItems().addAll(addFriendItem, sendMessageItem, removeFriendItem);
-//            cell.textProperty().bind(cell.itemProperty());
-//            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-//                if (isNowEmpty) {
-//                    cell.setContextMenu(null);
-//                } else {
-//                    cell.setContextMenu(contextMenu);
-//                }
-//            });
-//            return cell ;
-//        });
-    }
+//    private void createFriendListCells() {
+//        tas.createFriendList(this.friendsList);
+//    }
 
     /**
      * Returns and closes the main stage from the class where it was created
@@ -425,11 +334,11 @@ public class Tab1Controller implements Initializable{
     private void closeOldStage() {
         coinTrack.FXMLDocumentController.mainStage.close();
     }
-    
+
     /**
      * Save coin using coinID and username.
      * @param userName
-     * @param coinID 
+     * @param coinID
      */
     private void saveCoin(String userName, int coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
@@ -443,9 +352,7 @@ public class Tab1Controller implements Initializable{
      * Pull saved coin data from database and add it to the accordion.
      */
     public void populateSavedCoins() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        ListClass lc = new ListClass(this.uname);
-        lc.populateSavedCoins(savedCoinsList);
+        this.tas.populateSavedCoins(savedCoinsList, savedCoins);
     }
     
     /**
@@ -493,9 +400,10 @@ public class Tab1Controller implements Initializable{
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.tas = new TabAssistantController();
         this.uname = coinTrack.FXMLDocumentController.uname;
         this.messageText.setText("Hello " + uname);
-        this.assistT1 = new Tab1AssistantController();
+//        this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();
         this.coinList = new LinkedList<>();
         // Set default currency
@@ -503,8 +411,7 @@ public class Tab1Controller implements Initializable{
         this.currencyRate = 1;
         populateCurrencyDropdown();
         populateSavedCoins();
-//        createListCells();
-        createFriendListCells();
+//        createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
         updateCoinPricesDB();

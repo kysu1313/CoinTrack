@@ -5,47 +5,30 @@ import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
-import coinTrack.FXMLDocumentController;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import static tabControllers.Tab1Controller.DEBUG;
-import tabControllers.assistantControllers.Tab1AssistantController;
-import tabControllers.assistantControllers.Tab2AssistantController;
 import tabControllers.assistantControllers.TabAssistantController;
-import tabControllers.assistantControllers.graphs.BarChartClass;
-import tabControllers.assistantControllers.graphs.PieChartClass;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
+ * Tab controller for the dashboard, "tab 3".
  * @author Kyle
  */
 
@@ -63,6 +46,8 @@ public class Tab3Controller implements Initializable{
     private LinkedHashMap<Double, String> userHistoryMap;
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
 
+    private TabAssistantController tas;
+
     @FXML private BarChart barChartDash;
     @FXML private PieChart pieChartDash;
     @FXML private TableView tableDash;
@@ -72,14 +57,13 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView onlineUsersListT3;
     @FXML private VBox vbox;
     @FXML private TextField searchField;
-    
+
     @FXML private void handleSearch(ActionEvent event) {
-        
+        System.out.println("nothing here yet");
     }
 
     private void installTextFieldEvent() {
         this.searchField.textProperty().addListener(new ChangeListener<String>() {
-            
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 LinkedList<Label> temp = new LinkedList<>();
@@ -133,90 +117,59 @@ public class Tab3Controller implements Initializable{
 
     /**
      * Create the table.
-     * Uses tab1AssistantController to format the table.
+     * Uses tabAssistantController to format the table.
      */
     private void createTable() {
-        TabAssistantController tas = new TabAssistantController();
-        tas.coinTableDash(this.tableDash, this.userSingleCoins);
+        this.tas.coinTableDash(this.tableDash, this.userSingleCoins);
     }
-    
+
+    /**
+     * Create the pie chart.
+     * Uses tabAssistantController to create graph.
+     */
     private void createPieChart() {
-        TabAssistantController tas = new TabAssistantController();
-        tas.PieChartDash(this.userSingleCoins, this.pieChartDash);
+        this.tas.PieChartDash(this.userSingleCoins, this.pieChartDash);
     }
-    
+
+    /**
+     * Create the bar chart.
+     * Uses tabAssistantController to create graph.
+     */
     private void createBarChart() {
-        TabAssistantController tas = new TabAssistantController();
-        tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
+        this.tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
         this.barChartDash.setLegendVisible(true);
     }
-    
+
     /**
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        TabAssistantController tas = new TabAssistantController();
-        tas.addOnlineUsers(this.onlineUserList, this.onlineUsersListT3);
+        this.tas.addOnlineUsers(this.onlineUserList, this.onlineUsersListT3);
     }
 
     /**
-     * This creates the right click menu on the onlineUsers list. 
+     * This creates the right click menu on the onlineUsers list.
      * It also maps each button to an action.
      */
     private void createListCells() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.listCells(this.onlineUsersListT3, USERNAME);
+//        Tab2AssistantController tas = new Tab2AssistantController();
+        this.tas.listCells(this.onlineUsersListT3, USERNAME);
     }
 
     /**
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.friendList(this.friendList, USERNAME, this.friendsListT3);
+        tas.createFriendList(this.friendsListT3);
     }
 
     /**
-     * Creates right-clickable cells in the friends list in the accordion.
+     * Add saved coins to the right side accordion.
      */
-    private void createFriendListCells() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.friendListCells(this.friendsListT3);
-    }
-    
-    private void addListEvents() {
-        onlineUsersListT3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            ContextMenu cmu = new ContextMenu();
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cmu.show(onlineUsersListT3, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
-        savedCoinsListT3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
-            ContextMenu cmu = new ContextMenu();
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    cmu.show(savedCoinsListT3, event.getScreenX(), event.getScreenY());
-                }
-            }
-        });
+    private void populateSavedCoins() {
+        this.tas.populateSavedCoins(this.savedCoinsListT3, this.savedCoins);
     }
 
-    private void populateSavedCoins() {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        savedCoinsListT3.getItems().clear();
-        this.userCoinList = conn.getSavedCoins(USERNAME);
-        conn.close();
-        if (this.userCoinList != null && this.userCoinList.size() > 0) {
-            for (int i = 0; i < this.userCoinList.size(); i++) {
-                savedCoinsListT3.getItems().add(this.userCoinList.get(i));
-            }
-        }
-    }
-    
     /**
      * Save coin using coinID and username.
      * @param userName
@@ -229,7 +182,7 @@ public class Tab3Controller implements Initializable{
         }
         dbConn.close();
     }
-    
+
     /**
      * Adds mouse handler for search VBox labels.
      *
@@ -250,7 +203,7 @@ public class Tab3Controller implements Initializable{
         cm.getItems().addAll(m1);
         _lbl.setContextMenu(cm);
     }
-    
+
     /**
      * Add coins to the search vbox.
      * This is updated when the user types something in the search field.
@@ -265,13 +218,19 @@ public class Tab3Controller implements Initializable{
         }
     }
 
+    @FXML
+    private void refresh(ActionEvent event) {
+        populateSavedCoins();
+    }
+
     /**
      * Initialize tab3, "dashboard".
      * @param location
-     * @param resources 
+     * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.tas = new TabAssistantController();
         this.userCoinList = new LinkedList<>();
         coinList = new LinkedList<>();
         this.userSingleCoins = new LinkedList<>();
@@ -290,12 +249,6 @@ public class Tab3Controller implements Initializable{
         addOnlineUsersToList();
         populateSavedCoins();
         addFriendsToList();
-        createFriendListCells();
         installTextFieldEvent();
-    }
-    
-    @FXML
-    private void refresh(ActionEvent event) {
-        populateSavedCoins();
     }
 }
