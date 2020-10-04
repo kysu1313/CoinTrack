@@ -53,6 +53,7 @@ public class TableClass implements TableInterface{
      * the logo of the coin when it is double clicked.
      *
      * Mainly used in Tab 1
+     *
      * @param _tableViewT1
      * @param _coinList
      * @param _webView
@@ -73,7 +74,9 @@ public class TableClass implements TableInterface{
 
     /**
      * This table is a slimmed down version that does not include a WebView.
+     *
      * Currently it is used on the dashboard.
+     *
      * @param _tableViewT1
      * @param _coinList
      * @param _columnNames
@@ -90,7 +93,7 @@ public class TableClass implements TableInterface{
     }
 
     /**
-     * This method created the columns for the table.
+     * This method creates the columns for the table.
      *
      * The parameter names for the class of objects to be displayed are linked
      * to each column. i.e: column1.getName() == class.parameter.name

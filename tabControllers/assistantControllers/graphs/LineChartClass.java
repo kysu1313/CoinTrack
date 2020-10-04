@@ -8,9 +8,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 
 /**
  * General class for making / displaying LineCharts.
@@ -133,6 +137,64 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
     @Override
     public LinkedList<String> getElements() {
         return this.LINES;
+    }
+    
+    public Label getLineChartCoords(LineChart<String, Number> lineChart) {
+        final Axis<String> xAxis = lineChart.getXAxis();
+        final Axis<Number> yAxis = lineChart.getYAxis();
+        final Label cursorCoords = new Label();
+        final Node chartBackground = lineChart.lookup(".chart-plot-background");
+        for (Node n : chartBackground.getParent().getChildrenUnmodifiable()) {
+            if (n != chartBackground && n != xAxis && n != yAxis) {
+                n.setMouseTransparent(true);
+            }
+        }
+        chartBackground.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        chartBackground.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            cursorCoords.setText(
+                    String.format(
+                            "(%.2f, %.2f)",
+                            xAxis.getValueForDisplay(mouseEvent.getX()),
+                            yAxis.getValueForDisplay(mouseEvent.getY())
+                    )
+            );
+        });
+        chartBackground.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+        xAxis.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        xAxis.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            cursorCoords.setText(
+                    String.format(
+                            "x = %.2f",
+                            xAxis.getValueForDisplay(mouseEvent.getX())
+                    )
+            );
+        });
+        xAxis.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+
+        yAxis.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(true);
+        });
+        yAxis.setOnMouseMoved((MouseEvent mouseEvent) -> {
+            cursorCoords.setText(
+                    String.format(
+                            "y = %.2f",
+                            yAxis.getValueForDisplay(mouseEvent.getY())
+                    )
+            );
+        });
+        yAxis.setOnMouseExited((MouseEvent mouseEvent) -> {
+            cursorCoords.setVisible(false);
+        });
+
+        return cursorCoords;
     }
     
 }
