@@ -34,6 +34,9 @@ import javafx.scene.text.Text;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
+import tabControllers.assistantControllers.TabAssistantController;
+import tabControllers.assistantControllers.graphs.BarChartClass;
+import tabControllers.assistantControllers.graphs.PieChartClass;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -133,18 +136,18 @@ public class Tab3Controller implements Initializable{
      * Uses tab1AssistantController to format the table.
      */
     private void createTable() {
-        Tab1AssistantController tas1 = new Tab1AssistantController();
-        tas1.coinTableDash(this.tableDash, this.userSingleCoins);
+        TabAssistantController tas = new TabAssistantController();
+        tas.coinTableDash(this.tableDash, this.userSingleCoins);
     }
     
     private void createPieChart() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.PieChartDashboard(this.userSingleCoins, this.pieChartDash);
+        TabAssistantController tas = new TabAssistantController();
+        tas.PieChartDash(this.userSingleCoins, this.pieChartDash);
     }
     
     private void createBarChart() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
+        TabAssistantController tas = new TabAssistantController();
+        tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
         this.barChartDash.setLegendVisible(true);
     }
     
@@ -152,8 +155,8 @@ public class Tab3Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        Tab2AssistantController tas2 = new Tab2AssistantController();
-        tas2.addOnlineUsers(this.onlineUserList, this.onlineUsersListT3);
+        TabAssistantController tas = new TabAssistantController();
+        tas.addOnlineUsers(this.onlineUserList, this.onlineUsersListT3);
     }
 
     /**
