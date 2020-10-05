@@ -103,7 +103,6 @@ public class AlphaVantage implements DailyWeeklyInterface{
             LinkedHashMap<String, String> temp = new LinkedHashMap<>();
             JSONObject ob = innerJob.getJSONObject(keys.next());
             String time = keys.next();
-            System.out.println(time);
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date date = formatter.parse(time);
             double open = Double.parseDouble(ob.getString("1b. open (USD)"));
@@ -112,8 +111,6 @@ public class AlphaVantage implements DailyWeeklyInterface{
             double close = Double.parseDouble(ob.getString("4b. close (USD)"));
             double volume = Double.parseDouble(ob.getString("5. volume"));
             OHLCDataItem odi = new OHLCDataItem(date, open, high, low, close, volume);
-            
-            System.out.println(odi.getHigh());
             this.ohlc.add(odi);
         }
         return this.ohlc;
