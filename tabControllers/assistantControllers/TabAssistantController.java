@@ -10,6 +10,7 @@ import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
+import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import javafx.collections.ObservableList;
@@ -19,9 +20,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import tabControllers.AlertMessages;
 import tabControllers.assistantControllers.graphs.BarChartClass;
+import tabControllers.assistantControllers.graphs.CandleChartClass;
 import tabControllers.assistantControllers.graphs.PieChartClass;
 import tabControllers.assistantControllers.tablesAndLists.ListClass;
 import tabControllers.assistantControllers.tablesAndLists.TableClass;
@@ -141,6 +144,10 @@ public class TabAssistantController {
     public void PieChartDash(LinkedList<SingleCoin> coinList, PieChart pieChart){
         PieChartClass pcc = new PieChartClass(coinList, pieChart);
         pcc.displayGraph();
+    }
+    
+    public void candleChart(Pane _pane) throws ParseException {
+        CandleChartClass ccc = new CandleChartClass(_pane);
     }
 
     /**

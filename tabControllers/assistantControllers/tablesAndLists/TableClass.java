@@ -28,7 +28,7 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import tabControllers.Tab1Controller;
 import static tabControllers.Tab1Controller.DEBUG;
-import tabControllers.assistantControllers.Tab1AssistantController;
+import tabControllers.assistantControllers.TabAssistantController;
 
 /**
  * General class for making & displaying tables.
@@ -218,7 +218,7 @@ public class TableClass implements TableInterface{
     public void createTableCells(String _username, ListView _savedCoinsList, LinkedList<UserCoin> _savedCoins) {
         ContextMenu cm2 = new ContextMenu();
         MenuItem mi1 = new MenuItem("Save Coin");
-        Tab1AssistantController tas = new Tab1AssistantController();
+        TabAssistantController tas = new TabAssistantController();
         mi1.setOnAction(event -> {
                 SingleCoin item = (SingleCoin) TABLE_VIEW.getSelectionModel().getSelectedItem();
                 tas.saveCoin(_username, item.getId());

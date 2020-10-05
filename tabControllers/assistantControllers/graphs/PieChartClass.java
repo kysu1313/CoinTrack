@@ -37,6 +37,7 @@ public class PieChartClass implements interfaces.GraphInterface{
      * @param _pieChart
      */
     public PieChartClass(CoinRankApi _coinList, int _pieChartCoins, ComboBox<String> _comboBox, ObservableList<PieChart.Data> _pieChartData, PieChart _pieChart) {
+        this.coinList = _coinList;
         this.singleCoinList = _coinList.getCoinList();
         this.pieChartCoins = _pieChartCoins;
         this.comboBox = _comboBox;
@@ -75,7 +76,7 @@ public class PieChartClass implements interfaces.GraphInterface{
 
     private void createFullGraph() {
         // Make sure the thread is finished
-        this.coinList.join();
+//        this.coinList.join();
         LinkedList<SingleCoin> temp = this.coinList.getSortedCoinList();
         this.pieChartCoins = Integer.parseInt(this.comboBox.getValue());
         // Loops over SingleCoin list and adds data to pieChart
