@@ -19,6 +19,7 @@ import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -58,7 +59,6 @@ import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.TabAssistantController;
 import tabControllers.assistantControllers.tablesAndLists.ListClass;
 import tabControllers.assistantControllers.tablesAndLists.TableClass;
@@ -206,10 +206,10 @@ public class Tab1Controller implements Initializable{
     }
 
     @FXML
-    private void handleTest(ActionEvent event) {
+    private void handleTest(ActionEvent event) throws ParseException {
         AlphaVantage av = new AlphaVantage("BTC");
-        av.getDaily().forEach((item) -> {
-            System.out.println(item.keySet());
+        av.getOHLCData().forEach((item) -> {
+            System.out.println(item.getClose());
         });
     }
 

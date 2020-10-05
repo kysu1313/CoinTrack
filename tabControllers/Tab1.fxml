@@ -19,9 +19,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="897.0" stylesheets="styleSheets/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
+<AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" stylesheets="styleSheets/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
     <children>
-      <MenuBar prefHeight="28.0" prefWidth="897.0">
+      <MenuBar prefHeight="28.0" prefWidth="1183.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -40,7 +40,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar layoutY="528.0" prefHeight="50.0" prefWidth="911.0">
+      <ToolBar layoutY="731.0" prefHeight="42.0" prefWidth="1183.0">
           <items>
               <CheckBox fx:id="searchGlobalStats" mnemonicParsing="false" text="Global Stats">
                <tooltip>
@@ -66,15 +66,15 @@
                </tooltip></Button>
         </items>
       </ToolBar>
-      <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="498.0" prefWidth="911.0">
+      <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="698.0" prefWidth="1183.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.18435754189944134" prefHeight="432.0" prefWidth="897.0">
+                  <SplitPane dividerPositions="0.1102629346904156" prefHeight="607.0" prefWidth="1181.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="480.0" prefWidth="162.0">
                            <children>
-                              <Accordion fx:id="accordianT1" prefHeight="430.0" prefWidth="163.0" style="-fx-background-color: #858585;">
+                              <Accordion fx:id="accordianT1" prefHeight="607.0" prefWidth="127.0" style="-fx-background-color: #858585;">
                                 <panes>
                                   <TitledPane fx:id="onlineUsers" animated="false" text="Online Users">
                                     <content>
@@ -106,7 +106,7 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
-                              <TableView fx:id="tableViewT1" prefHeight="430.0" prefWidth="751.0">
+                              <TableView fx:id="tableViewT1" prefHeight="605.0" prefWidth="959.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               </TableView>
                            </children>
                         </AnchorPane>
@@ -116,7 +116,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <SplitPane dividerPositions="0.18081587651598677" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.11195928753180662" prefHeight="58.0" prefWidth="785.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                            <children>
@@ -134,7 +134,7 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <ToolBar fx:id="bottomToolbar" layoutY="578.0" prefHeight="25.0" prefWidth="911.0">
+      <ToolBar fx:id="bottomToolbar" layoutY="773.0" prefHeight="35.0" prefWidth="1183.0">
         <items>
             <CheckBox fx:id="debugBtn" mnemonicParsing="false" onAction="#handleDebug" text="Debug" />
           <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="Reset Currency" />

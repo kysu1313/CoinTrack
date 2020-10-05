@@ -14,6 +14,7 @@ import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,12 +62,13 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.HoveredThresholdNode;
-import tabControllers.assistantControllers.Tab1AssistantController;
+//import tabControllers.assistantControllers.Tab1AssistantController;
 import tabControllers.assistantControllers.Tab2AssistantController;
 import tabControllers.assistantControllers.TabAssistantController;
 import tabControllers.assistantControllers.graphs.BarChartClass;
@@ -121,6 +123,7 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab pieChartTab;
     @FXML private Tab lineChartTab;
     @FXML private Tab webTab;
+    @FXML private Tab candleTab;
 //    @FXML private ToolBar toolBarT2;
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
@@ -143,6 +146,7 @@ public class Tab2Controller implements Initializable{
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
     @FXML private Text messageText;
+    @FXML private Pane candlePane;
 
     // Bar Chart
     @FXML private BarChart barChart;
@@ -396,7 +400,7 @@ public class Tab2Controller implements Initializable{
         this.barChartData.add(this.series1);
         this.barChart.setData(this.barChartData);
     }
-    
+
     private void saveCoin(String userName, int coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(userName, coinID)) {
@@ -419,6 +423,7 @@ public class Tab2Controller implements Initializable{
      * in an effort to keep this controller as clean as possible.
      */
     private void displayPieChart() {
+        this.coinList.join();
         this.tas.MakePieChart(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
     }
 
@@ -442,6 +447,10 @@ public class Tab2Controller implements Initializable{
      */
     private void addFriendsToList() {
         tas.friendList(this.friendList, this.uname, this.friendsListT2);
+    }
+
+    private void displayCandleChart() throws ParseException {
+        tas.candleChart(this.candlePane);
     }
 
     /**
@@ -487,6 +496,21 @@ public class Tab2Controller implements Initializable{
                     comboBox.setItems(TIMES);
                     addRemoveComboBox.setValue("Add / Remove");
                     lineChart.setAnimated(false);
+                } else if (currentTab == candleTab) {
+                    currTab = candleTab;
+                    comboBox.setValue("Timeframe");
+                    tabSelection = 4;
+                    searchBtnT2.setDisable(false);
+                    scanBtnT2.setDisable(true);
+                    addRemoveComboBox.setVisible(true);
+                    comboBox.setItems(TIMES);
+                    addRemoveComboBox.setVisible(false);
+                    lineChart.setAnimated(false);
+                    try {
+                        displayCandleChart();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(Tab2Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });

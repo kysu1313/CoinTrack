@@ -4,20 +4,20 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="647.0" prefWidth="897.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="842.0" prefWidth="1183.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
     <children>
       <TabPane fx:id="mainTabPane" prefHeight="647.0" prefWidth="897.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-            <Tab text="Dashboard" fx:id="dashboard">
+            <Tab fx:id="dashboard" text="Dashboard">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="923.0">
                      <children>
                         <fx:include source="../tabControllers/Tab3.fxml" />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
-          <Tab text="Tables" fx:id="tab1">
+          <Tab fx:id="tab1" text="Tables">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -25,7 +25,7 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Graphs" fx:id="tab2">
+            <Tab fx:id="tab2" text="Graphs">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
