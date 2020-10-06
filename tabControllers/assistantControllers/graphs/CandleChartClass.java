@@ -25,13 +25,22 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
+//import org.jfree.chart.axis.NumberAxis;
 //import org.jfree.chart.axis.SegmentedTimeline;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.CandlestickRenderer;
 import org.jfree.data.xy.DefaultOHLCDataset;
 import org.jfree.data.xy.OHLCDataItem;
 import org.jfree.data.xy.OHLCDataset;
+
+import com.BarData;
+import com.CandleStickChart;
+import com.DecimalAxisFormatter;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.stage.Stage;
 
 /**
  *
@@ -40,60 +49,30 @@ import org.jfree.data.xy.OHLCDataset;
 public class CandleChartClass implements GraphInterface {
     
     public CandleChartClass (Pane _pane) throws ParseException {
-        AlphaVantage av = new AlphaVantage("BTC");
-        List<OHLCDataItem> dataItems = av.getOHLCData();
-        
-        OHLCDataItem[] data = dataItems.toArray(new OHLCDataItem[dataItems.size()]);
-        OHLCDataset dataset = new DefaultOHLCDataset("MSFT", data);
-
-        // 2. Create chart
-        JFreeChart chart = ChartFactory.createCandlestickChart("MSFT", "Time", "Price", dataset, false);
-
-        // 3. Set chart background
-        chart.setBackgroundPaint(Color.white);
-
-        // 4. Set a few custom plot features
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.WHITE); // light yellow = new Color(0xffffe0)
-        plot.setDomainGridlinesVisible(true);
-        plot.setDomainGridlinePaint(Color.lightGray);
-        plot.setRangeGridlinePaint(Color.lightGray);
-        ((NumberAxis) plot.getRangeAxis()).setAutoRangeIncludesZero(false);
         
         /**
-         * embed swing node in javafx
+         * Times are wrong.
+         * 
+         * Do I need to change line 61 in CandleStickChart?????
+         * 
+         * Look at this tmwr
          */
-        final SwingNode swingNode = new SwingNode();
-        createSwingContent(swingNode, chart, _pane);
-        _pane.getChildren().add(swingNode);
-        ((CandlestickRenderer) plot.getRenderer()).setDrawVolume(false);
         
-
-        // 7. Create and display full-screen JFrame
-//        JFrame myFrame = new JFrame();
-//        myFrame.setResizable(true);
-//        myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        myFrame.add(new ChartPanel(chart), BorderLayout.CENTER);
-//        Toolkit kit = Toolkit.getDefaultToolkit();
-//        Insets insets = kit.getScreenInsets(myFrame.getGraphicsConfiguration());
-//        Dimension screen = kit.getScreenSize();
-//        myFrame.setSize((int) (screen.getWidth() - insets.left - insets.right), (int) (screen.getHeight() - insets.top - insets.bottom));
-//        myFrame.setLocation((int) (insets.left), (int) (insets.top));
-//        myFrame.setVisible(true);
+        AlphaVantage av = new AlphaVantage("BTC");
+        
+        List<BarData> barData = av.getBarData();
+        CandleStickChart candleStickChart = new CandleStickChart("S&P 500 Index", barData);
+        Scene scene = new Scene(candleStickChart);
+        
+        scene.getStylesheets().add("/styles/CandleStickChartStyles.css");
+        
+        Stage stage = new Stage();
+        stage.setTitle("BTC");
+        stage.setScene(scene);
+        stage.show();
+        System.out.println("candle test");
+        candleStickChart.setYAxisFormatter(new DecimalAxisFormatter("#000.00"));
     }
-    
-    private void createSwingContent(final SwingNode swingNode, JFreeChart chart, Pane _pane) {
-         SwingUtilities.invokeLater(new Runnable() {
-             @Override
-             public void run() {
-                 JPanel panel = new JPanel();
-                 panel.add(new ChartPanel(chart), BorderLayout.CENTER);
-//                 panel.setLayout();
-                 panel.setBounds(184, 77, 638, 399);
-                 swingNode.setContent(panel);
-             }
-         });
-     }
 
     @Override
     public void displayGraph() {
