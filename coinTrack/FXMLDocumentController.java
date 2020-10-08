@@ -49,6 +49,7 @@ public class FXMLDocumentController implements Initializable {
     protected Scene scene;
     private static String tempUsernameStorage;
     private String code;
+    private int _code;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
@@ -156,6 +157,16 @@ public class FXMLDocumentController implements Initializable {
         }
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
+            String toEmail3 = this.emailEntry.getText();
+            ConnectToDatabase conn = new ConnectToDatabase();
+            if (conn.emailExists(toEmail3)) {
+            tempUsernameStorage = conn.getUsernameFromEmail(toEmail3);
+            if (DEBUG) {
+                System.out.println(tempUsernameStorage);
+            }
+            conn.close();
+            _code = 1;
+            Email sendMail = new Email(toEmail3, this.tempUsernameStorage, _code);
             Parent root;
             try {
                 getCurrentStage().close();
@@ -167,12 +178,11 @@ public class FXMLDocumentController implements Initializable {
                 stage.show();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }}
+        } else {
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("username taken");
         }
-//        else {
-//            this.registerInfo.setFill(Color.RED);
-//            this.registerInfo.setText("username taken");
-//        }
     }
 
     /**
@@ -408,13 +418,8 @@ public class FXMLDocumentController implements Initializable {
      * @param event
      */
     @FXML
-    private void handleWelcomeEmail(ActionEvent event){
+    private void handleForgotUsernameEmail(ActionEvent event){
         String toEmail2 = this.recoveryEmail.getText();
-         if (!isEmailValid(this.recoveryEmail.getText().trim())) {
-            AlertMessages.showErrorMessage("Forgot Password", "Email format is not correct.");
-            this.recoveryEmail.requestFocus();
-            return;
-        }
         ConnectToDatabase conn = new ConnectToDatabase();
         if (conn.emailExists(toEmail2)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail2);
@@ -422,10 +427,11 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println(tempUsernameStorage);
             }
             conn.close();
-            Email sendMail = new Email(toEmail2, this.tempUsernameStorage);
+            _code = 0;
+            Email sendMail = new Email(toEmail2, this.tempUsernameStorage, _code);
         } else {
-            AlertMessages.showErrorMessage("Forgot Password", "hmm, can't find that email.");
-            this.recoveryEmail.requestFocus();
+            this.forgotWarning.setText("hmm, can't find that email");
+            this.forgotWarning.setFill(Color.RED);
         }
     }
 
