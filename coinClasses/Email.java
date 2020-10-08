@@ -16,6 +16,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import tabControllers.AlertMessages;
 
 public class Email {
 
@@ -55,7 +56,7 @@ public class Email {
                     + "Anyways, heres the code you need: \n\n"
                     + "====>   " + _code);
             Transport.send(message);
-            System.out.println("Recovery email sent");
+            AlertMessages.showInformationMessage("Forgot Password", "Recovery email sent. Please check your email.");
         } catch (MessagingException e) {
             System.out.println(e);
         }
@@ -90,6 +91,8 @@ public class Email {
                     + "====>   " + _uname);
             Transport.send(message);
             System.out.println("Recovery email sent");
+            AlertMessages.showInformationMessage("Forgot UserName", "Recovery email sent. Please check your email.");
+
         } catch (MessagingException e) {
             System.out.println(e);
         }

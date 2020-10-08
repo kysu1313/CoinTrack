@@ -16,6 +16,8 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -33,6 +35,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tabControllers.AlertMessages;
 import tabControllers.Tab1Controller;
 
 /**
@@ -76,6 +79,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Tab tab1;
     @FXML private Tab tab2;
 
+    Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
     //========== Action Handlers ==========
     /**
      * Login button action handler. If the username and password are correct the
@@ -164,10 +168,11 @@ public class FXMLDocumentController implements Initializable {
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            this.registerInfo.setFill(Color.RED);
-            this.registerInfo.setText("username taken");
         }
+//        else {
+//            this.registerInfo.setFill(Color.RED);
+//            this.registerInfo.setText("username taken");
+//        }
     }
 
     /**
@@ -179,30 +184,84 @@ public class FXMLDocumentController implements Initializable {
     private boolean checkGoodInput() {
         boolean isGood = false;
         if (this.emailEntry.getText().isEmpty()) {
-            this.emailEntry.setPromptText("Enter an email address");
+//            this.emailEntry.setPromptText("");
+            AlertMessages.showErrorMessage("Register User", "Enter an email address.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter an email address");
+            this.emailEntry.requestFocus();
+        } else if (!isEmailValid(this.emailEntry.getText().trim())) {
+            AlertMessages.showErrorMessage("Register User", "Email format is not correct.");
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText("Email format is not correct.");
+            this.emailEntry.requestFocus();
         } else if (usernameEntry.getText().isEmpty()) {
-            this.usernameEntry.setPromptText("Enter a username");
+//            this.usernameEntry.setPromptText("Enter a username");
+            AlertMessages.showErrorMessage("Register User", "Enter a username.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a username");
+            this.usernameEntry.requestFocus();
+
         } else if (this.passwordEntry.getText().isEmpty()) {
-            this.passwordEntry.setPromptText("Enter a password");
+//            this.passwordEntry.setPromptText("Enter a password");
+            AlertMessages.showErrorMessage("Register User", "Enter a password.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a password");
+            this.passwordEntry.requestFocus();
+
+        } else if (isPasswordValid( this.passwordEntry.getText())) {
+            this.registerInfo.setFill(Color.RED);
+            this.registerInfo.setText(" Password must be 8 characters long and should contain a digit and an uppercase letter.");
+            this.passwordEntry.requestFocus();
+        
         } else if (this.passwordRepeatEntry.getText().isEmpty()) {
-            this.passwordRepeatEntry.setPromptText("Repeat your password");
+//            this.passwordRepeatEntry.setPromptText("Repeat your password");
+            AlertMessages.showErrorMessage("Register User", "Repeat your password.");
+
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Repeat your password");
+            this.passwordRepeatEntry.requestFocus();
+        
         } else if (!this.passwordEntry.getText().equals(this.passwordRepeatEntry.getText())) {
-            this.passwordEntry.setPromptText("Passwords must match");
+//            this.passwordEntry.setPromptText("Passwords must match");
+            AlertMessages.showErrorMessage("Register User", "Passwords must match.");
             this.passwordRepeatEntry.setPromptText("Passwords must match");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Passwords must match");
+            this.passwordRepeatEntry.requestFocus();
+
         } else {
             isGood = true;
         }
         return isGood;
+    }
+    
+    public boolean isEmailValid(String email) {
+        Matcher matcher = emailRegex.matcher(email);
+        return matcher.find();
+    }
+    
+    public boolean isPasswordValid(String password) {
+        if(password.length() < 8) {
+            AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
+            return true;
+        }
+        boolean isCapital = false;
+        boolean isNumber = false;
+        
+        for (int i = 0; i < password.length(); i++) {
+           char ch = password.charAt(i);
+           
+           if (Character.isUpperCase(ch)) {
+               isCapital = true;
+           } else if (Character.isDigit(ch)) {
+               isNumber = true;
+           }
+        }
+        
+        if (!isCapital || !isNumber) {
+            AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
+        }
+       return !isCapital && !isNumber;
     }
 
     /**
@@ -228,6 +287,9 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("SUCCESS!");
             return true;
         } else {
+            AlertMessages.showErrorMessage("Register User", "Username already taken. Try another one.");
+            this.registerInfo.setText("Username already taken. Try another one.");
+            this.registerInfo.setFill(Color.RED);
             return false;
         }
     }
@@ -320,7 +382,12 @@ public class FXMLDocumentController implements Initializable {
     private void handleRecoveryEmail(ActionEvent event) {
         String toEmail = this.recoveryEmail.getText();
         ConnectToDatabase conn = new ConnectToDatabase();
-        if (conn.emailExists(toEmail)) {
+        if (!isEmailValid(this.recoveryEmail.getText().trim())) {
+            AlertMessages.showErrorMessage("Forgot Password", "Email format is not correct.");
+            this.recoveryEmail.requestFocus();
+            return;
+        }
+        if (conn.emailExists(toEmail) ) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail);
             if (DEBUG) {
                 System.out.println(tempUsernameStorage);
@@ -329,8 +396,8 @@ public class FXMLDocumentController implements Initializable {
             this.code = generateRecoveryCode();
             Email sendMail = new Email(toEmail, this.tempUsernameStorage, this.code);
         } else {
-            this.forgotWarning.setText("hmm, can't find that email");
-            this.forgotWarning.setFill(Color.RED);
+            AlertMessages.showErrorMessage("Forgot Password", "hmm, can't find that email.");
+            this.recoveryEmail.requestFocus();
         }
     }
 
@@ -343,6 +410,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleWelcomeEmail(ActionEvent event){
         String toEmail2 = this.recoveryEmail.getText();
+         if (!isEmailValid(this.recoveryEmail.getText().trim())) {
+            AlertMessages.showErrorMessage("Forgot Password", "Email format is not correct.");
+            this.recoveryEmail.requestFocus();
+            return;
+        }
         ConnectToDatabase conn = new ConnectToDatabase();
         if (conn.emailExists(toEmail2)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail2);
@@ -352,8 +424,8 @@ public class FXMLDocumentController implements Initializable {
             conn.close();
             Email sendMail = new Email(toEmail2, this.tempUsernameStorage);
         } else {
-            this.forgotWarning.setText("hmm, can't find that email");
-            this.forgotWarning.setFill(Color.RED);
+            AlertMessages.showErrorMessage("Forgot Password", "hmm, can't find that email.");
+            this.recoveryEmail.requestFocus();
         }
     }
 
