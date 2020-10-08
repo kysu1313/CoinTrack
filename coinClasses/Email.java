@@ -16,6 +16,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import tabControllers.AlertMessages;
 
 public class Email {
 
@@ -55,7 +56,7 @@ public class Email {
                     + "Anyways, heres the code you need: \n\n"
                     + "====>   " + _code);
             Transport.send(message);
-            System.out.println("Recovery email sent");
+            AlertMessages.showInformationMessage("Forgot Password", "Recovery email sent. Please check your email.");
         } catch (MessagingException e) {
             System.out.println(e);
         }
@@ -69,7 +70,7 @@ public class Email {
      * @param _toEmail
      * @param _uname
      */
-   public Email(String _toEmail, String _uname, int _code) {
+    public Email(String _toEmail, String _uname) {
         connecting();
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
@@ -83,21 +84,15 @@ public class Email {
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(_toEmail));
-            if(_code == 0){
             message.setSubject("Coin Track Recovery Username");
             message.setText("Dear " + _uname + ", \n\n"
                     + "Stop being so forgetful... \n\n"
                     + "Anyways, heres your username: \n\n"
                     + "====>   " + _uname);
             Transport.send(message);
-            System.out.println("Recovery email sent");}
-            else {
-               message.setSubject("Welcome to Coin Track");
-            message.setText("Dear " + _uname + ", \n\n"
-                    + "Thank you for registering \n\n");
-            Transport.send(message);
-            System.out.println("Welcome email sent"); 
-            }
+            System.out.println("Recovery email sent");
+            AlertMessages.showInformationMessage("Forgot UserName", "Recovery email sent. Please check your email.");
+
         } catch (MessagingException e) {
             System.out.println(e);
         }
