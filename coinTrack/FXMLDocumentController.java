@@ -235,19 +235,21 @@ public class FXMLDocumentController implements Initializable {
         return isGood;
     }
     
+    //checking email is in coreect format or not.
     public boolean isEmailValid(String email) {
         Matcher matcher = emailRegex.matcher(email);
         return matcher.find();
     }
     
     public boolean isPasswordValid(String password) {
+        //checking password length that we entered.
         if(password.length() < 8) {
             AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
             return true;
         }
         boolean isCapital = false;
         boolean isNumber = false;
-        
+        //checking evrry charcater in the string that we enter.
         for (int i = 0; i < password.length(); i++) {
            char ch = password.charAt(i);
            
@@ -257,7 +259,7 @@ public class FXMLDocumentController implements Initializable {
                isNumber = true;
            }
         }
-        
+        // if both condition is true then it will return true and if one of them is false then return false. 
         if (!isCapital || !isNumber) {
             AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
         }

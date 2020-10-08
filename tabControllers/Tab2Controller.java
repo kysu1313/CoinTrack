@@ -518,17 +518,18 @@ public class Tab2Controller implements Initializable{
         savedCoinsListT2.setContextMenu(contextMenu);
     }
 
+
     private void createGraphsForSavedCoins() {
         if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
-            if (DEBUG){System.out.println("bar chart selected");}
+            if (DEBUG){System.out.println("bar chart selected");}//will remove all data for barchart and create empty chart  
             this.barChart.getData().clear();
-            this.series2 = new BarChart.Series<>();
-            if (this.timeSelection == null){this.timeSelection = "24h";}
-            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
-            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
+            this.series2 = new BarChart.Series<>();//creating series 
+            if (this.timeSelection == null){this.timeSelection = "24h";}// will select time frame
+            UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();// getting coin object 
+            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();//getting 24 hours saved coin data
             // Create new bar chart object
             BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart);
-            bcc.displaySingleGraph();
+            bcc.displaySingleGraph();//seleted data displaying on graph 
             bcc.alternateColors("green", "red");
         } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
             if (DEBUG){System.out.println("bar chart selected");}
