@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" stylesheets="styleSheets/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
+<AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" stylesheets="styles/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
     <children>
       <MenuBar prefHeight="28.0" prefWidth="1183.0">
         <menus>
