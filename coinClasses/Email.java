@@ -69,7 +69,7 @@ public class Email {
      * @param _toEmail
      * @param _uname
      */
-    public Email(String _toEmail, String _uname) {
+   public Email(String _toEmail, String _uname, int _code) {
         connecting();
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
@@ -83,13 +83,21 @@ public class Email {
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(_toEmail));
+            if(_code == 0){
             message.setSubject("Coin Track Recovery Username");
             message.setText("Dear " + _uname + ", \n\n"
                     + "Stop being so forgetful... \n\n"
                     + "Anyways, heres your username: \n\n"
                     + "====>   " + _uname);
             Transport.send(message);
-            System.out.println("Recovery email sent");
+            System.out.println("Recovery email sent");}
+            else {
+               message.setSubject("Welcome to Coin Track");
+            message.setText("Dear " + _uname + ", \n\n"
+                    + "Thank you for registering \n\n");
+            Transport.send(message);
+            System.out.println("Welcome email sent"); 
+            }
         } catch (MessagingException e) {
             System.out.println(e);
         }
