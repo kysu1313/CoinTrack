@@ -193,8 +193,8 @@ public class TabAssistantController {
         }
     }
     
-    public void multiBarChart(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap, int _numCoins, LinkedList<UserCoin> _userCoinList) {
-        BarChartClass bcc = new BarChartClass(_barChart, _linkedMap, _numCoins, _userCoinList);
+    public void multiBarChart(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap, int _numCoins, LinkedList<UserCoin> _userCoinList, TextArea _textArea) {
+        BarChartClass bcc = new BarChartClass(_barChart, _linkedMap, _numCoins, _userCoinList, _textArea);
         bcc.displayGraph();
     }
 

@@ -9,8 +9,11 @@ package coinClasses;
 import com.BarData;
 import interfaces.DailyWeeklyInterface;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,29 +128,25 @@ public class AlphaVantage implements DailyWeeklyInterface{
         return this.ohlc;
     }
 
-//    private void makeJSONFile(JSONObject _innerObj) {
-//        try {
-//            File myObj = new File("alpha-coin.txt");
-//            if (myObj.createNewFile()) {
-//                System.out.println("File created: " + myObj.getName());
-//                FileWriter myWriter = new FileWriter("alpha-coin.txt");
-//                myWriter.write(_innerObj.toString());
-//                myWriter.close();
-//            } else {
-//                System.out.println("File already exists.");
-//            }
-//        } catch (IOException e) {
-//            System.out.println("An error occurred.");
-//            e.printStackTrace();
-//        }
-//    }
+    private void makeJSONFile(JSONObject _innerObj) {
+        try {
+//            FileWriter myWriter = new FileWriter("alpha-coin.txt");
+//            myWriter.write(_innerObj.toString());
+//            myWriter.close();
+            PrintWriter writer = new PrintWriter("alpha-coin.txt");
+            writer.write(_innerObj.toString());
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
     
     public List<BarData> getBarData() throws ParseException {
         String url = "https://alpha-vantage.p.rapidapi.com/query?market=CNY&symbol=" + this.symbol + "&function=DIGITAL_CURRENCY_DAILY";
         ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);
         JSONObject job = api.getJsonObject();
         JSONObject innerJob = job.getJSONObject("Time Series (Digital Currency Daily)");
-        
 //        makeJSONFile(innerJob);
         
         System.out.println(innerJob.names());
@@ -181,6 +180,7 @@ public class AlphaVantage implements DailyWeeklyInterface{
             
             LinkedHashMap<String, String> temp = new LinkedHashMap<>();
             JSONObject ob = innerJob.getJSONObject(keys.next());
+            
 //            String time = keys.next();
             System.out.println(dates.get(count));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
