@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -36,6 +37,7 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     private XYChart.Series series;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private String timeSelection;
+    private TextArea textArea;
     
     /**
      * Constructor for bar chart used in Tab 2.
@@ -47,11 +49,12 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      * @param _userCoinList
      */
     public BarChartClass(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap,
-            int _numCoins, LinkedList<UserCoin> _userCoinList) {
+            int _numCoins, LinkedList<UserCoin> _userCoinList, TextArea _textArea) {
         this.barChart = _barChart;
         this.linkedMap = _linkedMap;
         this.numCoins = _numCoins;
         this.userCoinList = _userCoinList;
+        this.textArea = _textArea;
         this.barChart.getData().clear();
         multiCoinData();
     }
@@ -65,11 +68,12 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      * @param _bc
      */
     public BarChartClass(XYChart.Series _series, LinkedHashMap<Double, String> _singleHistoryMap,
-                            String _timeSelection, BarChart _bc) {
+                            String _timeSelection, BarChart _bc, TextArea _textArea) {
         this.series = _series;
         this.singleHistoryMap = _singleHistoryMap;
         this.timeSelection = _timeSelection;
         this.barChart = _bc;
+        this.textArea = _textArea;
         this.barChart.getData().clear();
         singleCoinData();
     }
@@ -99,13 +103,18 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      */
     private void singleCoinData() {
         this.series.getData().clear();
+        double highestPrice = 0;
         // Add entries from singleHistoryMap into series1
         for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
             long tempLong = Long.parseLong(entry.getValue());
             Date d = new Date(tempLong);
             String date = "" + d;
             double price = entry.getKey();
+            if (price >= highestPrice) {
+                highestPrice = price;
+            }
             this.series.getData().add(new XYChart.Data(date, price));
+            this.textArea.setText("Highest Price: " + highestPrice + ", Recorded on: " + date);
         }
         // Add series1 to the barChartData, then add that to the barChart
         this.barChart.setTitle("Viewing the past " + this.timeSelection);

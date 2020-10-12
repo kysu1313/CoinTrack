@@ -335,7 +335,7 @@ public class Tab2Controller implements Initializable{
         }
         // Create a new BarChart object passing appropriate values.
         BarChartClass bcc = new BarChartClass(this.series4, this.singleHistoryMap,
-                                              this.timeSelection, this.barChart);
+                                              this.timeSelection, this.barChart, this.txtAreaT2);
         bcc.displaySingleGraph();
     }
 
@@ -527,7 +527,7 @@ public class Tab2Controller implements Initializable{
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
             this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
             // Create new bar chart object
-            BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart);
+            BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
             bcc.displaySingleGraph();
             bcc.alternateColors("green", "red");
         } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {

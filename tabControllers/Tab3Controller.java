@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -45,7 +46,7 @@ public class Tab3Controller implements Initializable{
     private LinkedHashMap<Double, String> singleHistoryMap;
     private LinkedHashMap<Double, String> userHistoryMap;
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
-
+    private TextArea textArea;
     private TabAssistantController tas;
 
     @FXML private BarChart barChartDash;
@@ -136,7 +137,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to create graph.
      */
     private void createBarChart() {
-        this.tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList);
+        this.tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList, this.textArea);
         this.barChartDash.setLegendVisible(true);
     }
 

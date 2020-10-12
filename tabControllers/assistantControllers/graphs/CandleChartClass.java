@@ -7,39 +7,15 @@ package tabControllers.assistantControllers.graphs;
 
 import coinClasses.AlphaVantage;
 import interfaces.GraphInterface;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javafx.embed.swing.SwingNode;
 import javafx.scene.layout.Pane;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-//import org.jfree.chart.axis.NumberAxis;
-//import org.jfree.chart.axis.SegmentedTimeline;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.CandlestickRenderer;
-import org.jfree.data.xy.DefaultOHLCDataset;
-import org.jfree.data.xy.OHLCDataItem;
-import org.jfree.data.xy.OHLCDataset;
 
 import com.BarData;
 import com.CandleStickChart;
 import com.DecimalAxisFormatter;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.stage.Stage;
 
 /**
