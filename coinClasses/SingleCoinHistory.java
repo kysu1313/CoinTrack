@@ -6,19 +6,17 @@ package coinClasses;
  * - Kyle
  */
 
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
 public class SingleCoinHistory {
     
-    private JSONArray object;
-    private int coinId;
-    private LinkedHashMap<Double, String> coinList;
+    private final JSONArray OBJECT;
+    private final int COIN_ID;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
+    private LinkedHashMap<Double, String> coinList;
 
     /**
      * Constructor.
@@ -30,15 +28,15 @@ public class SingleCoinHistory {
      * @param _id
      */
     public SingleCoinHistory(JSONArray _jar, int _id) {
-        this.object = _jar;
-        this.coinId = _id;
+        this.OBJECT = _jar;
+        this.COIN_ID = _id;
         if (coinList == null) {
             coinList = new LinkedHashMap<>();
         }
         // Loop that adds historical data to appropriate data vields
         // this.object.length(), commented out b/c too long
         for (int i = 0; i < 5; i++) {
-            JSONObject cn = this.object.getJSONObject(i);
+            JSONObject cn = this.OBJECT.getJSONObject(i);
             double price = Double.parseDouble(cn.getString("price"));
             String date = Integer.toString(cn.getInt("timestamp"));
             this.coinList.put(price, date);
@@ -60,7 +58,7 @@ public class SingleCoinHistory {
      * @return coinId
      */
     public int getCoinId() {
-        return this.coinId;
+        return this.COIN_ID;
     }
     
 }

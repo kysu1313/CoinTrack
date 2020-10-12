@@ -25,10 +25,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab3Controller">
-    <stylesheets>
+<AnchorPane id="AnchorPane" prefHeight="822.0" stylesheets="styles/MainStyle.css" prefWidth="1183.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab3Controller">
+<!--    <stylesheets>
         <URL value="@styles/tab3.css" />
-    </stylesheets>
+    </stylesheets>-->
     <children>
       <MenuBar prefHeight="28.0" prefWidth="897.0">
         <menus>
