@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class CoinHistory implements Runnable, CoinHistoryInterface{
+public final class CoinHistory implements Runnable, CoinHistoryInterface{
     
     private LinkedList<SingleCoin> history;
     private LinkedHashMap<String, Integer> historyMap;
@@ -46,7 +46,6 @@ public class CoinHistory implements Runnable, CoinHistoryInterface{
      * @param _id
      * @param _name
      * @param _timeFrame
-     * @param debug
      */
     public CoinHistory(int _id, String _name, String _timeFrame) {
         this.singleHistoryMap = new LinkedHashMap<>();

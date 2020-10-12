@@ -104,7 +104,6 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         for (String line : this.LINES) {
             CoinHistory coinHist = new CoinHistory(0, line, this.TIME_SELECTION);
             this.singleHistoryMap = coinHist.getSingleHistory();
-//            XYChart.Series newSeries = new XYChart.Series();
             XYChart.Series<Number, String> newSeries = new XYChart.Series();
             double previousPrice = 0;
             // Create the datapoints for the line chart.
@@ -119,7 +118,6 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
                 newSeries.getNode();
                 this.dataList.add(new XYChart.Data(date, price));
             });
-//            if (newSeries.getName() == null){newSeries.setName(line);}
             this.seriesList.add(newSeries);
             for (XYChart.Data<Number, String> entry : newSeries.getData()) {
                 Tooltip t = new Tooltip(entry.getExtraValue().toString());

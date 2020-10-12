@@ -6,13 +6,12 @@ package coinClasses;
  * Constructor just opens a connection.
  * The methods allow interaction with specific tables.
  *
- * TODO: create interface?
- *
  * If you open it. You MUST close it!
  *
  * - Kyle, Parth
  */
 
+import interfaces.DatabaseInterface;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -29,7 +28,7 @@ import java.sql.DriverManager;
 import java.util.LinkedList;
 import tabControllers.AlertMessages;
 
-public class ConnectToDatabase {
+public class ConnectToDatabase implements DatabaseInterface{
 
     private Connection con;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
@@ -64,6 +63,7 @@ public class ConnectToDatabase {
      * @param _change
      * @param _coinRank
      */
+    @Override
     public void addCoinToDatabase(int _coinID, String _uuid, String _slug, 
                             String _symbol, String _name,
                             int _numMarkets, int _numExchanges, 
@@ -111,6 +111,7 @@ public class ConnectToDatabase {
      * @param _uuid
      * @return 
      */
+    @Override
     public boolean checkIfCoinExists(String _uuid) {
         boolean doesExist = false;
         try {
@@ -135,6 +136,7 @@ public class ConnectToDatabase {
      * @param _newChange
      * @param _newVolume
      */
+    @Override
     public void updateCoinPrices(int _id, double _newPrice, double _newChange, int _newVolume) {
         try {
             // Insert statement, using prepared statements
@@ -164,6 +166,7 @@ public class ConnectToDatabase {
      * @param _price
      * @param _date
      */
+    @Override
     public void coinDatabase(String _uuid, String _symbol, String _name, String _price, Date _date) {
         try {
             // Parse price to a float because DB requires it.
@@ -191,6 +194,7 @@ public class ConnectToDatabase {
      * @param userName
      * @param _coin_id
      */
+    @Override
     public boolean insertSavedCoin(String userName, int _coin_id) {
          try {
             // Insert statement, using prepared statements
@@ -223,6 +227,7 @@ public class ConnectToDatabase {
      * @param _userName
      * @param _userPassword
      */
+    @Override
     public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword) {
         try {
             /**
@@ -253,6 +258,7 @@ public class ConnectToDatabase {
      * @param _username
      * @param _isOnline
      */
+    @Override
     public void setUserOnlineStatus(String _username, int _isOnline) {
         try {
             // Insert statement, using prepared statements
@@ -273,6 +279,7 @@ public class ConnectToDatabase {
      * @param _symbol
      * @return
      */
+    @Override
     public int getCoinID(String _symbol) {
         int res = 0;
         try {
@@ -294,6 +301,7 @@ public class ConnectToDatabase {
      * Returns a linked list of all users currently online.
      * @return
      */
+    @Override
     public LinkedList<String> getOnlineUsers() {
         LinkedList<String> list = new LinkedList<>();
         try {
@@ -318,6 +326,7 @@ public class ConnectToDatabase {
      * @param _username
      * @param _friendUsername
      */
+    @Override
     public void addFriend(String _username, String _friendUsername) {
         int fid = getIdFromUsername(_friendUsername);
         int uid = getIdFromUsername(_username);
@@ -344,6 +353,7 @@ public class ConnectToDatabase {
      * from the friend table.
      * @param _username
      */
+    @Override
     public void removeFriend(String _username) {
         try {
             // Insert statement, using prepared statements
@@ -362,6 +372,7 @@ public class ConnectToDatabase {
      * @param _username
      * @return
      */
+    @Override
     public LinkedList<String> getFriendList(String _username) {
         LinkedList<String> friendList = new LinkedList<>();
         int userId = getIdFromUsername(_username);
@@ -385,6 +396,7 @@ public class ConnectToDatabase {
      * @param _username
      * @return
      */
+    @Override
     public int getIdFromUsername(String _username) {
         int id = -1;
         try {
@@ -409,6 +421,7 @@ public class ConnectToDatabase {
      * @param _userPass
      * @return
      */
+    @Override
     public boolean validateLogin(String _userName, String _userPass) {
         boolean isValid = false;
         try {
@@ -442,6 +455,7 @@ public class ConnectToDatabase {
      * @param _userName
      * @return
      */
+    @Override
     public boolean usernameExists(String _userName) {
         boolean isValid = true;
         try {
@@ -464,6 +478,7 @@ public class ConnectToDatabase {
      * @param _userEmail
      * @return
      */
+    @Override
     public boolean emailExists(String _userEmail) {
         boolean isValid = false;
         try {
@@ -485,6 +500,7 @@ public class ConnectToDatabase {
      * @param _username
      * @return
      */
+    @Override
     public String getEmailFromUsername(String _username) {
         boolean isValid = true;
         String email = "";
@@ -508,6 +524,7 @@ public class ConnectToDatabase {
      * @param _email
      * @return
      */
+    @Override
     public String getUsernameFromEmail(String _email) {
         boolean isValid = true;
         String username = "";
@@ -526,6 +543,7 @@ public class ConnectToDatabase {
         return username;
     }
 
+    @Override
     public void changePassword(String _uname, String _newPassword) {
         try {
             String hashedPass = getSHA256(_newPassword);
@@ -548,6 +566,7 @@ public class ConnectToDatabase {
      * @param _userPass
      * @return
      */
+    @Override
     public boolean getUserInfo(String _userName, String _userPass) {
         return false;
     }
@@ -561,6 +580,7 @@ public class ConnectToDatabase {
      * @param _input
      * @return
      */
+    @Override
     public String getSHA256(String _input) {
         // MessageDigest used to hash bytes from input string
         MessageDigest md = null;
@@ -596,6 +616,7 @@ public class ConnectToDatabase {
      * Must do this after every ConnectionToDatabase object
      * is done being used!!
      */
+    @Override
     public void close() {
         try {
             this.con.close();
@@ -609,6 +630,7 @@ public class ConnectToDatabase {
      * @param username
      * @return
      */
+    @Override
      public LinkedList<UserCoin> getSavedCoins(String username) {
         LinkedList<UserCoin> list = new LinkedList<>();
         try {
@@ -638,6 +660,7 @@ public class ConnectToDatabase {
      * Returns a list of all coins in the database.
      * @return
      */
+    @Override
     public LinkedList<String> getAllCoins() {
         LinkedList<String> temp = new LinkedList<>();
         try {
@@ -680,6 +703,7 @@ public class ConnectToDatabase {
         }
     }
 
+    @Override
     public boolean deleteSavedCoin(UserCoin userCoin) {
         try {
             String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + userCoin.getUserID() + " AND `user_coins`.`coin_id` = " + userCoin.getCoinID();
