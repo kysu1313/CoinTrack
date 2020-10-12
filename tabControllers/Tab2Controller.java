@@ -239,6 +239,11 @@ public class Tab2Controller implements Initializable{
             } else {
                 this.lcc.removeCoin(this.searchFieldT2.getText());
                 this.lcc.displayGraph();
+                this.sideVBox.getChildren().forEach(item -> {
+                    if (((Label)item).getText().equalsIgnoreCase(this.searchFieldT2.getText())){
+                        this.sideVBox.getChildren().remove(item);
+                    }
+                });
 //                removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
@@ -569,6 +574,7 @@ public class Tab2Controller implements Initializable{
         m1.setOnAction((event) -> {
             if (DEBUG) {System.out.println("Choice 1 clicked!");}
             this.lcc.removeCoin(_lbl.getText());
+            this.sideVBox.getChildren().remove(_lbl);
         });
         cm.getItems().addAll(m1);
         _lbl.setContextMenu(cm);
