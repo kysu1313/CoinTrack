@@ -195,7 +195,7 @@ public class FXMLDocumentController implements Initializable {
             }}
         } else {
             this.registerInfo.setFill(Color.RED);
-            this.registerInfo.setText("username taken");
+            this.registerInfo.setText("Username or Email already taken");
         }
     }
 
@@ -314,7 +314,7 @@ public class FXMLDocumentController implements Initializable {
         // Call DB connection class
         ConnectToDatabase conn = new ConnectToDatabase();
         // Check is username exists in DB
-        if (!conn.usernameExists(this.usernameEntry.getText())) {
+        if (!conn.usernameExists(this.usernameEntry.getText()) && !conn.emailExists(this.emailEntry.getText())) {
             String email = this.emailEntry.getText();
             String uname = this.usernameEntry.getText();
             String pass = this.passwordEntry.getText();
@@ -327,12 +327,16 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.GREEN);
             this.registerInfo.setText("SUCCESS!");
             return true;
-        } else {
+        } else if (conn.usernameExists(this.usernameEntry.getText())){
             AlertMessages.showErrorMessage("Register User", "Username already taken. Try another one.");
             this.registerInfo.setText("Username already taken. Try another one.");
             this.registerInfo.setFill(Color.RED);
             return false;
-        }
+        } else
+            AlertMessages.showErrorMessage("Register User", "Email already taken. Try another one.");
+            this.registerInfo.setText("Email already taken. Try another one.");
+            this.registerInfo.setFill(Color.RED);
+            return false;
     }
 
     /**
@@ -401,7 +405,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             getCurrentStage();
-            System.out.println(getCurrentStage());
+        //    System.out.println(getCurrentStage());
             this.mainStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
             root = FXMLLoader.load(getClass().getResource("FXMLLogin.fxml"));
