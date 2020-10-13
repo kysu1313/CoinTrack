@@ -28,7 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import org.jfree.data.xy.OHLCDataItem;
+//import org.jfree.data.xy.OHLCDataItem;
 import org.json.JSONObject;
 
 
@@ -40,7 +40,7 @@ public class AlphaVantage implements DailyWeeklyInterface{
     private String symbol;
     private LinkedList<LinkedHashMap<String, String>> dailySeries;
     private LinkedList<LinkedHashMap<String, String>> weeklySeries;
-    private List<OHLCDataItem> ohlc;
+//    private List<OHLCDataItem> ohlc;
     private List<BarData> barData;
 
     /**
@@ -102,31 +102,31 @@ public class AlphaVantage implements DailyWeeklyInterface{
         return this.weeklySeries;
     }
     
-    public List<OHLCDataItem> getOHLCData() throws ParseException {
-        String url = "https://alpha-vantage.p.rapidapi.com/query?market=CNY&symbol=" + this.symbol + "&function=DIGITAL_CURRENCY_DAILY";
-        ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);
-        JSONObject job = api.getJsonObject();
-        JSONObject innerJob = job.getJSONObject("Time Series (Digital Currency Daily)");
-        Iterator<String> keys = innerJob.keys();
-        this.dailySeries = new LinkedList<>();
-//        this.ohlc = new LinkedList<>();
-        this.ohlc = new ArrayList<>();
-        while (keys.hasNext()) {
-            LinkedHashMap<String, String> temp = new LinkedHashMap<>();
-            JSONObject ob = innerJob.getJSONObject(keys.next());
-            String time = keys.next();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            Date date = formatter.parse(time);
-            double open = Double.parseDouble(ob.getString("1b. open (USD)"));
-            double high = Double.parseDouble(ob.getString("2b. high (USD)"));
-            double low = Double.parseDouble(ob.getString("3b. low (USD)"));
-            double close = Double.parseDouble(ob.getString("4b. close (USD)"));
-            double volume = Double.parseDouble(ob.getString("5. volume"));
-            OHLCDataItem odi = new OHLCDataItem(date, open, high, low, close, volume);
-            this.ohlc.add(odi);
-        }
-        return this.ohlc;
-    }
+//    public List<OHLCDataItem> getOHLCData() throws ParseException {
+//        String url = "https://alpha-vantage.p.rapidapi.com/query?market=CNY&symbol=" + this.symbol + "&function=DIGITAL_CURRENCY_DAILY";
+//        ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);
+//        JSONObject job = api.getJsonObject();
+//        JSONObject innerJob = job.getJSONObject("Time Series (Digital Currency Daily)");
+//        Iterator<String> keys = innerJob.keys();
+//        this.dailySeries = new LinkedList<>();
+////        this.ohlc = new LinkedList<>();
+//        this.ohlc = new ArrayList<>();
+//        while (keys.hasNext()) {
+//            LinkedHashMap<String, String> temp = new LinkedHashMap<>();
+//            JSONObject ob = innerJob.getJSONObject(keys.next());
+//            String time = keys.next();
+//            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+//            Date date = formatter.parse(time);
+//            double open = Double.parseDouble(ob.getString("1b. open (USD)"));
+//            double high = Double.parseDouble(ob.getString("2b. high (USD)"));
+//            double low = Double.parseDouble(ob.getString("3b. low (USD)"));
+//            double close = Double.parseDouble(ob.getString("4b. close (USD)"));
+//            double volume = Double.parseDouble(ob.getString("5. volume"));
+//            OHLCDataItem odi = new OHLCDataItem(date, open, high, low, close, volume);
+//            this.ohlc.add(odi);
+//        }
+//        return this.ohlc;
+//    }
 
     private void makeJSONFile(JSONObject _innerObj) {
         try {

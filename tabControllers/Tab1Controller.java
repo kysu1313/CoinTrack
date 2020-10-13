@@ -208,9 +208,9 @@ public class Tab1Controller implements Initializable{
     @FXML
     private void handleTest(ActionEvent event) throws ParseException {
         AlphaVantage av = new AlphaVantage("BTC");
-        av.getOHLCData().forEach((item) -> {
-            System.out.println(item.getClose());
-        });
+//        av.getOHLCData().forEach((item) -> {
+//            System.out.println(item.getClose());
+//        });
     }
 
     // ========== HELPER METHODS ==========
