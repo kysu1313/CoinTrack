@@ -10,14 +10,19 @@ import coinClasses.ConnectToDatabase;
 import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
+import static coinTrack.FXMLDocumentController.scene;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
@@ -38,7 +43,30 @@ public class TabAssistantController {
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private static final String UNAME = FXMLDocumentController.uname;
     private TableClass tbl;
-    
+    private static Theme theme;
+    private static Scene scene = FXMLDocumentController.scene;
+
+    /**
+     * Add listener to theme menu item.
+     */
+    public void addThemeListener() {
+        theme = new Theme("light");
+        FXMLDocumentController.darkMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                theme = new Theme("dark");
+                scene.getStylesheets().add(theme.getTheme());
+            }
+        });
+        FXMLDocumentController.lightMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                theme = new Theme("light");
+                scene.getStylesheets().add(theme.getTheme());
+            }
+        });
+    }
+
     public void coinTable(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webViewT1, String _currency, long _currencyRate) {
 
         // Create columns

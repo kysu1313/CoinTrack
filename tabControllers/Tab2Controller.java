@@ -54,7 +54,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tabControllers.assistantControllers.HoveredThresholdNode;
 import tabControllers.assistantControllers.TabAssistantController;
 import tabControllers.assistantControllers.graphs.BarChartClass;
 import tabControllers.assistantControllers.graphs.LineChartClass;
@@ -90,7 +89,6 @@ public class Tab2Controller implements Initializable{
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
 //    private XYChart.Series[] seriesArr;
-    public HoveredThresholdNode node;
     private Tab currTab;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private LineChartClass lcc;

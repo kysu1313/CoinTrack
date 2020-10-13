@@ -20,14 +20,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -35,8 +40,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import tabControllers.AlertMessages;
 import tabControllers.Tab1Controller;
+import tabControllers.assistantControllers.Theme;
 
 /**
  *
@@ -46,11 +53,14 @@ public class FXMLDocumentController implements Initializable {
 
     public static String uname;
     public static Tab currTab;
-    protected Scene scene;
+    public static Scene scene;
     private static String tempUsernameStorage;
     private String code;
     private int _code;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
+    private static Theme theme;
+    private final ObservableList<Theme> THEMES = FXCollections.
+            observableArrayList(new Theme("Dark"), new Theme("Light"));
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -79,6 +89,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Tab dashboard;
     @FXML private Tab tab1;
     @FXML private Tab tab2;
+//    @FXML private ComboBox<Theme> themeComboBox;
+    @FXML public static MenuItem darkMenuItem;
+    @FXML public static MenuItem lightMenuItem;
 
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
     //========== Action Handlers ==========
@@ -110,6 +123,7 @@ public class FXMLDocumentController implements Initializable {
                 this.scene = new Scene(root);
                 this.mainStage.setScene(scene);
                 this.mainStage.show();
+//                addThemeListener();
                 coinTrack.CoinTrack.newStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,7 +208,6 @@ public class FXMLDocumentController implements Initializable {
     private boolean checkGoodInput() {
         boolean isGood = false;
         if (this.emailEntry.getText().isEmpty()) {
-//            this.emailEntry.setPromptText("");
             AlertMessages.showErrorMessage("Register User", "Enter an email address.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter an email address");
@@ -205,14 +218,12 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Email format is not correct.");
             this.emailEntry.requestFocus();
         } else if (usernameEntry.getText().isEmpty()) {
-//            this.usernameEntry.setPromptText("Enter a username");
             AlertMessages.showErrorMessage("Register User", "Enter a username.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a username");
             this.usernameEntry.requestFocus();
 
         } else if (this.passwordEntry.getText().isEmpty()) {
-//            this.passwordEntry.setPromptText("Enter a password");
             AlertMessages.showErrorMessage("Register User", "Enter a password.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a password");
@@ -224,7 +235,6 @@ public class FXMLDocumentController implements Initializable {
             this.passwordEntry.requestFocus();
         
         } else if (this.passwordRepeatEntry.getText().isEmpty()) {
-//            this.passwordRepeatEntry.setPromptText("Repeat your password");
             AlertMessages.showErrorMessage("Register User", "Repeat your password.");
 
             this.registerInfo.setFill(Color.RED);
@@ -232,7 +242,6 @@ public class FXMLDocumentController implements Initializable {
             this.passwordRepeatEntry.requestFocus();
         
         } else if (!this.passwordEntry.getText().equals(this.passwordRepeatEntry.getText())) {
-//            this.passwordEntry.setPromptText("Passwords must match");
             AlertMessages.showErrorMessage("Register User", "Passwords must match.");
             this.passwordRepeatEntry.setPromptText("Passwords must match");
             this.registerInfo.setFill(Color.RED);
@@ -243,6 +252,28 @@ public class FXMLDocumentController implements Initializable {
             isGood = true;
         }
         return isGood;
+    }
+
+    /**
+     * Add listener to theme menu item.
+     */
+    private void addThemeListener() {
+        theme = new Theme("light");
+        scene = this.mainTabPane.getScene();
+        darkMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                theme = new Theme("dark");
+                scene.getStylesheets().add(theme.getTheme());
+            }
+        });
+        lightMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                theme = new Theme("light");
+                scene.getStylesheets().add(theme.getTheme());
+            }
+        });
     }
     
     public boolean isEmailValid(String email) {
@@ -582,14 +613,14 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
-        ConnectToDatabase conn = new ConnectToDatabase();
-
+//        ConnectToDatabase conn = new ConnectToDatabase();
         /**
          * HOW DO I DO SOMETHING AFTER PROGRAM IS CLOSED !?!? ARGHHH
          */
-        getCurrentStage().setOnCloseRequest(evt
-                -> conn.setUserOnlineStatus(this.uname, 0)
-        );
+//        getCurrentStage().setOnCloseRequest(evt
+//                -> conn.setUserOnlineStatus(this.uname, 0)
+//        );
+//        conn.close();
     }
 
 }

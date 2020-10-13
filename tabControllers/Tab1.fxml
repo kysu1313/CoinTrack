@@ -4,9 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -21,26 +18,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" stylesheets="styles/Tab1Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tabControllers.Tab1Controller">
     <children>
-      <MenuBar prefHeight="28.0" prefWidth="1183.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-          <Menu fx:id="editBtn" mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Currency Type" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <ToolBar layoutY="731.0" prefHeight="42.0" prefWidth="1183.0">
+      <ToolBar layoutY="715.0" prefHeight="42.0" prefWidth="1183.0">
           <items>
               <CheckBox fx:id="searchGlobalStats" mnemonicParsing="false" text="Global Stats">
                <tooltip>
@@ -66,7 +44,7 @@
                </tooltip></Button>
         </items>
       </ToolBar>
-      <SplitPane dividerPositions="0.8770161290322581" layoutY="28.0" orientation="VERTICAL" prefHeight="698.0" prefWidth="1183.0">
+      <SplitPane dividerPositions="0.8770161290322581" layoutY="-1.0" orientation="VERTICAL" prefHeight="716.0" prefWidth="1183.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
@@ -134,7 +112,7 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <ToolBar fx:id="bottomToolbar" layoutY="773.0" prefHeight="35.0" prefWidth="1183.0">
+      <ToolBar fx:id="bottomToolbar" layoutY="757.0" prefHeight="35.0" prefWidth="1183.0">
         <items>
             <CheckBox fx:id="debugBtn" mnemonicParsing="false" onAction="#handleDebug" text="Debug" />
           <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="Reset Currency" />

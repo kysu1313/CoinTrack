@@ -5,6 +5,7 @@ import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -14,8 +15,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -25,8 +28,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.TabAssistantController;
+import tabControllers.assistantControllers.Theme;
 
 /**
  * Tab controller for the dashboard, "tab 3".
@@ -58,6 +63,7 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView onlineUsersListT3;
     @FXML private VBox vbox;
     @FXML private TextField searchField;
+    @FXML private Text textLabel;
 
     @FXML private void handleSearch(ActionEvent event) {
         System.out.println("nothing here yet");
@@ -191,10 +197,10 @@ public class Tab3Controller implements Initializable{
      */
     private void addListListener(Label _lbl) {
         _lbl.setOnMouseEntered((MouseEvent mouseEvent) -> {
-            _lbl.setStyle("-fx-background-color: #bababa;");
+            _lbl.setStyle("-fx-background-color: #8f8f8f;");
         });
         _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
-            _lbl.setStyle("-fx-background-color: white;");
+            _lbl.setStyle("-fx-background-color: #323232;");
         });
         ContextMenu cm = new ContextMenu();
         MenuItem m1 = new MenuItem("Save Coin");
@@ -203,6 +209,10 @@ public class Tab3Controller implements Initializable{
         });
         cm.getItems().addAll(m1);
         _lbl.setContextMenu(cm);
+    }
+
+    private void setTheme() {
+        this.tas.addThemeListener();
     }
 
     /**
@@ -251,5 +261,6 @@ public class Tab3Controller implements Initializable{
         populateSavedCoins();
         addFriendsToList();
         installTextFieldEvent();
+//        setTheme();
     }
 }
