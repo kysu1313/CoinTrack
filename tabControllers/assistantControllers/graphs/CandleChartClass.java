@@ -29,24 +29,15 @@ public class CandleChartClass implements GraphInterface {
         /**
          * Times are wrong.
          * 
-         * Do I need to change line 61 in CandleStickChart?????
-         * 
-         * Look at this tmwr
+         * Look at this tomorrow
          */
         
         AlphaVantage av = new AlphaVantage("BTC");
         
         List<BarData> barData = av.getBarData();
         CandleStickChart candleStickChart = new CandleStickChart("S&P 500 Index", barData);
-        Scene scene = new Scene(candleStickChart);
-        
-        scene.getStylesheets().add("/styles/CandleStickChartStyles.css");
-        
-        Stage stage = new Stage();
-        stage.setTitle("BTC");
-        stage.setScene(scene);
-        stage.show();
-        System.out.println("candle test");
+
+        _pane.getChildren().add(candleStickChart);
         candleStickChart.setYAxisFormatter(new DecimalAxisFormatter("#000.00"));
     }
 

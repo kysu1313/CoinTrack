@@ -176,6 +176,8 @@ public class TabAssistantController {
     
     public void candleChart(Pane _pane) throws ParseException {
         CandleChartClass ccc = new CandleChartClass(_pane);
+//        CustomCandleChart newCcc = new CustomeCandleChart(_pane);
+
     }
 
     /**
