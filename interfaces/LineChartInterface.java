@@ -17,6 +17,5 @@ public interface LineChartInterface {
     public void addCoin(String _coin);
     public void removeCoin(String _coin);
     public void clearChart();
-    public void addToolTips();
     
 }

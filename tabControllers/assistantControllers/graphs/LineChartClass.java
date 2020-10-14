@@ -1,10 +1,12 @@
 package tabControllers.assistantControllers.graphs;
 
 import coinClasses.CoinHistory;
+import java.awt.Color;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Path;
 
 /**
  * General class for making / displaying LineCharts.
@@ -28,7 +31,7 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
     private final String TIME_SELECTION;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private LinkedList<XYChart.Data<String, Number>> dataList;
-    private LinkedList<XYChart.Series> seriesList;
+    private LinkedList<XYChart.Series<Number, String>> seriesList;
     private ObservableList<XYChart.Series<Number, String>> lineChartData;
 
     /**
@@ -52,6 +55,7 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
     public void displayGraph() {
         this.LINE_CHART.setTitle("Viewing the past " + this.TIME_SELECTION + " of: " + this.LINES.peek());
         this.LINE_CHART.setData(this.lineChartData);
+        addToolTips(this.seriesList);
     }
 
     @Override
@@ -90,14 +94,6 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
             entry.getData().removeAll();
         });
     }
-
-    @Override
-    public void addToolTips() {
-        this.dataList.forEach((data) -> {
-            Tooltip t = new Tooltip(data.getYValue().toString());
-            Tooltip.install(data.getNode(), t);
-        });
-    }
     
     private void createData() {
         // For every coin entered, create a new CoinHistory object.
@@ -119,11 +115,20 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
-            for (XYChart.Data<Number, String> entry : newSeries.getData()) {
+            this.lineChartData.add(newSeries);
+        }
+    }
+
+    /**
+     * Add tool tips to each node on the line chart.
+     * @param _series
+     */
+    private void addToolTips(LinkedList<XYChart.Series<Number, String>> _series) {
+        for (XYChart.Series<Number, String> series : _series) {
+            for (XYChart.Data<Number, String> entry : series.getData()) {
                 Tooltip t = new Tooltip(entry.getExtraValue().toString());
                 Tooltip.install(entry.getNode(), t);
             }
-            this.lineChartData.add(newSeries);
         }
     }
 

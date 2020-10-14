@@ -18,6 +18,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -95,6 +96,19 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
         this.barChart.getData().add(this.series);
         alternateColors("green", "red");
         scaleGraph();
+    }
+
+    /**
+     * Add tool tips to each node on the bar chart.
+     * @param _series
+     */
+    private void addToolTips(LinkedList<XYChart.Series<Number, String>> _series) {
+        for (XYChart.Series<Number, String> series : _series) {
+            for (XYChart.Data<Number, String> entry : series.getData()) {
+                Tooltip t = new Tooltip(entry.getExtraValue().toString());
+                Tooltip.install(entry.getNode(), t);
+            }
+        }
     }
 
     /**
