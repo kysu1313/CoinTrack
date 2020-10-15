@@ -204,8 +204,7 @@ public class Tab2Controller implements Initializable{
             this.barChartData2.clear();
             this.series4.getData().clear();
             // timeSelection
-            boolean isComboBoxEmpty = this.comboBox.getSelectionModel().isEmpty();
-            if (isComboBoxEmpty) {
+            if (this.comboBox.getSelectionModel().isEmpty()) {
                 // Default timeframe will be 7 days.
                 this.timeSelection = "7d";
             } else {
@@ -227,12 +226,8 @@ public class Tab2Controller implements Initializable{
                     warning += "Enter the name of a coin to add.\n";
                     this.txtAreaT2.setText(warning);
                 } else {
-                    if (this.linesToGraph.size() >= 10) {
-                        this.txtAreaT2.setText("Too many coins, clear graph to view more.");
-                    } else {
-                        this.linesToGraph.add(this.searchFieldT2.getText());
-                        displayLineGraph();
-                    }
+                    this.linesToGraph.add(this.searchFieldT2.getText());
+                    displayLineGraph();
                 }
             } else {
                 this.lcc.removeCoin(this.searchFieldT2.getText());
@@ -242,7 +237,6 @@ public class Tab2Controller implements Initializable{
                         this.sideVBox.getChildren().remove(item);
                     }
                 });
-//                removeCoinFromLineChart(this.searchFieldT2.getText());
             }
         } else {
             if (DEBUG){System.out.println("pie chart selected");}
@@ -267,9 +261,6 @@ public class Tab2Controller implements Initializable{
         this.series4.getData().clear();
         this.dataList.clear();
         this.sideVBox.getChildren().clear();
-//        if (this.linesToGraph != null) {
-//            this.lcc.clearChart();              // TODO: fix clear
-//        }
     }
 
     /**
@@ -337,7 +328,7 @@ public class Tab2Controller implements Initializable{
             }
         }
         // Create a new BarChart object passing appropriate values.
-        BarChartClass bcc = new BarChartClass(this.series4, this.singleHistoryMap,
+        BarChartClass bcc = new BarChartClass(this.singleHistoryMap,
                                               this.timeSelection, this.barChart, this.txtAreaT2);
         bcc.displaySingleGraph();
     }
@@ -347,7 +338,6 @@ public class Tab2Controller implements Initializable{
      */
     private void displayLineGraph() {
         System.out.println("displaying line graph");
-//        XYChart.Series newSeries = new XYChart.Series();
         // Get the string/int from the text field.
         if (this.searchFieldT2.getText().isEmpty()){
             AlertMessages.showInformationMessage("Coin Name",
@@ -530,7 +520,7 @@ public class Tab2Controller implements Initializable{
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
             this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
             // Create new bar chart object
-            BarChartClass bcc = new BarChartClass(this.series2, this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
+            BarChartClass bcc = new BarChartClass(this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
             bcc.displaySingleGraph();
             bcc.alternateColors("green", "red");
         } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
@@ -607,7 +597,7 @@ public class Tab2Controller implements Initializable{
         seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
-        series2 = new BarChart.Series<>(); //add this line
+        series2 = new BarChart.Series<>();
         dataList = new LinkedList<>();
         series1.setName("Data");
         series4.setName("Prices");
@@ -619,6 +609,6 @@ public class Tab2Controller implements Initializable{
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
         addRemoveComboBox.setVisible(false);
-        addContextMenuToList(); //add this line as well
+        addContextMenuToList(); 
     }
 }

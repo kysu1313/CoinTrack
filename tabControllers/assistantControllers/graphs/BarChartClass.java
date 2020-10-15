@@ -68,9 +68,9 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      * @param _timeSelection
      * @param _bc
      */
-    public BarChartClass(XYChart.Series _series, LinkedHashMap<Double, String> _singleHistoryMap,
+    public BarChartClass(LinkedHashMap<Double, String> _singleHistoryMap,
                             String _timeSelection, BarChart _bc, TextArea _textArea) {
-        this.series = _series;
+        this.series = new XYChart.Series();
         this.singleHistoryMap = _singleHistoryMap;
         this.timeSelection = _timeSelection;
         this.barChart = _bc;
