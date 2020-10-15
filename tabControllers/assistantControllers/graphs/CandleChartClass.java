@@ -35,7 +35,7 @@ public class CandleChartClass implements GraphInterface {
         AlphaVantage av = new AlphaVantage("BTC");
         
         List<BarData> barData = av.getBarData();
-        CandleStickChart candleStickChart = new CandleStickChart("S&P 500 Index", barData);
+        CandleStickChart candleStickChart = new CandleStickChart("BTC", barData);
 
         _pane.getChildren().add(candleStickChart);
         candleStickChart.setYAxisFormatter(new DecimalAxisFormatter("#000.00"));

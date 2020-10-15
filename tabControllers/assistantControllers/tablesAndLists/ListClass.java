@@ -47,6 +47,11 @@ public class ListClass implements ListClassInterface{
         this.friendList = new LinkedList<>();
     }
 
+    /**
+     * Populates a list with the data in _items.
+     * @param _list
+     * @param _items
+     */
     @Override
     public void populateList(ListView _list, LinkedList<String> _items) {
         if (_items != null && _items.size() > 0) {
@@ -57,6 +62,11 @@ public class ListClass implements ListClassInterface{
 
     }
 
+    /**
+     * Populates a list with data with saved coins.
+     * Creates a connection to the database to get the coin list.
+     * @param _savedCoinList
+     */
     @Override
     public void populateSavedCoins(ListView _savedCoinList) {
         this.list = _savedCoinList;
@@ -75,6 +85,11 @@ public class ListClass implements ListClassInterface{
         addRightClick(_savedCoinList);
     }
 
+    /**
+     * Populates the list with online users.
+     * Creates a connection to the database to get the user list.
+     * @param _onlineUserList
+     */
     @Override
     public void populateOnlineUsers(ListView _onlineUserList) {
         this.list = _onlineUserList;
@@ -101,6 +116,11 @@ public class ListClass implements ListClassInterface{
         addRightClick(_onlineUserList);
     }
 
+    /**
+     * Populates the list with friends.
+     * Creates a connection to the database to get the friend list.
+     * @param _friendList
+     */
     public void populateFriends(ListView _friendList) {
         this.list = _friendList;
         ConnectToDatabase conn = new ConnectToDatabase();
@@ -115,6 +135,10 @@ public class ListClass implements ListClassInterface{
         addRightClick(_friendList);
     }
 
+    /**
+     * Adds right-clickable cells to friends list.
+     * @param _list
+     */
     private void createFriendListCells(ListView _list) {
         _list.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<>();
@@ -148,7 +172,11 @@ public class ListClass implements ListClassInterface{
             return cell ;
         });
     }
-    
+
+    /**
+     * Creates right-clickable cells for saved coin list.
+     * @param _list
+     */
     private void createSavedCoinCells(ListView _list) {
         ContextMenu contextMenu = new ContextMenu();
             MenuItem deleteCoin = new MenuItem();
@@ -163,7 +191,11 @@ public class ListClass implements ListClassInterface{
             contextMenu.getItems().addAll(deleteCoin);
             _list.setContextMenu(contextMenu);
     }
-    
+
+    /**
+     * Creates right-clickable cells for online user list.
+     * @param _list
+     */
     private void createOnlineUserCells(ListView _list) {
         _list.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<>();
@@ -200,6 +232,7 @@ public class ListClass implements ListClassInterface{
             return cell ;
         });
     }
+
     
     private void addRightClick(ListView _list) {
         _list.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){

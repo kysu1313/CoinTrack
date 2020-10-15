@@ -199,51 +199,49 @@ public class AlphaVantage implements DailyWeeklyInterface{
             
             dataMap.add(item);
             
-            double open = Double.parseDouble(ob.getString("1b. open (USD)"));
-            double high = Double.parseDouble(ob.getString("2b. high (USD)"));
-            double low = Double.parseDouble(ob.getString("3b. low (USD)"));
-            double close = Double.parseDouble(ob.getString("4b. close (USD)"));
-            double dubVolume = Double.parseDouble(ob.getString("5. volume"));
-            long volume = (new Double(dubVolume)).longValue();
+//            double open = Double.parseDouble(ob.getString("1b. open (USD)"));
+//            double high = Double.parseDouble(ob.getString("2b. high (USD)"));
+//            double low = Double.parseDouble(ob.getString("3b. low (USD)"));
+//            double close = Double.parseDouble(ob.getString("4b. close (USD)"));
+//            double dubVolume = Double.parseDouble(ob.getString("5. volume"));
+//            long volume = (new Double(dubVolume)).longValue();
 //            GregorianCalendar gc = new GregorianCalendar();
 //            GregorianCalendar now = new GregorianCalendar();
             gc.setTime(dates.get(count));
             count++;
-            BarData bd = new BarData(gc, open, high, low, close, volume);
-            this.barData.add(bd);
+//            BarData bd = new BarData(gc, open, high, low, close, volume);
+//            this.barData.add(bd);
         }
         
         System.out.println("===================================");
 //        
-//        for (int i = 0; i < dataMap.size()-1; i++) { // Loop over dates list
-//            for (int j = 0; j < dataMap.size()-1; j++) { // loop over dataMap list
-//                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-//                Date tempDate = formatter.parse(dataMap.get(j).get("date"));
-//                
-////                System.out.println("index dataMap: " + j + ", index dates: " + i);
-//                
-//                if (tempDate.equals(dates.get(j))) {
-//                    System.out.println(tempDate + " == " + dates.get(j));
-//                    GregorianCalendar gc = new GregorianCalendar();
-//                    GregorianCalendar now = new GregorianCalendar();
-//                    gc.setTime(tempDate);
-//
-//                    double open = Double.parseDouble(dataMap.get(i).get("open"));
-//                    double high = Double.parseDouble(dataMap.get(i).get("high"));
-//                    double low = Double.parseDouble(dataMap.get(i).get("low"));
-//                    double close = Double.parseDouble(dataMap.get(i).get("close"));
-//                    double dubVolume = Double.parseDouble(dataMap.get(i).get("volume"));
-//                    long volume = (new Double(dubVolume)).longValue();
-//                    System.out.println("date: " + gc);
-//                    BarData bd = new BarData(gc, open, high, low, close, volume);
-//                    this.barData.add(bd);
-//                }
-//
-//            }
-//
-////            count++;
-//
-//        }
+        for (int i = 0; i < dataMap.size()-1; i++) { // Loop over dates list   
+            for (int j = 0; j < dataMap.size()-1; j++) { // loop over dataMap list
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                Date tempDate = formatter.parse(dataMap.get(j).get("date"));
+                
+//                System.out.println("index dataMap: " + j + ", index dates: " + i);
+                
+                if (tempDate.equals(dates.get(j))) {
+                    System.out.println(tempDate + " == " + dates.get(j));
+                    GregorianCalendar gc = new GregorianCalendar();
+                    GregorianCalendar now = new GregorianCalendar();
+                    gc.setTime(tempDate);
+
+                    double open = Double.parseDouble(dataMap.get(i).get("open"));
+                    double high = Double.parseDouble(dataMap.get(i).get("high"));
+                    double low = Double.parseDouble(dataMap.get(i).get("low"));
+                    double close = Double.parseDouble(dataMap.get(i).get("close"));
+                    double dubVolume = Double.parseDouble(dataMap.get(i).get("volume"));
+                    long volume = (new Double(dubVolume)).longValue();
+                    System.out.println("date: " + gc);
+                    BarData bd = new BarData(gc, open, high, low, close, volume);
+                    this.barData.add(bd);
+                }
+
+            }
+//            count++;
+        }
         return this.barData;
     }
 }

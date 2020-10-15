@@ -228,6 +228,12 @@ public class TabAssistantController {
         bcc.displayGraph();
     }
 
+    public void singleBarChart(LinkedHashMap<Double, String> _singleHistoryMap,
+                            String _timeSelection, BarChart _bc, TextArea _textArea) {
+        BarChartClass bcc = new BarChartClass(_singleHistoryMap, _timeSelection, _bc, _textArea);
+        bcc.displayGraph();
+    }
+
     /**
      * This creates the right click menu on the onlineUsers list. 
      * It also maps each button to an action.
