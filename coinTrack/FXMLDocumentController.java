@@ -125,6 +125,7 @@ public class FXMLDocumentController implements Initializable {
                 this.mainStage.show();
 //                addThemeListener();
                 coinTrack.CoinTrack.newStage.close();
+                
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -147,13 +148,14 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             // Create registration stage
+            getCurrentStage().close();
             this.registerStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.registerStage;
             root = FXMLLoader.load(getClass().getResource("RegisterUserFXML.fxml"));
             this.scene = new Scene(root);
             this.registerStage.setScene(scene);
             this.registerStage.show();
-
+            this.currentStage = this.registerStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -361,6 +363,7 @@ public class FXMLDocumentController implements Initializable {
             this.scene = new Scene(root);
             this.forgotPassStage.setScene(this.scene);
             this.forgotPassStage.show();
+            this.currentStage = this.forgotPassStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -386,6 +389,7 @@ public class FXMLDocumentController implements Initializable {
             this.scene = new Scene(root);
             this.forgotUserStage.setScene(this.scene);
             this.forgotUserStage.show();
+            this.currentStage = this.forgotUserStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -404,7 +408,7 @@ public class FXMLDocumentController implements Initializable {
         }
         Parent root;
         try {
-            getCurrentStage();
+            getCurrentStage().close();
         //    System.out.println(getCurrentStage());
             this.mainStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
@@ -413,6 +417,7 @@ public class FXMLDocumentController implements Initializable {
             this.mainStage.setScene(this.scene);
             this.mainStage.show();
             System.out.println("back to main worked!");
+            this.currentStage = this.mainStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -490,6 +495,7 @@ public class FXMLDocumentController implements Initializable {
                 this.scene = new Scene(root);
                 this.resetPassStage.setScene(this.scene);
                 this.resetPassStage.show();
+                this.currentStage = this.resetPassStage;
 //                this.forgotPassStage.close();
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -539,6 +545,7 @@ public class FXMLDocumentController implements Initializable {
                 this.scene = new Scene(root);
                 this.mainStage.setScene(this.scene);
                 this.mainStage.show();
+                this.currentStage = this.mainStage;
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
