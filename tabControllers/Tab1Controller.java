@@ -9,12 +9,10 @@ package tabControllers;
 import coinClasses.AlphaVantage;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
-import coinClasses.ConnectToApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.FixerApi;
 import coinClasses.GlobalCoinStats;
 import coinClasses.SingleCoin;
-import coinClasses.SingleCoinHistory;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
 import java.io.IOException;
@@ -27,10 +25,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -42,26 +38,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import tabControllers.assistantControllers.TabAssistantController;
 import tabControllers.assistantControllers.tablesAndLists.ListClass;
-import tabControllers.assistantControllers.tablesAndLists.TableClass;
 
 /**
  *
@@ -69,11 +58,11 @@ import tabControllers.assistantControllers.tablesAndLists.TableClass;
  */
 public class Tab1Controller implements Initializable{
 
-    private LinkedHashMap<String, String> coinNamePrice;
-    private LinkedList<SingleCoin> coinList;
+    private LinkedHashMap<String, String> coinNamePrice; //
+    private LinkedList<SingleCoin> coinList; //
     private int count;
-    private CoinHistory coinHistory;
-    private GlobalCoinStats globalStats;
+    private CoinHistory coinHistory; //
+    private GlobalCoinStats globalStats; //
     private CoinRankApi cri;
     private String uname;
     private LinkedList<String> onlineUsers;
@@ -292,18 +281,6 @@ public class Tab1Controller implements Initializable{
     }
 
     /**
-     * Change a users online status. i.e. when they log on/off .
-     * @param _uname
-     * @param _status
-     */
-//    private void setOnlineStatus(String _uname, int _status) {
-//        if(DEBUG){System.out.println("Update " + _uname + "'s online status");}
-//        ConnectToDatabase conn = new ConnectToDatabase();
-//        conn.setUserOnlineStatus(_uname, _status);
-//        conn.close();
-//    }
-
-    /**
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
@@ -317,16 +294,6 @@ public class Tab1Controller implements Initializable{
     private void addFriendsToList() {
         tas.createFriendList(this.friendsList);
     }
-
-    /**
-     * Create right-clickable cells for the friend list.
-     *
-     * Allow the user to share coins, send messages, and
-     * remove the friend.
-     */
-//    private void createFriendListCells() {
-//        tas.createFriendList(this.friendsList);
-//    }
 
     /**
      * Returns and closes the main stage from the class where it was created

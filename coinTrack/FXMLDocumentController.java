@@ -93,7 +93,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML public static MenuItem darkMenuItem;
     @FXML public static MenuItem lightMenuItem;
 
-    Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
+    Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b"); // nice regex
     //========== Action Handlers ==========
     /**
      * Login button action handler. If the username and password are correct the
