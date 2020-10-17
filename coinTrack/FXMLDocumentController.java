@@ -10,6 +10,8 @@ package coinTrack;
 
 import coinClasses.ConnectToDatabase;
 import coinClasses.Email;
+import coinClasses.SaveToDisk;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -39,6 +41,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import tabControllers.AlertMessages;
@@ -92,6 +96,8 @@ public class FXMLDocumentController implements Initializable {
 //    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
     @FXML public static MenuItem lightMenuItem;
+    @FXML private static MenuItem saveBtn;
+    @FXML private static MenuItem SaveAsBtn;
 
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b"); // nice regex
     //========== Action Handlers ==========
@@ -199,6 +205,30 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Username or Email already taken");
         }
+    }
+
+    @FXML
+    private void handleSave(ActionEvent event) throws IOException {
+        SaveToDisk save = new SaveToDisk();
+
+        /**
+         * Create new stage to select how the file should be saved.
+         * i.e. text, excel, json, etc...
+         */
+
+    }
+
+    @FXML
+    private void handleSaveAs(ActionEvent event) throws IOException {
+        SaveToDisk save = new SaveToDisk();
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(FXMLDocumentController.currentStage);
+
+        /**
+         * Create new stage to select how the file should be saved.
+         * i.e. text, excel, json, etc...
+         */
+        
     }
 
     /**

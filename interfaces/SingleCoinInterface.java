@@ -16,7 +16,7 @@ public interface SingleCoinInterface {
     public String getIconType();
     public String getIconUrl();
     public String getWebsiteUrl();
-    public String getConfirmedSupply();
+    public boolean getConfirmedSupply();
     public int getNumberOfMarkets();
     public int getNumberOfExchanges();
     public String getType();

@@ -2,7 +2,10 @@ package coinClasses;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -51,10 +54,10 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
             JSONObject coinRank = new ConnectToApi("https://coinranking1.p.rapidapi.com/coins",
                 "coinranking1.p.rapidapi.com",
                 "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
-            data = coinRank.getJSONObject("data");
-            stats = data.getJSONObject("stats");
-            coins = data.getJSONArray("coins");
-            coinList = getCoinList();
+            this.data = coinRank.getJSONObject("data");
+            this.stats = data.getJSONObject("stats");
+            this.coins = data.getJSONArray("coins");
+            this.coinList = getCoins();
     }
 
     /**
@@ -119,8 +122,7 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
      *
      * @return
      */
-    @Override
-    public LinkedList<SingleCoin> getCoinList() {
+    private LinkedList<SingleCoin> getCoins() {
         LinkedList<SingleCoin> tmpList = new LinkedList<>();
         for (int i = 0; i < this.coins.length(); i++) {
             JSONObject obj = this.coins.getJSONObject(i);
@@ -145,6 +147,38 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
             return 0;
         });
         return temp;
+    }
+
+    public HashMap<String, HashMap<String, String>> getCoinsAndParams() {
+        HashMap<String, HashMap<String, String>> hm = new HashMap<>();
+
+        HashMap<String, String> innerHm = new HashMap<>();
+        this.coinList.forEach((item) -> {
+            String name = item.getName();
+            innerHm.put("id", item.getId()+"");
+            innerHm.put("uuid", item.getUuid());
+            innerHm.put("symbol", item.getSymbol());
+            innerHm.put("iconUrl", item.getIconUrl());
+            innerHm.put("confirmedSupply", item.getConfirmedSupply()+"");
+            innerHm.put("numberOfMarkets", item.getNumberOfMarkets()+"");
+            innerHm.put("numberOfExchanges", item.getNumberOfExchanges()+"");
+            innerHm.put("type", item.getType());
+            innerHm.put("volume", item.getVolume()+"");
+            innerHm.put("marketCap", item.getMarketCap()+"");
+            innerHm.put("price", item.getPrice()+"");
+            innerHm.put("circulatingSupply", item.getCirculatingSupply()+"");
+            innerHm.put("totalSupply", item.getTotalSupply()+"");
+            innerHm.put("approvedSupply", item.getApprovedSupply()+"");
+            innerHm.put("firstSeen", item.getFirstSeen()+"");
+            innerHm.put("change", item.getChange()+"");
+            innerHm.put("rank", item.getRank()+"");
+            hm.put(name, innerHm);
+        });
+        return hm;
+    }
+
+    public LinkedList<SingleCoin> getCoinList() {
+        return this.coinList;
     }
 
     /**
