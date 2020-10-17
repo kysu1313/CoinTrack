@@ -12,6 +12,7 @@ import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.FixerApi;
 import coinClasses.GlobalCoinStats;
+import coinClasses.SaveToDisk;
 import coinClasses.SingleCoin;
 import coinClasses.UserCoin;
 import coinTrack.FXMLDocumentController;
@@ -34,6 +35,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -98,6 +100,7 @@ public class Tab1Controller implements Initializable{
     @FXML private CheckBox searchGlobalStats;
     @FXML private Text messageText;
     @FXML private ToolBar bottomToolbar;
+    @FXML private Button saveBtnT1;
 
     // Table View
     @FXML public TableView<SingleCoin> tableViewT1;
@@ -195,11 +198,19 @@ public class Tab1Controller implements Initializable{
     }
 
     @FXML
-    private void handleTest(ActionEvent event) throws ParseException {
-        AlphaVantage av = new AlphaVantage("BTC");
-//        av.getOHLCData().forEach((item) -> {
-//            System.out.println(item.getClose());
-//        });
+    private void handleTest(ActionEvent event) throws ParseException, IOException {
+        /**
+         * This is a test button
+         */
+    }
+
+    @FXML
+    private void handleSaveT1(ActionEvent event) throws IOException {
+        this.cri = new CoinRankApi();
+        this.cri.join();
+        this.coinList = this.cri.getCoinList();
+        SaveToDisk save = new SaveToDisk();
+        save.saveTableAsText(coinList);
     }
 
     // ========== HELPER METHODS ==========

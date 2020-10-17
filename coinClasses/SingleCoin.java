@@ -60,7 +60,17 @@ public class SingleCoin implements SingleCoinInterface{
 //        color = coinList.getString("color");
         iconType = coinList.getString("iconType");
         iconUrl = coinList.getString("iconUrl");
+//        websiteUrl = coinList.getString("websiteUrl");
+        confirmedSupply = coinList.getBoolean("confirmedSupply");
+        numberOfMarkets = coinList.getInt("numberOfMarkets");
+        numberOfExchanges = coinList.getInt("numberOfExchanges");
+        type = coinList.getString("type");
+        marketCap = coinList.getInt("marketCap");
         price = coinList.getString("price");
+        circulatingSupply = coinList.getInt("circulatingSupply");
+        totalSupply = coinList.getInt("totalSupply");
+        approvedSupply = coinList.getBoolean("approvedSupply");
+        firstSeen = coinList.getInt("firstSeen");
         rank = coinList.getInt("rank");
         change = coinList.getDouble("change");
         volume = coinList.getInt("volume");
@@ -153,8 +163,8 @@ public class SingleCoin implements SingleCoinInterface{
     }
 
     @Override
-    public String getConfirmedSupply() {
-        return coinList.getString("confirmedSupply");
+    public boolean getConfirmedSupply() {
+        return coinList.getBoolean("confirmedSupply");
     }
 
     @Override
@@ -199,7 +209,7 @@ public class SingleCoin implements SingleCoinInterface{
 
     @Override
     public int getTotalSupply() {
-        return coinList.getInt("supply");
+        return coinList.getInt("totalSupply");
     }
 
     @Override

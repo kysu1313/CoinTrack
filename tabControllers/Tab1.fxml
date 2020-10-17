@@ -122,6 +122,7 @@
                </font>
             </Text>
             <Button fx:id="testBtn" mnemonicParsing="false" onAction="#handleTest" text="Test" />
+            <Button fx:id="saveBtnT1" mnemonicParsing="false" onAction="#handleSaveT1" text="Save" />
         </items>
       </ToolBar>
     </children>
