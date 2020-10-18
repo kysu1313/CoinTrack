@@ -207,6 +207,19 @@ public class Tab1Controller implements Initializable{
     @FXML
     private void handleSaveT1(ActionEvent event) throws IOException {
         this.cri = new CoinRankApi();
+        if(DEBUG){System.out.println("logging out");}
+        Parent root;
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            Tab1Controller.mainPage1.setScene(this.scene);
+            Tab1Controller.mainPage1.show();
+            closeOldStage();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.cri.join();
         this.coinList = this.cri.getCoinList();
         SaveToDisk save = new SaveToDisk();

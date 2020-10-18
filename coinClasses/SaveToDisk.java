@@ -4,6 +4,7 @@ import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import javax.swing.filechooser.FileSystemView;
+import tabControllers.AlertMessages;
 
 /**
  * This class saves a users saved coins to either a text file,
@@ -55,7 +57,7 @@ public class SaveToDisk {
             this.system = "windows";
             this.dir = _dir;
 //            this.path = Paths.get(DEFAULT_WINDOWS_LOCATION);
-            Files.createDirectories(this.path);
+//            Files.createDirectories(this.path);
         } else if (isMac()) {
             this.system = "mac";
             this.dir = _dir;
@@ -67,8 +69,8 @@ public class SaveToDisk {
     public void saveTableAsText(LinkedList<SingleCoin> _data) throws IOException {
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
-        CoinRankApi cri = new CoinRankApi();
-        File file = new File(fileName);
+//        CoinRankApi cri = new CoinRankApi();
+//        File file = new File(fileName);
 	FileOutputStream fos = new FileOutputStream(fileName);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
             for (SingleCoin coin : _data) {
@@ -90,6 +92,44 @@ public class SaveToDisk {
                 bw.write("firstSeen: " + coin.getFirstSeen()+"");
                 bw.write("change: " + coin.getChange()+"");
                 bw.write("rank: " + coin.getRank()+"");
+                bw.newLine();
+            }
+            bw.close();
+            fos.close();
+        }
+    }
+
+    public void saveTableAsText(String _fileName, LinkedList<SingleCoin> _data) throws IOException {
+        Date date = new Date(System.currentTimeMillis());
+//        CoinRankApi cri = new CoinRankApi();
+//        File file = new File(_fileName);
+	FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(this.dir + "\\" + _fileName + ".txt");
+        } catch (FileNotFoundException ex) {
+            AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
+            fos = new FileOutputStream(_fileName + ".txt");
+        }
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
+            for (SingleCoin coin : _data) {
+                bw.write(coin.getName() + ": ");
+                bw.write("id: " + coin.getId()+", ");
+                bw.write("uuid: " + coin.getUuid()+", ");
+                bw.write("symbol: " + coin.getSymbol()+", ");
+                bw.write("iconUrl: " + coin.getIconUrl()+", ");
+                bw.write("confirmedSupply: " + coin.getConfirmedSupply()+", ");
+                bw.write("numberOfMarkets: " + coin.getNumberOfMarkets()+", ");
+                bw.write("numberOfExchanges: " + coin.getNumberOfExchanges()+", ");
+                bw.write("type: " + coin.getType()+", ");
+                bw.write("volume: " + coin.getVolume()+", ");
+                bw.write("marketCap: " + coin.getMarketCap()+", ");
+                bw.write("price: " + coin.getPrice()+", ");
+                bw.write("circulatingSupply: " + coin.getCirculatingSupply()+", ");
+                bw.write("totalSupply: " + coin.getTotalSupply()+", ");
+                bw.write("approvedSupply: " + coin.getApprovedSupply()+", ");
+                bw.write("firstSeen: " + coin.getFirstSeen()+", ");
+                bw.write("change: " + coin.getChange()+", ");
+                bw.write("rank: " + coin.getRank()+", ");
                 bw.newLine();
             }
             bw.close();
