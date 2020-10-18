@@ -8,12 +8,17 @@ package coinTrack;
  * - Kyle
  */
 
+import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.Email;
 import coinClasses.SaveToDisk;
+import coinClasses.SingleCoin;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -36,6 +41,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -47,6 +53,7 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import tabControllers.AlertMessages;
 import tabControllers.Tab1Controller;
+import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.Theme;
 
 /**
@@ -63,6 +70,7 @@ public class FXMLDocumentController implements Initializable {
     private int _code;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private static Theme theme;
+    private File saveLoc;
     private final ObservableList<Theme> THEMES = FXCollections.
             observableArrayList(new Theme("Dark"), new Theme("Light"));
     @FXML protected TextField username;
@@ -81,6 +89,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private static Stage loginStage;
     @FXML private static Stage registerStage;
     @FXML private static Stage currentStage;
+    @FXML private static Stage saveStage;
     @FXML private Text registerInfo;
     @FXML private TextField recoveryEmail;
     @FXML private TextField recoveryCode;
@@ -98,6 +107,13 @@ public class FXMLDocumentController implements Initializable {
     @FXML public static MenuItem lightMenuItem;
     @FXML private static MenuItem saveBtn;
     @FXML private static MenuItem SaveAsBtn;
+    @FXML private TextField saveLocation;
+    @FXML private Button saveMenuBtn;
+    @FXML private Button browseBtn;
+    @FXML private ComboBox fileTypeMenu;
+    @FXML private TextField fileName;
+    @FXML private RadioButton saveSavedCoins;
+    @FXML private RadioButton saveAllCoins;
 
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b"); // nice regex
     //========== Action Handlers ==========
@@ -207,28 +223,88 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    /**
+     * Handles the event when user clicks the "save" button in the file menu.
+     * Creates a new scene where the user specifies where the file will
+     * be saved and what it will be called.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void handleSave(ActionEvent event) throws IOException {
-        SaveToDisk save = new SaveToDisk();
-
-        /**
-         * Create new stage to select how the file should be saved.
-         * i.e. text, excel, json, etc...
-         */
-
+        if(DEBUG){System.out.println("Saving data");}
+        Parent root;
+        try {
+            Tab1Controller.mainPage1 = new Stage();
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/SaveFXML.fxml"));
+            Scene scene = new Scene(root);
+            saveStage = new Stage();
+            saveStage.setScene(scene);
+            saveStage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
+    /**
+     * Handles the save button click inside the save menu.
+     * @param event
+     * @throws IOException
+     */
     @FXML
-    private void handleSaveAs(ActionEvent event) throws IOException {
-        SaveToDisk save = new SaveToDisk();
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(FXMLDocumentController.currentStage);
+    private void handleSaveMenu(ActionEvent event) throws IOException {
+        if (!this.saveLocation.getText().isEmpty() && isPathValid(this.saveLocation.getText())) {
+            this.saveLoc = new File(saveLocation.getText());
+            CoinRankApi cri = new CoinRankApi();
+            cri.join();
+            LinkedList<SingleCoin> coinList = cri.getCoinList();
+            SaveToDisk save = new SaveToDisk(new File(this.saveLocation.getText()));
+            
+            if (this.fileName.getText().isEmpty()) {
+                save.saveTableAsText(coinList);
+            } else {
+                save.saveTableAsText(this.fileName.getText(), coinList);
+            }
+            /**
+             * Add functionality to save users saved coins
+             */
+            saveStage.close();
 
-        /**
-         * Create new stage to select how the file should be saved.
-         * i.e. text, excel, json, etc...
-         */
+        } else {
+            AlertMessages.showErrorMessage("Save Location Invalid", "Enter a location to save file.");
+        }
         
+    }
+
+    /**
+     * Handles the browse button inside the file save menu.
+     * Creates a directory browser window allowing the user to select
+     * where they want the file saved.
+     * @param event
+     * @throws IOException
+     */
+    @FXML
+    private void handleBrowse(ActionEvent event) throws IOException {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        System.out.println("get dir");
+        this.saveLoc = directoryChooser.showDialog(saveStage);
+        this.saveLocation.setText(this.saveLoc.toString());
+    }
+
+    /**
+     * Verifies the path entered to save file.
+     * @param path
+     * @return
+     */
+    public static boolean isPathValid(String path) {
+        try {
+            Paths.get(path);
+        } catch (InvalidPathException ex) {
+            AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
+            return false;
+        }
+        return true;
     }
 
     /**
