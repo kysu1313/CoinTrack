@@ -2,10 +2,12 @@ package coinClasses;
 
 import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -17,9 +19,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.filechooser.FileSystemView;
 import tabControllers.AlertMessages;
+//import org.apache.poi.ss.usermodel.Cell;
+
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 /**
  * This class saves a users saved coins to either a text file,
@@ -56,8 +67,6 @@ public class SaveToDisk {
         if (isWindows()) {
             this.system = "windows";
             this.dir = _dir;
-//            this.path = Paths.get(DEFAULT_WINDOWS_LOCATION);
-//            Files.createDirectories(this.path);
         } else if (isMac()) {
             this.system = "mac";
             this.dir = _dir;
@@ -69,8 +78,6 @@ public class SaveToDisk {
     public void saveTableAsText(LinkedList<SingleCoin> _data) throws IOException {
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
-//        CoinRankApi cri = new CoinRankApi();
-//        File file = new File(fileName);
 	FileOutputStream fos = new FileOutputStream(fileName);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
             for (SingleCoin coin : _data) {
@@ -101,15 +108,15 @@ public class SaveToDisk {
 
     public void saveTableAsText(String _fileName, LinkedList<SingleCoin> _data) throws IOException {
         Date date = new Date(System.currentTimeMillis());
-//        CoinRankApi cri = new CoinRankApi();
-//        File file = new File(_fileName);
 	FileOutputStream fos;
+        // Verify file path is acceptable
         try {
             fos = new FileOutputStream(this.dir + "\\" + _fileName + ".txt");
         } catch (FileNotFoundException ex) {
             AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
             fos = new FileOutputStream(_fileName + ".txt");
         }
+        // Loop over coins and add a row for each
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
             for (SingleCoin coin : _data) {
                 bw.write(coin.getName() + ": ");
@@ -137,4 +144,87 @@ public class SaveToDisk {
         }
     }
 
+    public void saveAsExcel(LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
+        //Create blank workbook
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //Create a blank sheet
+        XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
+        Map< String, Object[]> cninfo = new TreeMap< >();
+        Row header = spreadsheet.createRow(0);
+        cninfo.put("1", new Object[]{
+            "name", "id", "uuid", "symbol", "iconUrl", "confirmedSupply", "numberOfMarkets",
+            "numberOfExchanges", "type", "volume", "marketCap", "price", "circulatingSupply",
+            "totalSupply", "approvedSupply", "firstSeen", "change", "rank"});
+//        header.
+        int colNum = 0;
+        int rowNum = 0;
+        for (SingleCoin coin : _data) {
+            Row currentRow = spreadsheet.createRow(rowNum);
+            rowNum++;
+            currentRow.createCell(colNum).setCellValue(coin.getName());
+            currentRow.createCell(colNum + 1).setCellValue(coin.getId() + "");
+            currentRow.createCell(colNum + 2).setCellValue(coin.getUuid());
+            currentRow.createCell(colNum + 3).setCellValue(coin.getSymbol());
+            currentRow.createCell(colNum + 4).setCellValue(coin.getIconUrl());
+            currentRow.createCell(colNum + 5).setCellValue(coin.getConfirmedSupply() + "");
+            currentRow.createCell(colNum + 6).setCellValue(coin.getNumberOfMarkets() + "");
+            currentRow.createCell(colNum + 7).setCellValue(coin.getNumberOfExchanges() + "");
+            currentRow.createCell(colNum + 8).setCellValue(coin.getType());
+            currentRow.createCell(colNum + 9).setCellValue(coin.getVolume() + "");
+            currentRow.createCell(colNum + 10).setCellValue(coin.getMarketCap() + "");
+            currentRow.createCell(colNum + 11).setCellValue(coin.getPrice() + "");
+            currentRow.createCell(colNum + 12).setCellValue(coin.getCirculatingSupply() + "");
+            currentRow.createCell(colNum + 13).setCellValue(coin.getTotalSupply() + "");
+            currentRow.createCell(colNum + 14).setCellValue(coin.getApprovedSupply() + "");
+            currentRow.createCell(colNum + 15).setCellValue(coin.getFirstSeen() + "");
+            currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
+            currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
+        }
+        Date date = new Date(System.currentTimeMillis());
+        String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
+        FileOutputStream out = new FileOutputStream(new File(fileName + ".xlsx"));
+        workbook.write(out);
+        out.close();
+        System.out.println(".xlsx written successfully");
+    }
+
+    public void saveAsExcel(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
+        //Create blank workbook
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //Create a blank sheet
+        XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
+        Map< String, Object[]> cninfo = new TreeMap< >();
+        cninfo.put("1", new Object[]{
+            "name", "id", "uuid", "symbol", "iconUrl", "confirmedSupply", "numberOfMarkets",
+            "numberOfExchanges", "type", "volume", "marketCap", "price", "circulatingSupply",
+            "totalSupply", "approvedSupply", "firstSeen", "change", "rank"});
+        int colNum = 0;
+        int rowNum = 0;
+        for (SingleCoin coin : _data) {
+            Row currentRow = spreadsheet.createRow(rowNum);
+            rowNum++;
+            currentRow.createCell(colNum).setCellValue(coin.getName());
+            currentRow.createCell(colNum + 1).setCellValue(coin.getId() + "");
+            currentRow.createCell(colNum + 2).setCellValue(coin.getUuid());
+            currentRow.createCell(colNum + 3).setCellValue(coin.getSymbol());
+            currentRow.createCell(colNum + 4).setCellValue(coin.getIconUrl());
+            currentRow.createCell(colNum + 5).setCellValue(coin.getConfirmedSupply() + "");
+            currentRow.createCell(colNum + 6).setCellValue(coin.getNumberOfMarkets() + "");
+            currentRow.createCell(colNum + 7).setCellValue(coin.getNumberOfExchanges() + "");
+            currentRow.createCell(colNum + 8).setCellValue(coin.getType());
+            currentRow.createCell(colNum + 9).setCellValue(coin.getVolume() + "");
+            currentRow.createCell(colNum + 10).setCellValue(coin.getMarketCap() + "");
+            currentRow.createCell(colNum + 11).setCellValue(coin.getPrice() + "");
+            currentRow.createCell(colNum + 12).setCellValue(coin.getCirculatingSupply() + "");
+            currentRow.createCell(colNum + 13).setCellValue(coin.getTotalSupply() + "");
+            currentRow.createCell(colNum + 14).setCellValue(coin.getApprovedSupply() + "");
+            currentRow.createCell(colNum + 15).setCellValue(coin.getFirstSeen() + "");
+            currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
+            currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
+        }
+        FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + _fileName + ".xlsx"));
+        workbook.write(out);
+        out.close();
+        System.out.println(".xlsx written successfully");
+    }
 }
