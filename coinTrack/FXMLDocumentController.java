@@ -73,6 +73,8 @@ public class FXMLDocumentController implements Initializable {
     private File saveLoc;
     private final ObservableList<Theme> THEMES = FXCollections.
             observableArrayList(new Theme("Dark"), new Theme("Light"));
+    private final ObservableList<String> FILE_TYPES = FXCollections.
+            observableArrayList(".txt", ".xlsx", ".json");
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -260,11 +262,22 @@ public class FXMLDocumentController implements Initializable {
             cri.join();
             LinkedList<SingleCoin> coinList = cri.getCoinList();
             SaveToDisk save = new SaveToDisk(new File(this.saveLocation.getText()));
-            
-            if (this.fileName.getText().isEmpty()) {
-                save.saveTableAsText(coinList);
-            } else {
-                save.saveTableAsText(this.fileName.getText(), coinList);
+
+            switch (fileTypeMenu.getValue().toString()) {
+                case ".txt":
+                    if (this.fileName.getText().isEmpty()) {
+                        save.saveTableAsText(coinList);
+                    } else {
+                        save.saveTableAsText(this.fileName.getText(), coinList);
+                    }
+                case ".xlsx":
+                    if (this.fileName.getText().isEmpty()) {
+                        save.saveAsExcel(coinList);
+                    } else {
+                        save.saveAsExcel(this.fileName.getText(), coinList);
+                    }
+                case ".json":
+                    System.out.println("not avaliable yet..");
             }
             /**
              * Add functionality to save users saved coins
