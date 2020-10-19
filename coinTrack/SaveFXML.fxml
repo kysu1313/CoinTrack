@@ -12,7 +12,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="281.0" prefWidth="497.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
-      <TextField fx:id="saveLocation" layoutX="38.0" layoutY="70.0" prefHeight="25.0" prefWidth="296.0" promptText="Save Location, leave empty for default" />
+      <TextField fx:id="saveLocation" layoutX="38.0" layoutY="70.0" prefHeight="25.0" prefWidth="296.0" promptText="Save Location" />
       <Button fx:id="saveMenuBtn" layoutX="229.0" layoutY="211.0" mnemonicParsing="false" onAction="#handleSaveMenu" text="Save">
          <font>
             <Font size="18.0" />
