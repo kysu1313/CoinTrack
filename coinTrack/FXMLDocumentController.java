@@ -239,9 +239,9 @@ public class FXMLDocumentController implements Initializable {
         try {
             Tab1Controller.mainPage1 = new Stage();
             root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/SaveFXML.fxml"));
-            Scene scene = new Scene(root);
+            Scene saveScene = new Scene(root);
             saveStage = new Stage();
-            saveStage.setScene(scene);
+            saveStage.setScene(saveScene);
             saveStage.show();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -256,38 +256,43 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void handleSaveMenu(ActionEvent event) throws IOException {
-        if (!this.saveLocation.getText().isEmpty() && isPathValid(this.saveLocation.getText())) {
-            this.saveLoc = new File(saveLocation.getText());
-            CoinRankApi cri = new CoinRankApi();
-            cri.join();
-            LinkedList<SingleCoin> coinList = cri.getCoinList();
+        CoinRankApi cri = new CoinRankApi();
+        cri.join();
+        LinkedList<SingleCoin> coinList = cri.getCoinList();
+        if (!this.saveLocation.getText().isEmpty() && !this.fileName.getText().isEmpty()) {
             SaveToDisk save = new SaveToDisk(new File(this.saveLocation.getText()));
-
             switch (fileTypeMenu.getValue().toString()) {
                 case ".txt":
-                    if (this.fileName.getText().isEmpty()) {
-                        save.saveTableAsText(coinList);
-                    } else {
-                        save.saveTableAsText(this.fileName.getText(), coinList);
-                    }
+                    save.saveTableAsText(this.fileName.getText(), coinList);
+                    break;
                 case ".xlsx":
-                    if (this.fileName.getText().isEmpty()) {
-                        save.saveAsExcel(coinList);
-                    } else {
-                        save.saveAsExcel(this.fileName.getText(), coinList);
-                    }
+                    save.saveAsExcel(this.fileName.getText(), coinList);
+                    break;
                 case ".json":
-                    System.out.println("not avaliable yet..");
+                    save.saveAsJson(this.fileName.getText(), coinList);
+                    break;
+                default:
+                    AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
             }
-            /**
-             * Add functionality to save users saved coins
-             */
-            saveStage.close();
-
+        } else if (!this.saveLocation.getText().isEmpty() && this.fileName.getText().isEmpty()) {
+            SaveToDisk save = new SaveToDisk(new File(saveLocation.getText()));
+            switch (fileTypeMenu.getValue().toString()) {
+                case ".txt":
+                        save.saveTableAsText(coinList);
+                    break;
+                case ".xlsx":
+                        save.saveAsExcel(coinList);
+                    break;
+                case ".json":
+                    save.saveAsJson(this.fileName.getText(), coinList);
+                    break;
+                default:
+                    AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
+            }
         } else {
-            AlertMessages.showErrorMessage("Save Location Invalid", "Enter a location to save file.");
+            AlertMessages.showErrorMessage("Missing info", "Please fill out all fields.");
         }
-        
+        saveStage.close();
     }
 
     /**

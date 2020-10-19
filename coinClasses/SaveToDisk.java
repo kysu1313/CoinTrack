@@ -2,13 +2,10 @@ package coinClasses;
 
 import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -16,19 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import javax.swing.filechooser.FileSystemView;
 import tabControllers.AlertMessages;
 //import org.apache.poi.ss.usermodel.Cell;
 
 
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
@@ -149,15 +140,30 @@ public class SaveToDisk {
         XSSFWorkbook workbook = new XSSFWorkbook();
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
-        Map< String, Object[]> cninfo = new TreeMap< >();
-        Row header = spreadsheet.createRow(0);
-        cninfo.put("1", new Object[]{
-            "name", "id", "uuid", "symbol", "iconUrl", "confirmedSupply", "numberOfMarkets",
-            "numberOfExchanges", "type", "volume", "marketCap", "price", "circulatingSupply",
-            "totalSupply", "approvedSupply", "firstSeen", "change", "rank"});
 //        header.
         int colNum = 0;
         int rowNum = 0;
+        Row header = spreadsheet.createRow(rowNum);
+        header.createCell(colNum).setCellValue("name");
+        header.createCell(colNum+1).setCellValue("id");
+        header.createCell(colNum+2).setCellValue("uuid");
+        header.createCell(colNum+3).setCellValue("symbol");
+        header.createCell(colNum+4).setCellValue("iconUrl");
+        header.createCell(colNum+5).setCellValue("confirmedSupply");
+        header.createCell(colNum+6).setCellValue("numberOfMarkets");
+        header.createCell(colNum+7).setCellValue("numberOfExchanges");
+        header.createCell(colNum+8).setCellValue("type");
+        header.createCell(colNum+9).setCellValue("volume");
+        header.createCell(colNum+10).setCellValue("marketCap");
+        header.createCell(colNum+11).setCellValue("price");
+        header.createCell(colNum+12).setCellValue("circulatingSupply");
+        header.createCell(colNum+13).setCellValue("totalSupply");
+        header.createCell(colNum+14).setCellValue("approvedSupply");
+        header.createCell(colNum+15).setCellValue("firstSeen");
+        header.createCell(colNum+16).setCellValue("change");
+        header.createCell(colNum+17).setCellValue("rank");
+        colNum = 0;
+        rowNum++;
         for (SingleCoin coin : _data) {
             Row currentRow = spreadsheet.createRow(rowNum);
             rowNum++;
@@ -181,8 +187,8 @@ public class SaveToDisk {
             currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
         }
         Date date = new Date(System.currentTimeMillis());
-        String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
-        FileOutputStream out = new FileOutputStream(new File(fileName + ".xlsx"));
+        String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".xlsx";
+        FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + fileName + ".xlsx"));
         workbook.write(out);
         out.close();
         System.out.println(".xlsx written successfully");
@@ -193,13 +199,30 @@ public class SaveToDisk {
         XSSFWorkbook workbook = new XSSFWorkbook();
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
-        Map< String, Object[]> cninfo = new TreeMap< >();
-        cninfo.put("1", new Object[]{
-            "name", "id", "uuid", "symbol", "iconUrl", "confirmedSupply", "numberOfMarkets",
-            "numberOfExchanges", "type", "volume", "marketCap", "price", "circulatingSupply",
-            "totalSupply", "approvedSupply", "firstSeen", "change", "rank"});
+//        header.
         int colNum = 0;
         int rowNum = 0;
+        Row header = spreadsheet.createRow(rowNum);
+        header.createCell(colNum).setCellValue("name");
+        header.createCell(colNum+1).setCellValue("id");
+        header.createCell(colNum+2).setCellValue("uuid");
+        header.createCell(colNum+3).setCellValue("symbol");
+        header.createCell(colNum+4).setCellValue("iconUrl");
+        header.createCell(colNum+5).setCellValue("confirmedSupply");
+        header.createCell(colNum+6).setCellValue("numberOfMarkets");
+        header.createCell(colNum+7).setCellValue("numberOfExchanges");
+        header.createCell(colNum+8).setCellValue("type");
+        header.createCell(colNum+9).setCellValue("volume");
+        header.createCell(colNum+10).setCellValue("marketCap");
+        header.createCell(colNum+11).setCellValue("price");
+        header.createCell(colNum+12).setCellValue("circulatingSupply");
+        header.createCell(colNum+13).setCellValue("totalSupply");
+        header.createCell(colNum+14).setCellValue("approvedSupply");
+        header.createCell(colNum+15).setCellValue("firstSeen");
+        header.createCell(colNum+16).setCellValue("change");
+        header.createCell(colNum+17).setCellValue("rank");
+        colNum = 0;
+        rowNum++;
         for (SingleCoin coin : _data) {
             Row currentRow = spreadsheet.createRow(rowNum);
             rowNum++;
@@ -226,5 +249,53 @@ public class SaveToDisk {
         workbook.write(out);
         out.close();
         System.out.println(".xlsx written successfully");
+    }
+
+    public void saveAsJson(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
+//        Date date = new Date(System.currentTimeMillis());
+	FileOutputStream fos;
+//        String fileName = "coin-track-" + TIME_FORMAT.format(date);
+        // Verify file path is acceptable
+        try {
+            fos = new FileOutputStream(this.dir + "\\" + _fileName + ".json");
+        } catch (FileNotFoundException ex) {
+            AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
+            fos = new FileOutputStream(_fileName + ".txt");
+        }
+        int count = 0;
+        // Loop over coins and add a row for each
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
+            bw.write("{\"coins\": {");
+            bw.newLine();
+            for (SingleCoin coin : _data) {
+                bw.write("\"" + coin.getName() + "\"" + ": {");
+                bw.newLine();
+                bw.write("\t\"" + "id\":" + "\"" + coin.getId() + "\",\n");
+                bw.write("\t\"" + "uuid\":" + "\"" + coin.getUuid() + "\",");bw.newLine();
+                bw.write("\t\"" + "symbol\":" + "\"" + coin.getSymbol() + "\",");bw.newLine();
+                bw.write("\t\"" + "iconUrl\":" + "\"" + coin.getIconUrl() + "\",");bw.newLine();
+                bw.write("\t\"" + "confirmedSupply\":" + "\"" + coin.getConfirmedSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "numberOfMarkets\":" + "\"" + coin.getNumberOfMarkets() + "\",");bw.newLine();
+                bw.write("\t\"" + "numberOfExchanges\":" + "\"" + coin.getNumberOfExchanges() + "\",");bw.newLine();
+                bw.write("\t\"" + "type\":" + "\"" + coin.getType() + "\",");bw.newLine();
+                bw.write("\t\"" + "volume\":" + "\"" + coin.getVolume() + "\",");bw.newLine();
+                bw.write("\t\"" + "marketCap\":" + "\"" + coin.getMarketCap() + "\",");bw.newLine();
+                bw.write("\t\"" + "price:\":" + "\"" + coin.getPrice() + "\",");bw.newLine();
+                bw.write("\t\"" + "circulatingSupply\":" + "\"" + coin.getCirculatingSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "totalSupply\":" + "\"" + coin.getTotalSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "approvedSupply\":" + "\"" + coin.getApprovedSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "firstSeen\":" + "\"" + coin.getFirstSeen() + "\",");bw.newLine();
+                bw.write("\t\"" + "change\":" + "\"" + coin.getChange() + "\",");bw.newLine();
+                bw.write("\t\"" + "rank\":" + "\"" + coin.getRank() + "\"");
+                bw.write("}");
+                count++;
+                if (count < _data.size()) {bw.write(",");}
+                bw.newLine();
+            }
+            bw.write("}}");
+            // Close file writers
+            bw.close();
+            fos.close();
+        }
     }
 }
