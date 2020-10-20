@@ -149,34 +149,6 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
         return temp;
     }
 
-    public HashMap<String, HashMap<String, String>> getCoinsAndParams() {
-        HashMap<String, HashMap<String, String>> hm = new HashMap<>();
-
-        HashMap<String, String> innerHm = new HashMap<>();
-        this.coinList.forEach((item) -> {
-            String name = item.getName();
-            innerHm.put("id", item.getId()+"");
-            innerHm.put("uuid", item.getUuid());
-            innerHm.put("symbol", item.getSymbol());
-            innerHm.put("iconUrl", item.getIconUrl());
-            innerHm.put("confirmedSupply", item.getConfirmedSupply()+"");
-            innerHm.put("numberOfMarkets", item.getNumberOfMarkets()+"");
-            innerHm.put("numberOfExchanges", item.getNumberOfExchanges()+"");
-            innerHm.put("type", item.getType());
-            innerHm.put("volume", item.getVolume()+"");
-            innerHm.put("marketCap", item.getMarketCap()+"");
-            innerHm.put("price", item.getPrice()+"");
-            innerHm.put("circulatingSupply", item.getCirculatingSupply()+"");
-            innerHm.put("totalSupply", item.getTotalSupply()+"");
-            innerHm.put("approvedSupply", item.getApprovedSupply()+"");
-            innerHm.put("firstSeen", item.getFirstSeen()+"");
-            innerHm.put("change", item.getChange()+"");
-            innerHm.put("rank", item.getRank()+"");
-            hm.put(name, innerHm);
-        });
-        return hm;
-    }
-
     public LinkedList<SingleCoin> getCoinList() {
         return this.coinList;
     }

@@ -2,6 +2,7 @@ package coinClasses;
 
 import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
+import interfaces.SaveFileInterface;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
  * excel file, or JSON file to their computer.
  * @author Kyle
  */
-public class SaveToDisk {
+public class SaveToDisk implements SaveFileInterface{
 
     private static String OS = System.getProperty("os.name").toLowerCase();
     private String system;
@@ -66,10 +67,16 @@ public class SaveToDisk {
         }
     }
 
+    /**
+     * Save LinkedList of single coins as a text file.
+     * @param _data
+     * @throws IOException
+     */
+    @Override
     public void saveTableAsText(LinkedList<SingleCoin> _data) throws IOException {
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
-	FileOutputStream fos = new FileOutputStream(fileName);
+	FileOutputStream fos = new FileOutputStream(this.dir + "\\" + fileName);
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
             for (SingleCoin coin : _data) {
                 bw.write(coin.getName() + ": ");
@@ -97,6 +104,12 @@ public class SaveToDisk {
         }
     }
 
+    /**
+     * Save LinkedList of single coins as a text file with given file name.
+     * @param _data
+     * @throws IOException
+     */
+    @Override
     public void saveTableAsText(String _fileName, LinkedList<SingleCoin> _data) throws IOException {
         Date date = new Date(System.currentTimeMillis());
 	FileOutputStream fos;
@@ -135,6 +148,12 @@ public class SaveToDisk {
         }
     }
 
+    /**
+     * Save LinkedList of single coins as a excel file.
+     * @param _data
+     * @throws IOException
+     */
+    @Override
     public void saveAsExcel(LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
         //Create blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -194,6 +213,14 @@ public class SaveToDisk {
         System.out.println(".xlsx written successfully");
     }
 
+    /**
+     * Save LinkedList of single coins as a text excel with given file name.
+     * @param _fileName
+     * @param _data
+     * @throws java.io.FileNotFoundException
+     * @throws IOException
+     */
+    @Override
     public void saveAsExcel(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
         //Create blank workbook
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -251,6 +278,14 @@ public class SaveToDisk {
         System.out.println(".xlsx written successfully");
     }
 
+    /**
+     * Save LinkedList of single coins as a json file with given file name.
+     * @param _fileName
+     * @param _data
+     * @throws java.io.FileNotFoundException
+     * @throws IOException
+     */
+    @Override
     public void saveAsJson(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
 //        Date date = new Date(System.currentTimeMillis());
 	FileOutputStream fos;
@@ -261,6 +296,61 @@ public class SaveToDisk {
         } catch (FileNotFoundException ex) {
             AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
             fos = new FileOutputStream(_fileName + ".txt");
+        }
+        int count = 0;
+        // Loop over coins and add a row for each
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
+            bw.write("{\"coins\": {");
+            bw.newLine();
+            for (SingleCoin coin : _data) {
+                bw.write("\"" + coin.getName() + "\"" + ": {");
+                bw.newLine();
+                bw.write("\t\"" + "id\":" + "\"" + coin.getId() + "\",\n");
+                bw.write("\t\"" + "uuid\":" + "\"" + coin.getUuid() + "\",");bw.newLine();
+                bw.write("\t\"" + "symbol\":" + "\"" + coin.getSymbol() + "\",");bw.newLine();
+                bw.write("\t\"" + "iconUrl\":" + "\"" + coin.getIconUrl() + "\",");bw.newLine();
+                bw.write("\t\"" + "confirmedSupply\":" + "\"" + coin.getConfirmedSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "numberOfMarkets\":" + "\"" + coin.getNumberOfMarkets() + "\",");bw.newLine();
+                bw.write("\t\"" + "numberOfExchanges\":" + "\"" + coin.getNumberOfExchanges() + "\",");bw.newLine();
+                bw.write("\t\"" + "type\":" + "\"" + coin.getType() + "\",");bw.newLine();
+                bw.write("\t\"" + "volume\":" + "\"" + coin.getVolume() + "\",");bw.newLine();
+                bw.write("\t\"" + "marketCap\":" + "\"" + coin.getMarketCap() + "\",");bw.newLine();
+                bw.write("\t\"" + "price:\":" + "\"" + coin.getPrice() + "\",");bw.newLine();
+                bw.write("\t\"" + "circulatingSupply\":" + "\"" + coin.getCirculatingSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "totalSupply\":" + "\"" + coin.getTotalSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "approvedSupply\":" + "\"" + coin.getApprovedSupply() + "\",");bw.newLine();
+                bw.write("\t\"" + "firstSeen\":" + "\"" + coin.getFirstSeen() + "\",");bw.newLine();
+                bw.write("\t\"" + "change\":" + "\"" + coin.getChange() + "\",");bw.newLine();
+                bw.write("\t\"" + "rank\":" + "\"" + coin.getRank() + "\"");
+                bw.write("}");
+                count++;
+                if (count < _data.size()) {bw.write(",");}
+                bw.newLine();
+            }
+            bw.write("}}");
+            // Close file writers
+            bw.close();
+            fos.close();
+        }
+    }
+
+    /**
+     * Save LinkedList of single coins as a json file.
+     * @param _data
+     * @throws java.io.FileNotFoundException
+     * @throws IOException
+     */
+    @Override
+    public void saveAsJson(LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
+//        Date date = new Date(System.currentTimeMillis());
+	FileOutputStream fos;
+        Date date = new Date(System.currentTimeMillis());
+        String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".json";
+        try {
+            fos = new FileOutputStream(this.dir + "\\" + fileName + ".json");
+        } catch (FileNotFoundException ex) {
+            AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
+            fos = new FileOutputStream(fileName + ".txt");
         }
         int count = 0;
         // Loop over coins and add a row for each
