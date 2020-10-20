@@ -284,7 +284,7 @@ public class FXMLDocumentController implements Initializable {
                         save.saveAsExcel(coinList);
                     break;
                 case ".json":
-                    save.saveAsJson(this.fileName.getText(), coinList);
+                    save.saveAsJson(coinList);
                     break;
                 default:
                     AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
