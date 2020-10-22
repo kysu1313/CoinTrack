@@ -5,7 +5,6 @@ import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
-import coinTrack.FXMLDocumentController;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -15,10 +14,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -31,7 +28,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.TabAssistantController;
-import tabControllers.assistantControllers.Theme;
 
 /**
  * Tab controller for the dashboard, "tab 3".
@@ -251,6 +247,7 @@ public class Tab3Controller implements Initializable{
         this.friendList = new LinkedList<>();
         this.onlineUserList = new LinkedList<>();
         this.savedCoins = new LinkedList<>();
+        this.textLabel.setText("Hello " + USERNAME);
         getCoinList();
         populateSearch();
         createTable();
