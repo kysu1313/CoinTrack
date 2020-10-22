@@ -88,16 +88,14 @@ public class Tab2Controller implements Initializable{
     private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
-//    private XYChart.Series[] seriesArr;
     private Tab currTab;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     private LineChartClass lcc;
-    
-//    Tab2AssistantController assistT2;
-//    Tab1AssistantController assistT1;
     private TabAssistantController tas;
     ContextMenu cm3;
     protected Scene scene;
+
+    // General FXML properties
     @FXML protected TextField usernamePhone;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -107,11 +105,9 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab lineChartTab;
     @FXML private Tab webTab;
     @FXML private Tab candleTab;
-//    @FXML private ToolBar toolBarT2;
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
     @FXML private VBox sideVBox;
-//    @FXML private Label hoverLabel;
 
     // Accordion
     @FXML private ListView onlineUsersListT2;
@@ -135,8 +131,7 @@ public class Tab2Controller implements Initializable{
     @FXML private BarChart barChart;
     private XYChart.Series series1;
     private XYChart.Series series4;
-    private XYChart.Series series2; //add this line
-
+    private XYChart.Series series2;
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
     
