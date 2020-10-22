@@ -4,6 +4,7 @@ package coinClasses;
  * excel file, or JSON file to the users computer.
  * @author Kyle
  */
+
 import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
 import interfaces.SaveFileInterface;
@@ -83,31 +84,7 @@ public class SaveToDisk implements SaveFileInterface{
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".txt";
 	FileOutputStream fos = new FileOutputStream(this.dir + "\\" + fileName);
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
-            for (SingleCoin coin : _data) {
-                bw.write(coin.getName() + ": ");
-                bw.write("id: " + coin.getId()+"");
-                bw.write("uuid: " + coin.getUuid());
-                bw.write("symbol: " + coin.getSymbol());
-                bw.write("iconUrl: " + coin.getIconUrl());
-                bw.write("confirmedSupply: " + coin.getConfirmedSupply()+"");
-                bw.write("numberOfMarkets: " + coin.getNumberOfMarkets()+"");
-                bw.write("numberOfExchanges: " + coin.getNumberOfExchanges()+"");
-                bw.write("type: " + coin.getType());
-                bw.write("volume: " + coin.getVolume()+"");
-                bw.write("marketCap: " + coin.getMarketCap()+"");
-                bw.write("price: " + coin.getPrice()+"");
-                bw.write("circulatingSupply: " + coin.getCirculatingSupply()+"");
-                bw.write("totalSupply: " + coin.getTotalSupply()+"");
-                bw.write("approvedSupply: " + coin.getApprovedSupply()+"");
-                bw.write("firstSeen: " + coin.getFirstSeen()+"");
-                bw.write("change: " + coin.getChange()+"");
-                bw.write("rank: " + coin.getRank()+"");
-                bw.newLine();
-            }
-            bw.close();
-            fos.close();
-        }
+        addDataToTextFile(fos, _data);
     }
 
     /**
@@ -126,8 +103,18 @@ public class SaveToDisk implements SaveFileInterface{
             AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
             fos = new FileOutputStream(_fileName + ".txt");
         }
+        addDataToTextFile(fos, _data);
+    }
+
+    /**
+     * Add data to text file.
+     * @param _fos
+     * @param _data
+     * @throws IOException
+     */
+    private void addDataToTextFile(FileOutputStream _fos, LinkedList<SingleCoin> _data) throws IOException {
         // Loop over coins and add a row for each
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(_fos))) {
             for (SingleCoin coin : _data) {
                 bw.write(coin.getName() + ": ");
                 bw.write("id: " + coin.getId()+", ");
@@ -150,7 +137,7 @@ public class SaveToDisk implements SaveFileInterface{
                 bw.newLine();
             }
             bw.close();
-            fos.close();
+            _fos.close();
         }
     }
 
@@ -165,32 +152,8 @@ public class SaveToDisk implements SaveFileInterface{
         XSSFWorkbook workbook = new XSSFWorkbook();
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
-
         addExcelHeaders(spreadsheet);
-        int colNum = 0;
-        int rowNum = 1;
-        for (SingleCoin coin : _data) {
-            Row currentRow = spreadsheet.createRow(rowNum);
-            rowNum++;
-            currentRow.createCell(colNum).setCellValue(coin.getName());
-            currentRow.createCell(colNum + 1).setCellValue(coin.getId() + "");
-            currentRow.createCell(colNum + 2).setCellValue(coin.getUuid());
-            currentRow.createCell(colNum + 3).setCellValue(coin.getSymbol());
-            currentRow.createCell(colNum + 4).setCellValue(coin.getIconUrl());
-            currentRow.createCell(colNum + 5).setCellValue(coin.getConfirmedSupply() + "");
-            currentRow.createCell(colNum + 6).setCellValue(coin.getNumberOfMarkets() + "");
-            currentRow.createCell(colNum + 7).setCellValue(coin.getNumberOfExchanges() + "");
-            currentRow.createCell(colNum + 8).setCellValue(coin.getType());
-            currentRow.createCell(colNum + 9).setCellValue(coin.getVolume() + "");
-            currentRow.createCell(colNum + 10).setCellValue(coin.getMarketCap() + "");
-            currentRow.createCell(colNum + 11).setCellValue(coin.getPrice() + "");
-            currentRow.createCell(colNum + 12).setCellValue(coin.getCirculatingSupply() + "");
-            currentRow.createCell(colNum + 13).setCellValue(coin.getTotalSupply() + "");
-            currentRow.createCell(colNum + 14).setCellValue(coin.getApprovedSupply() + "");
-            currentRow.createCell(colNum + 15).setCellValue(coin.getFirstSeen() + "");
-            currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
-            currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
-        }
+        addExcelData(spreadsheet, _data);
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".xlsx";
         FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + fileName + ".xlsx"));
@@ -213,12 +176,24 @@ public class SaveToDisk implements SaveFileInterface{
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
         addExcelHeaders(spreadsheet);
+        addExcelData(spreadsheet, _data);
+        // Save file using output stream
+        FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + _fileName + ".xlsx"));
+        workbook.write(out);
+        out.close();
+        System.out.println(".xlsx written successfully");
+    }
+
+    /**
+     * Add data to the excel sheet.
+     * @param _sheet
+     * @param _data
+     */
+    private void addExcelData(XSSFSheet _sheet, LinkedList<SingleCoin> _data) {
         int colNum = 0;
         int rowNum = 0;
-        rowNum++;
-        // Loop over data and add to file
         for (SingleCoin coin : _data) {
-            Row currentRow = spreadsheet.createRow(rowNum);
+            Row currentRow = _sheet.createRow(rowNum);
             rowNum++;
             currentRow.createCell(colNum).setCellValue(coin.getName());
             currentRow.createCell(colNum + 1).setCellValue(coin.getId() + "");
@@ -239,11 +214,6 @@ public class SaveToDisk implements SaveFileInterface{
             currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
             currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
         }
-        // Save file using output stream
-        FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + _fileName + ".xlsx"));
-        workbook.write(out);
-        out.close();
-        System.out.println(".xlsx written successfully");
     }
 
     /**
