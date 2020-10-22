@@ -1,12 +1,12 @@
 package coinClasses;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 /**
- *
+ * This class represents a single market.
+ * A market is an exchange for one or many types of cryptocurrencies.
  * @author Kyle
  */
+import org.json.JSONObject;
+
 public class SingleMarket {
     
     JSONObject arr;

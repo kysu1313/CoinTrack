@@ -1,5 +1,9 @@
 package coinClasses;
-
+/**
+ * This class saves all coins to either a text file,
+ * excel file, or JSON file to the users computer.
+ * @author Kyle
+ */
 import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
 import interfaces.SaveFileInterface;
@@ -17,18 +21,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import javax.swing.filechooser.FileSystemView;
 import tabControllers.AlertMessages;
-//import org.apache.poi.ss.usermodel.Cell;
-
-
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-/**
- * This class saves a users saved coins to either a text file,
- * excel file, or JSON file to their computer.
- * @author Kyle
- */
 public class SaveToDisk implements SaveFileInterface{
 
     private static String OS = System.getProperty("os.name").toLowerCase();
@@ -40,7 +36,11 @@ public class SaveToDisk implements SaveFileInterface{
     private Path path;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
 
-
+    /**
+     * Constructor class determines what OS the user is running.
+     * Then changes the directory appropriately.
+     * @throws IOException
+     */
     public SaveToDisk() throws IOException {
         // Used to determine if user is on Mac or Windows
         if (isWindows()) {
@@ -54,6 +54,12 @@ public class SaveToDisk implements SaveFileInterface{
         }
     }
 
+    /**
+     * Constructor class determines what OS the user is running.
+     * Then changes the directory appropriately adding the given
+     * file path.
+     * @throws IOException
+     */
     public SaveToDisk(File _dir) throws IOException {
         // Used to determine if user is on Mac or Windows
         if (isWindows()) {
@@ -68,7 +74,7 @@ public class SaveToDisk implements SaveFileInterface{
     }
 
     /**
-     * Save LinkedList of single coins as a text file.
+     * Saves a LinkedList of single coins as a text file.
      * @param _data
      * @throws IOException
      */
@@ -105,7 +111,7 @@ public class SaveToDisk implements SaveFileInterface{
     }
 
     /**
-     * Save LinkedList of single coins as a text file with given file name.
+     * Saves a LinkedList of single coins as a text file with given file name.
      * @param _data
      * @throws IOException
      */
@@ -159,30 +165,10 @@ public class SaveToDisk implements SaveFileInterface{
         XSSFWorkbook workbook = new XSSFWorkbook();
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
-//        header.
+
+        addExcelHeaders(spreadsheet);
         int colNum = 0;
-        int rowNum = 0;
-        Row header = spreadsheet.createRow(rowNum);
-        header.createCell(colNum).setCellValue("name");
-        header.createCell(colNum+1).setCellValue("id");
-        header.createCell(colNum+2).setCellValue("uuid");
-        header.createCell(colNum+3).setCellValue("symbol");
-        header.createCell(colNum+4).setCellValue("iconUrl");
-        header.createCell(colNum+5).setCellValue("confirmedSupply");
-        header.createCell(colNum+6).setCellValue("numberOfMarkets");
-        header.createCell(colNum+7).setCellValue("numberOfExchanges");
-        header.createCell(colNum+8).setCellValue("type");
-        header.createCell(colNum+9).setCellValue("volume");
-        header.createCell(colNum+10).setCellValue("marketCap");
-        header.createCell(colNum+11).setCellValue("price");
-        header.createCell(colNum+12).setCellValue("circulatingSupply");
-        header.createCell(colNum+13).setCellValue("totalSupply");
-        header.createCell(colNum+14).setCellValue("approvedSupply");
-        header.createCell(colNum+15).setCellValue("firstSeen");
-        header.createCell(colNum+16).setCellValue("change");
-        header.createCell(colNum+17).setCellValue("rank");
-        colNum = 0;
-        rowNum++;
+        int rowNum = 1;
         for (SingleCoin coin : _data) {
             Row currentRow = spreadsheet.createRow(rowNum);
             rowNum++;
@@ -226,30 +212,11 @@ public class SaveToDisk implements SaveFileInterface{
         XSSFWorkbook workbook = new XSSFWorkbook();
         //Create a blank sheet
         XSSFSheet spreadsheet = workbook.createSheet("Coin Data");
-//        header.
+        addExcelHeaders(spreadsheet);
         int colNum = 0;
         int rowNum = 0;
-        Row header = spreadsheet.createRow(rowNum);
-        header.createCell(colNum).setCellValue("name");
-        header.createCell(colNum+1).setCellValue("id");
-        header.createCell(colNum+2).setCellValue("uuid");
-        header.createCell(colNum+3).setCellValue("symbol");
-        header.createCell(colNum+4).setCellValue("iconUrl");
-        header.createCell(colNum+5).setCellValue("confirmedSupply");
-        header.createCell(colNum+6).setCellValue("numberOfMarkets");
-        header.createCell(colNum+7).setCellValue("numberOfExchanges");
-        header.createCell(colNum+8).setCellValue("type");
-        header.createCell(colNum+9).setCellValue("volume");
-        header.createCell(colNum+10).setCellValue("marketCap");
-        header.createCell(colNum+11).setCellValue("price");
-        header.createCell(colNum+12).setCellValue("circulatingSupply");
-        header.createCell(colNum+13).setCellValue("totalSupply");
-        header.createCell(colNum+14).setCellValue("approvedSupply");
-        header.createCell(colNum+15).setCellValue("firstSeen");
-        header.createCell(colNum+16).setCellValue("change");
-        header.createCell(colNum+17).setCellValue("rank");
-        colNum = 0;
         rowNum++;
+        // Loop over data and add to file
         for (SingleCoin coin : _data) {
             Row currentRow = spreadsheet.createRow(rowNum);
             rowNum++;
@@ -272,10 +239,39 @@ public class SaveToDisk implements SaveFileInterface{
             currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
             currentRow.createCell(colNum + 17).setCellValue(coin.getRank() + "");
         }
+        // Save file using output stream
         FileOutputStream out = new FileOutputStream(new File(this.dir + "\\" + _fileName + ".xlsx"));
         workbook.write(out);
         out.close();
         System.out.println(".xlsx written successfully");
+    }
+
+    /**
+     * Create the column headers for excel files.
+     * @param _sheet
+     */
+    private void addExcelHeaders(XSSFSheet _sheet) {
+        int colNum = 0;
+        int rowNum = 0;
+        Row header = _sheet.createRow(rowNum);
+        header.createCell(colNum).setCellValue("name");
+        header.createCell(colNum+1).setCellValue("id");
+        header.createCell(colNum+2).setCellValue("uuid");
+        header.createCell(colNum+3).setCellValue("symbol");
+        header.createCell(colNum+4).setCellValue("iconUrl");
+        header.createCell(colNum+5).setCellValue("confirmedSupply");
+        header.createCell(colNum+6).setCellValue("numberOfMarkets");
+        header.createCell(colNum+7).setCellValue("numberOfExchanges");
+        header.createCell(colNum+8).setCellValue("type");
+        header.createCell(colNum+9).setCellValue("volume");
+        header.createCell(colNum+10).setCellValue("marketCap");
+        header.createCell(colNum+11).setCellValue("price");
+        header.createCell(colNum+12).setCellValue("circulatingSupply");
+        header.createCell(colNum+13).setCellValue("totalSupply");
+        header.createCell(colNum+14).setCellValue("approvedSupply");
+        header.createCell(colNum+15).setCellValue("firstSeen");
+        header.createCell(colNum+16).setCellValue("change");
+        header.createCell(colNum+17).setCellValue("rank");
     }
 
     /**
@@ -287,9 +283,7 @@ public class SaveToDisk implements SaveFileInterface{
      */
     @Override
     public void saveAsJson(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
-//        Date date = new Date(System.currentTimeMillis());
 	FileOutputStream fos;
-//        String fileName = "coin-track-" + TIME_FORMAT.format(date);
         // Verify file path is acceptable
         try {
             fos = new FileOutputStream(this.dir + "\\" + _fileName + ".json");
@@ -297,41 +291,8 @@ public class SaveToDisk implements SaveFileInterface{
             AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
             fos = new FileOutputStream(_fileName + ".txt");
         }
-        int count = 0;
-        // Loop over coins and add a row for each
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
-            bw.write("{\"coins\": {");
-            bw.newLine();
-            for (SingleCoin coin : _data) {
-                bw.write("\"" + coin.getName() + "\"" + ": {");
-                bw.newLine();
-                bw.write("\t\"" + "id\":" + "\"" + coin.getId() + "\",\n");
-                bw.write("\t\"" + "uuid\":" + "\"" + coin.getUuid() + "\",");bw.newLine();
-                bw.write("\t\"" + "symbol\":" + "\"" + coin.getSymbol() + "\",");bw.newLine();
-                bw.write("\t\"" + "iconUrl\":" + "\"" + coin.getIconUrl() + "\",");bw.newLine();
-                bw.write("\t\"" + "confirmedSupply\":" + "\"" + coin.getConfirmedSupply() + "\",");bw.newLine();
-                bw.write("\t\"" + "numberOfMarkets\":" + "\"" + coin.getNumberOfMarkets() + "\",");bw.newLine();
-                bw.write("\t\"" + "numberOfExchanges\":" + "\"" + coin.getNumberOfExchanges() + "\",");bw.newLine();
-                bw.write("\t\"" + "type\":" + "\"" + coin.getType() + "\",");bw.newLine();
-                bw.write("\t\"" + "volume\":" + "\"" + coin.getVolume() + "\",");bw.newLine();
-                bw.write("\t\"" + "marketCap\":" + "\"" + coin.getMarketCap() + "\",");bw.newLine();
-                bw.write("\t\"" + "price:\":" + "\"" + coin.getPrice() + "\",");bw.newLine();
-                bw.write("\t\"" + "circulatingSupply\":" + "\"" + coin.getCirculatingSupply() + "\",");bw.newLine();
-                bw.write("\t\"" + "totalSupply\":" + "\"" + coin.getTotalSupply() + "\",");bw.newLine();
-                bw.write("\t\"" + "approvedSupply\":" + "\"" + coin.getApprovedSupply() + "\",");bw.newLine();
-                bw.write("\t\"" + "firstSeen\":" + "\"" + coin.getFirstSeen() + "\",");bw.newLine();
-                bw.write("\t\"" + "change\":" + "\"" + coin.getChange() + "\",");bw.newLine();
-                bw.write("\t\"" + "rank\":" + "\"" + coin.getRank() + "\"");
-                bw.write("}");
-                count++;
-                if (count < _data.size()) {bw.write(",");}
-                bw.newLine();
-            }
-            bw.write("}}");
-            // Close file writers
-            bw.close();
-            fos.close();
-        }
+        // Write data to file
+        writeJson(fos, _data);
     }
 
     /**
@@ -342,19 +303,29 @@ public class SaveToDisk implements SaveFileInterface{
      */
     @Override
     public void saveAsJson(LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException {
-//        Date date = new Date(System.currentTimeMillis());
 	FileOutputStream fos;
         Date date = new Date(System.currentTimeMillis());
         String fileName = "coin-track-" + TIME_FORMAT.format(date) + ".json";
+        // Verify file path is acceptable
         try {
             fos = new FileOutputStream(this.dir + "\\" + fileName + ".json");
         } catch (FileNotFoundException ex) {
             AlertMessages.showErrorMessage("Bad File Path", "The specified file location could not be found.");
             fos = new FileOutputStream(fileName + ".txt");
         }
+        // Write data to file
+        writeJson(fos, _data);
+    }
+
+    /**
+     * Write data to file formatted as JSON.
+     * @param _fos
+     * @param _data
+     * @throws IOException
+     */
+    private void writeJson(FileOutputStream _fos, LinkedList<SingleCoin> _data) throws IOException {
         int count = 0;
-        // Loop over coins and add a row for each
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos))) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(_fos))) {
             bw.write("{\"coins\": {");
             bw.newLine();
             for (SingleCoin coin : _data) {
@@ -385,7 +356,7 @@ public class SaveToDisk implements SaveFileInterface{
             bw.write("}}");
             // Close file writers
             bw.close();
-            fos.close();
+            _fos.close();
         }
     }
 }

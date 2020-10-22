@@ -1,7 +1,8 @@
 package coinClasses;
 
 /**
- *
+ * This class represents a coin that has been saved by a user.
+ * This class is used when pulling data from the database.
  * @author Parth
  */
 public class UserCoin {

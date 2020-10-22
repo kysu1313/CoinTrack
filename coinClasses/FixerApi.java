@@ -1,7 +1,11 @@
 package coinClasses;
 
 /**
- * This class calls the "Fixer" api to convert
+ * This class calls the "Fixer" api to convert currencies.
+ * It takes the current currency and the desired currency,
+ * then returns a conversion rate.
+ *
+ * - Kyle
  */
 import java.io.IOException;
 import java.util.HashMap;

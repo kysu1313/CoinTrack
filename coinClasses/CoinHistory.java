@@ -9,11 +9,6 @@ package coinClasses;
  */
 
 import interfaces.CoinHistoryInterface;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -39,7 +34,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
     public CoinHistory() {
         start();
     }
-    
+
     /**
      * This constructor makes a single api call using
      * the provided coin id.
@@ -75,7 +70,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
                 singleHistoryMap.put(price, date);
             }
     }
-    
+
     @Override
     public void run() {
         history = new LinkedList<>();
@@ -104,7 +99,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
 
         }
     }
-    
+
     /**
      * Create a new thread if the thread
      * is not already started.
@@ -116,7 +111,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
             t.start();
         }
     }
-    
+
     /**
      * Wait for the thread to complete before 
      * calling the methods for data. 
@@ -129,10 +124,9 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
             Logger.getLogger(CoinRankApi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     // ========== GETTERS ==========
-    
+
     /**
      * Check if the thread is alive
      * @return 
@@ -159,9 +153,4 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
     public LinkedList<SingleCoin> getHistory() {
         return this.history;
     }
-    
-
-    
-
-
 }

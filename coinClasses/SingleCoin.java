@@ -56,8 +56,6 @@ public class SingleCoin implements SingleCoinInterface{
         slug = coinList.getString("slug");
         symbol = coinList.getString("symbol");
         name = coinList.getString("name");
-//        description = coinList.getString("description");  // TODO: Fix This
-//        color = coinList.getString("color");
         iconType = coinList.getString("iconType");
         iconUrl = coinList.getString("iconUrl");
 //        websiteUrl = coinList.getString("websiteUrl");
@@ -83,7 +81,8 @@ public class SingleCoin implements SingleCoinInterface{
     /**
      * Constructor for JSONArray.
      * Used in CoinHistory class to pull data for a coin using its id.
-     * @param jar
+     * @param _jar
+     * @param _id
      */
     public SingleCoin (JSONArray _jar, int _id) {
         this.object = _jar;

@@ -1,5 +1,10 @@
 package coinClasses;
 
+/**
+ * This class creates a connection to an api and has methods
+ * that allow access to the JSONBody response
+ * @author Kyle
+ */
 import interfaces.ApiInterface;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -9,11 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONObject;
 
-/**
- * This class creates a connection to an api and has methods
- * that allow access to the JSONBody response
- * @author Kyle
- */
 public class ConnectToApi implements ApiInterface{
     
     private JSONObject job;
