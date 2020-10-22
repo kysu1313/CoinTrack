@@ -1,21 +1,21 @@
 package coinClasses;
 
-import org.json.JSONObject;
-
 /**
  *  Data for the bottom text area.
- * I'm not sure if this is for a single coin, single market, or all coins.
+ *  Gets data for a single market, or all coins.
  * @author Kyle
  */
+import org.json.JSONObject;
+
 public class GlobalCoinStats {
     
-    private JSONObject resp;
-    private JSONObject data;
-    private int totalCoins;
-    private int totalMarkets;
-    private int totalExchanges;
-    private int totalMarketCap;
-    private int total24hVolume;
+    private final JSONObject resp;
+    private final JSONObject data;
+    private final int totalCoins;
+    private final int totalMarkets;
+    private final int totalExchanges;
+    private final int totalMarketCap;
+    private final int total24hVolume;
     private final boolean DEBUG = tabControllers.Tab1Controller.DEBUG;
     
     public GlobalCoinStats() {

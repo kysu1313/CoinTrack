@@ -1,11 +1,15 @@
 package coinClasses;
 
+/**
+ * This is a general class that embodies a call to the Coinrank api. 
+ * It parses the JSON and has getter methods for individual coin
+ * information as well as a LinkedList and LinkedHashMap methods.
+ *
+ * @author Kyle
+ */
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -13,14 +17,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- * This is a general class that embodies a call to the Coinrank api. It parses
- * the JSON and has getter methods for individual coin information as well as a
- * LinkedList and LinkedHashMap methods
- *
- * @author Kyle
- */
-public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
+public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
 
     private Thread t;
     private HttpResponse<JsonNode> response;
@@ -36,7 +33,6 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
     /**
      * Constructor, Automatically makes a call to the "coins" url and parses the
      * data into easily usable data;
-     * @param debugMode
      */
     public CoinRankApi() {
         start();
@@ -99,15 +95,15 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
     
     /**
      * Update the coins in the database to their current prices, volume, etc.
-     * @param coinList
+     * @param _coinList
      */
     @Override
-    public void updateDatabaseCoins(LinkedList<SingleCoin> coinList) {
+    public void updateDatabaseCoins(LinkedList<SingleCoin> _coinList) {
 //        Timestamp ts = new Timestamp(System.currentTimeMillis());
 //        Date date = new Date ();
 //        date.setTime((long)ts*1000);
         ConnectToDatabase conn = new ConnectToDatabase();
-        coinList.forEach((coin) -> {
+        _coinList.forEach((coin) -> {
             conn.addCoinToDatabase(coin.getId(), coin.getUuid(), coin.getSlug(),
                             coin.getSymbol(), coin.getName(),
                             coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
@@ -119,7 +115,6 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
     
     /**
      * Creates a LinkedList of each coin in the "coins" json array.
-     *
      * @return
      */
     private LinkedList<SingleCoin> getCoins() {
@@ -131,7 +126,11 @@ public class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
         }
         return tmpList;
     }
-    
+
+    /**
+     * Returns a sorted list of coins based on their price.
+     * @return
+     */
     @Override
     public LinkedList<SingleCoin> getSortedCoinList() {
         LinkedList<SingleCoin> temp = this.getCoinList();
