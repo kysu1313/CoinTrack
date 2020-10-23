@@ -400,7 +400,7 @@ public class Tab1Controller implements Initializable{
         // Set default currency
         this.selectedCurrency = "USD";
         this.currencyRate = 1;
-        populateCurrencyDropdown();
+//        populateCurrencyDropdown();
         populateSavedCoins();
 //        createFriendListCells();
         addOnlineUsersToList();
