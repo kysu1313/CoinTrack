@@ -1,5 +1,10 @@
 package tabControllers;
 
+/**
+ * Tab controller for the dashboard, "tab 3".
+ * @author Kyle
+ */
+
 import coinClasses.SingleCoin;
 import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
@@ -28,11 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.TabAssistantController;
-
-/**
- * Tab controller for the dashboard, "tab 3".
- * @author Kyle
- */
 
 public class Tab3Controller implements Initializable{
 
@@ -65,11 +65,15 @@ public class Tab3Controller implements Initializable{
         System.out.println("nothing here yet");
     }
 
+    /**
+     * Auto-Updating search bar.
+     */
     private void installTextFieldEvent() {
         this.searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 LinkedList<Label> temp = new LinkedList<>();
+                // Interactively add / remove coin names to the VBox
                 coinList.forEach((item) -> {
                     if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())) {
                         Label txt = new Label(item.getSymbol() + ": " + item.getName());
@@ -103,6 +107,7 @@ public class Tab3Controller implements Initializable{
         cri.run();
         cri.join();
         coinList = cri.getCoinList();
+        // Create list of SingleCoins by pulling full list and comparing to saved list.
         coinList.forEach((item) -> {
             userCoinList.forEach((entry) -> {
                 if (item.getName().equalsIgnoreCase(entry.getName())){
@@ -178,9 +183,9 @@ public class Tab3Controller implements Initializable{
      * @param userName
      * @param coinID
      */
-    private void saveCoin(String userName, int coinID) {
+    private void saveCoin(String _userName, int _coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
+        if (dbConn.insertSavedCoin(_userName, _coinID)) {
             AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
         }
         dbConn.close();

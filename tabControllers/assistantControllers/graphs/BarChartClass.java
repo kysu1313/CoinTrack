@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Random;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
@@ -62,11 +61,10 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     
     /**
      * Constructor for bar chart used in Tab 3, "dashboard".
-     * @param _barChartData
-     * @param _series
      * @param _singleHistoryMap
      * @param _timeSelection
      * @param _bc
+     * @param _textArea
      */
     public BarChartClass(LinkedHashMap<Double, String> _singleHistoryMap,
                             String _timeSelection, BarChart _bc, TextArea _textArea) {
@@ -90,9 +88,8 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     /**
      * Display single coin graph.
      */
+    @Override
     public void displaySingleGraph() {
-//        this.barChartData.add(this.series);
-//        this.barChart.setData(this.barChartData);
         this.barChart.getData().add(this.series);
         alternateColors("green", "red");
         scaleGraph();
@@ -178,6 +175,9 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
         });
     }
 
+    /**
+     * Color bar graph bars green for increasing and red for decreasing price.
+     */
     @Override
     public void alternateColors(String _upColor, String _downColor) {
         double lastPrice = 0;

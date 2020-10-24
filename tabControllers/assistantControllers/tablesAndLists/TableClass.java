@@ -5,11 +5,6 @@ import coinClasses.UserCoin;
 import interfaces.TableInterface;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Spliterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -26,7 +21,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
-import tabControllers.Tab1Controller;
 import static tabControllers.Tab1Controller.DEBUG;
 import tabControllers.assistantControllers.TabAssistantController;
 
@@ -171,7 +165,7 @@ public class TableClass implements TableInterface{
                                 super.updateItem(item, empty);
                                 // Change color based on data
                                 if (!isEmpty()) {
-                                    // This is a SUPER hacky way to change prices LOL
+                                    // This is a SUPER hacky way to change prices
                                     String newPrice = String.format("%.5f", Float.parseFloat(item) * Float.parseFloat("" + CURRENCY_RATE));
                                     setText(newPrice);
                                 }

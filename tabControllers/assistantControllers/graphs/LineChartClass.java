@@ -1,12 +1,9 @@
 package tabControllers.assistantControllers.graphs;
 
 import coinClasses.CoinHistory;
-import java.awt.Color;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +14,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Path;
 
 /**
  * General class for making / displaying LineCharts.
@@ -51,6 +47,9 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         createData();
     }
 
+    /**
+     * Display graph to the screen and add tool tips to the nodes.
+     */
     @Override
     public void displayGraph() {
         this.LINE_CHART.setTitle("Viewing the past " + this.TIME_SELECTION + " of: " + this.LINES.peek());
@@ -68,12 +67,20 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         // Not implemented yet
     }
 
+    /**
+     * Add given coin to the graph.
+     * @param _coin 
+     */
     @Override
     public void addCoin(String _coin) {
         this.LINES.add(_coin);
         createData();
     }
 
+    /**
+     * Remove given coin from the graph.
+     * @param _coin 
+     */
     @Override
     public void removeCoin(String _coin) {
         this.LINE_CHART.getData().clear();
@@ -87,7 +94,7 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
 
     @Override
     public void clearChart() {
-//        this.lineChart.getData().clear();
+        this.LINE_CHART.getData().clear();
         this.LINE_CHART.layout();
 //        this.lineChartData.clear();
         this.seriesList.forEach((entry) -> {

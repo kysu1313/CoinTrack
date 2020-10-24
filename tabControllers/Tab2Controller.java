@@ -256,6 +256,7 @@ public class Tab2Controller implements Initializable{
         this.series4.getData().clear();
         this.dataList.clear();
         this.sideVBox.getChildren().clear();
+        this.lcc.clearChart();
     }
 
     /**
