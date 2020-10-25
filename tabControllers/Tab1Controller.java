@@ -347,7 +347,7 @@ public class Tab1Controller implements Initializable{
     }
     
     /**
-     * Populates the currency changer drop down combo box located
+     * Populates the currency changer drop down combo box located 
      * under the "edit" button in the menu bar.
      */
     private void populateCurrencyDropdown() {
