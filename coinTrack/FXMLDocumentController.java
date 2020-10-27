@@ -30,6 +30,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;//Click "x" event
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -148,6 +149,23 @@ public class FXMLDocumentController implements Initializable {
                 this.mainStage.setScene(scene);
                 this.mainStage.show();
 //                addThemeListener();
+                // When You click on "X" will take you back to login page
+                mainStage.setOnCloseRequest(new EventHandler() {
+                    @Override
+                    public void handle(Event event) {
+                        try {
+                            System.out.println("Closing");
+                            FXMLDocumentController.mainStage = new Stage();
+                            Tab1Controller.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+                            Parent root = FXMLLoader.load(Tab1Controller.class.getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+                            FXMLDocumentController.scene = new Scene(root);
+                             FXMLDocumentController.mainStage.setScene(FXMLDocumentController.scene);
+                             FXMLDocumentController.mainStage.show();
+                        } catch (IOException ex) {
+                            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
                 coinTrack.CoinTrack.newStage.close();
                 
             } catch (IOException ex) {
