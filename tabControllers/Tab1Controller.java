@@ -77,7 +77,7 @@ public class Tab1Controller implements Initializable{
     private ComboBox cb;
     private long currencyRate;
     public static boolean DEBUG;
-    TabAssistantController tas;
+    public static TabAssistantController tas;
 
     protected Scene scene;
     @FXML protected TextField usernamePhone;
