@@ -5,6 +5,7 @@ import coinClasses.CoinHistory;
 import coinClasses.CoinRankApi;
 import coinClasses.ConnectToDatabase;
 import coinClasses.UserCoin;
+import coinTrack.FXMLDocumentController;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -36,7 +37,7 @@ import tabControllers.assistantControllers.TabAssistantController;
 
 public class Tab3Controller implements Initializable{
 
-    private static final String USERNAME = coinTrack.FXMLDocumentController.uname;
+    private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
     private LinkedList<UserCoin> userCoinList;
     protected static LinkedList<SingleCoin> coinList;
@@ -247,6 +248,7 @@ public class Tab3Controller implements Initializable{
         this.friendList = new LinkedList<>();
         this.onlineUserList = new LinkedList<>();
         this.savedCoins = new LinkedList<>();
+        USERNAME = FXMLDocumentController.uname;
         this.textLabel.setText("Hello " + USERNAME);
         getCoinList();
         populateSearch();

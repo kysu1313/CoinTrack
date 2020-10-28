@@ -133,8 +133,8 @@ public class FXMLDocumentController implements Initializable {
         if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
             this.lblStatus.setText("Login Success");
             conn.setUserOnlineStatus(this.username.getText(), 1);
-//            conn.close();
-            this.uname = this.username.getText();
+            uname = this.username.getText();
+            System.out.println(uname);
             // After login is successful, you are taken to the main page
             Parent root;
             try {
