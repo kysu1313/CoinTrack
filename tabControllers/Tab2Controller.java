@@ -492,6 +492,7 @@ public class Tab2Controller implements Initializable{
     @FXML
     private void refresh(ActionEvent event) {
         populateSavedCoins();
+        addContextMenuToList();
     }
 
     /** Save coin graph in graph tab**/
