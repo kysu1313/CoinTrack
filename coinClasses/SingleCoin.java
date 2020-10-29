@@ -65,8 +65,8 @@ public class SingleCoin implements SingleCoinInterface{
         type = coinList.getString("type");
         marketCap = coinList.getInt("marketCap");
         price = coinList.getString("price");
-        circulatingSupply = coinList.getInt("circulatingSupply");
-        totalSupply = coinList.getInt("totalSupply");
+//        circulatingSupply = coinList.getInt("circulatingSupply");
+//        totalSupply = coinList.getInt("totalSupply");
         approvedSupply = coinList.getBoolean("approvedSupply");
         firstSeen = coinList.getInt("firstSeen");
         rank = coinList.getInt("rank");

@@ -119,7 +119,7 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
      */
     private LinkedList<SingleCoin> getCoins() {
         LinkedList<SingleCoin> tmpList = new LinkedList<>();
-        for (int i = 0; i < this.coins.length(); i++) {
+        for (int i = 0; i < this.coins.length()-1; i++) {
             JSONObject obj = this.coins.getJSONObject(i);
             SingleCoin coin = new SingleCoin(obj);
             tmpList.add(coin);
