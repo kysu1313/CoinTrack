@@ -128,8 +128,8 @@ public class SaveToDisk implements SaveFileInterface{
                 bw.write("volume: " + coin.getVolume()+", ");
                 bw.write("marketCap: " + coin.getMarketCap()+", ");
                 bw.write("price: " + coin.getPrice()+", ");
-                bw.write("circulatingSupply: " + coin.getCirculatingSupply()+", ");
-                bw.write("totalSupply: " + coin.getTotalSupply()+", ");
+//                bw.write("circulatingSupply: " + coin.getCirculatingSupply()+", ");
+//                bw.write("totalSupply: " + coin.getTotalSupply()+", ");
                 bw.write("approvedSupply: " + coin.getApprovedSupply()+", ");
                 bw.write("firstSeen: " + coin.getFirstSeen()+", ");
                 bw.write("change: " + coin.getChange()+", ");
@@ -207,8 +207,8 @@ public class SaveToDisk implements SaveFileInterface{
             currentRow.createCell(colNum + 9).setCellValue(coin.getVolume() + "");
             currentRow.createCell(colNum + 10).setCellValue(coin.getMarketCap() + "");
             currentRow.createCell(colNum + 11).setCellValue(coin.getPrice() + "");
-            currentRow.createCell(colNum + 12).setCellValue(coin.getCirculatingSupply() + "");
-            currentRow.createCell(colNum + 13).setCellValue(coin.getTotalSupply() + "");
+//            currentRow.createCell(colNum + 12).setCellValue(coin.getCirculatingSupply() + "");
+//            currentRow.createCell(colNum + 13).setCellValue(coin.getTotalSupply() + "");
             currentRow.createCell(colNum + 14).setCellValue(coin.getApprovedSupply() + "");
             currentRow.createCell(colNum + 15).setCellValue(coin.getFirstSeen() + "");
             currentRow.createCell(colNum + 16).setCellValue(coin.getChange() + "");
@@ -236,8 +236,8 @@ public class SaveToDisk implements SaveFileInterface{
         header.createCell(colNum+9).setCellValue("volume");
         header.createCell(colNum+10).setCellValue("marketCap");
         header.createCell(colNum+11).setCellValue("price");
-        header.createCell(colNum+12).setCellValue("circulatingSupply");
-        header.createCell(colNum+13).setCellValue("totalSupply");
+//        header.createCell(colNum+12).setCellValue("circulatingSupply");
+//        header.createCell(colNum+13).setCellValue("totalSupply");
         header.createCell(colNum+14).setCellValue("approvedSupply");
         header.createCell(colNum+15).setCellValue("firstSeen");
         header.createCell(colNum+16).setCellValue("change");
@@ -312,8 +312,8 @@ public class SaveToDisk implements SaveFileInterface{
                 bw.write("\t\"" + "volume\":" + "\"" + coin.getVolume() + "\",");bw.newLine();
                 bw.write("\t\"" + "marketCap\":" + "\"" + coin.getMarketCap() + "\",");bw.newLine();
                 bw.write("\t\"" + "price:\":" + "\"" + coin.getPrice() + "\",");bw.newLine();
-                bw.write("\t\"" + "circulatingSupply\":" + "\"" + coin.getCirculatingSupply() + "\",");bw.newLine();
-                bw.write("\t\"" + "totalSupply\":" + "\"" + coin.getTotalSupply() + "\",");bw.newLine();
+//                bw.write("\t\"" + "circulatingSupply\":" + "\"" + coin.getCirculatingSupply() + "\",");bw.newLine();
+//                bw.write("\t\"" + "totalSupply\":" + "\"" + coin.getTotalSupply() + "\",");bw.newLine();
                 bw.write("\t\"" + "approvedSupply\":" + "\"" + coin.getApprovedSupply() + "\",");bw.newLine();
                 bw.write("\t\"" + "firstSeen\":" + "\"" + coin.getFirstSeen() + "\",");bw.newLine();
                 bw.write("\t\"" + "change\":" + "\"" + coin.getChange() + "\",");bw.newLine();
