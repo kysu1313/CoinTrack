@@ -149,25 +149,17 @@ public class FXMLDocumentController implements Initializable {
                 this.mainStage.setScene(scene);
                 this.mainStage.show();
 //                addThemeListener();
-                // When You click on "X" will take you back to login page
+                // Program will close and user will be logged out
                 mainStage.setOnCloseRequest(new EventHandler() {
                     @Override
                     public void handle(Event event) {
-                        try {
                             System.out.println("Closing");
-                            FXMLDocumentController.mainStage = new Stage();
                             Tab1Controller.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-                            Parent root = FXMLLoader.load(Tab1Controller.class.getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-                            FXMLDocumentController.scene = new Scene(root);
-                             FXMLDocumentController.mainStage.setScene(FXMLDocumentController.scene);
-                             FXMLDocumentController.mainStage.show();
-                        } catch (IOException ex) {
-                            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            getCurrentStage().close();
                     }
                 });
                 coinTrack.CoinTrack.newStage.close();
-                
+
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -264,7 +256,7 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     /**
@@ -377,14 +369,14 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText(" Password must be 8 characters long and should contain a digit and an uppercase letter.");
             this.passwordEntry.requestFocus();
-        
+
         } else if (this.passwordRepeatEntry.getText().isEmpty()) {
             AlertMessages.showErrorMessage("Register User", "Repeat your password.");
 
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Repeat your password");
             this.passwordRepeatEntry.requestFocus();
-        
+
         } else if (!this.passwordEntry.getText().equals(this.passwordRepeatEntry.getText())) {
             AlertMessages.showErrorMessage("Register User", "Passwords must match.");
             this.passwordRepeatEntry.setPromptText("Passwords must match");
@@ -419,12 +411,12 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    
+
     public boolean isEmailValid(String email) {
         Matcher matcher = emailRegex.matcher(email);
         return matcher.find();
     }
-    
+
     public boolean isPasswordValid(String password) {
         if(password.length() < 8) {
             AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
@@ -432,17 +424,17 @@ public class FXMLDocumentController implements Initializable {
         }
         boolean isCapital = false;
         boolean isNumber = false;
-        
+
         for (int i = 0; i < password.length(); i++) {
            char ch = password.charAt(i);
-           
+
            if (Character.isUpperCase(ch)) {
                isCapital = true;
            } else if (Character.isDigit(ch)) {
                isNumber = true;
            }
         }
-        
+
         if (!isCapital || !isNumber) {
             AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
         }
