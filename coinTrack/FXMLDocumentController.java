@@ -144,7 +144,7 @@ public class FXMLDocumentController implements Initializable {
                 getCurrentStage().close();
                 this.mainStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
-                root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/views/FXMLDocument.fxml"));
                 this.scene = new Scene(root);
                 this.mainStage.setScene(scene);
                 this.mainStage.show();
@@ -185,7 +185,7 @@ public class FXMLDocumentController implements Initializable {
             getCurrentStage().close();
             this.registerStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.registerStage;
-            root = FXMLLoader.load(getClass().getResource("views/RegisterUserFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/views/RegisterUserFXML.fxml"));
             this.scene = new Scene(root);
             this.registerStage.setScene(scene);
             this.registerStage.show();
@@ -222,7 +222,7 @@ public class FXMLDocumentController implements Initializable {
                 getCurrentStage().close();
                 Stage stage = new Stage();
                 FXMLDocumentController.currentStage = stage;
-                root = FXMLLoader.load(getClass().getResource("views/FXMLLogin.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
                 this.scene = new Scene(root);
                 stage.setScene(this.scene);
                 stage.show();
@@ -248,7 +248,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("views/SaveFXML.fxml"));
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("/views/SaveFXML.fxml"));
             Scene saveScene = new Scene(root);
             saveStage = new Stage();
             saveStage.setScene(saveScene);
@@ -493,7 +493,7 @@ public class FXMLDocumentController implements Initializable {
             getCurrentStage().close();
             this.forgotPassStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.forgotPassStage;
-            root = FXMLLoader.load(getClass().getResource("views/ForgotPasswordFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/views/ForgotPasswordFXML.fxml"));
             this.scene = new Scene(root);
             this.forgotPassStage.setScene(this.scene);
             this.forgotPassStage.show();
@@ -519,7 +519,7 @@ public class FXMLDocumentController implements Initializable {
             getCurrentStage().close();
             this.forgotUserStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.forgotUserStage;
-            root = FXMLLoader.load(getClass().getResource("views/ForgotUsernameFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/views/ForgotUsernameFXML.fxml"));
             this.scene = new Scene(root);
             this.forgotUserStage.setScene(this.scene);
             this.forgotUserStage.show();
@@ -546,7 +546,7 @@ public class FXMLDocumentController implements Initializable {
         //    System.out.println(getCurrentStage());
             this.mainStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
-            root = FXMLLoader.load(getClass().getResource("views/FXMLLogin.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             this.mainStage.setScene(this.scene);
             this.mainStage.show();
@@ -625,7 +625,7 @@ public class FXMLDocumentController implements Initializable {
                 getCurrentStage().close();
                 this.resetPassStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.resetPassStage;
-                root = FXMLLoader.load(getClass().getResource("views/PasswordResetFXML.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/views/PasswordResetFXML.fxml"));
                 this.scene = new Scene(root);
                 this.resetPassStage.setScene(this.scene);
                 this.resetPassStage.show();
@@ -675,7 +675,7 @@ public class FXMLDocumentController implements Initializable {
                 getCurrentStage().close();
                 this.mainStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
-                root = FXMLLoader.load(getClass().getResource("views/FXMLLogin.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
                 this.scene = new Scene(root);
                 this.mainStage.setScene(this.scene);
                 this.mainStage.show();
