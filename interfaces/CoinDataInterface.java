@@ -1,6 +1,6 @@
 package interfaces;
 
-import coinClasses.SingleCoin;
+import models.SingleCoin;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
