@@ -5,7 +5,7 @@
  */
 package interfaces;
 
-import coinClasses.UserCoin;
+import models.UserCoin;
 import java.sql.Date;
 import java.util.LinkedList;
 

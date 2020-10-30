@@ -1,0 +1,100 @@
+Bitcoin,BTC,1
+Ethereum,ETH,2
+Tether USD,USDT,8
+XRP,XRP,3
+Bitcoin Cash,BCH,4
+Chainlink,LINK,59
+Polkadot,DOT***,71983
+Litecoin,LTC,7
+Bitcoin SV,BSV,4875
+Crypto.com Chain,CRO,10296
+Cardano,ADA,9
+EOS,EOS,5
+Binance Coin,BNB,14
+TRON,TRX,11
+Tezos,XTZ,18
+USDC,USDC,1760
+Stellar,XLM,6
+Monero,XMR,10
+OKB,OKB,1524
+NEO,NEO,15
+LEO,LEO*,14755
+Cosmos,ATOM*,4966
+Algorand,ALGO,14585
+Huobi Token,HT,71
+VeChain,VET,19
+NEM,XEM,17
+IOTA,MIOTA,12
+Dash,DASH,13
+yearn.finance,YFI,71246
+UMA,UMA,69380
+Ethereum Classic,ETC,16
+Aave,LEND,227
+Zcash,ZEC,21
+Compound,COMP**,70838
+OmiseGo,OMG,24
+Maker,MKR,22
+Synthetix Network,SNX,10883
+Ontology,ONT,26
+Theta Token,THETA,96
+TrueUSD,TUSD,274
+Numeraire,NMR,422
+Dogecoin,DOGE,20
+Basic Attention Token,BAT,46
+Orchid Protocol,OXT,64962
+0x,ZRX,25
+FTX Token,FTT**,62569
+Multi-Collateral Dai,DAI,68589
+Paxos Standard,PAX,1694
+Energy Web Token,EWT,63102
+Kusama,KSM,57612
+DigiByte,DGB,30
+Elrond,ERD,14936
+Nexus Mutual Token,NXM,71022
+QTUM,QTUM,29
+Waves,WAVES,43
+Kyber Network,KNC,104
+ICON,ICX,37
+BitTorrent,BTT*,10463
+Storj,STORJ,121
+BUSD ,BUSD,14066
+Hedera HashGraph,HBAR,63100
+Zilliqa,ZIL,34
+Lisk,LSK,27
+Bitica,BDCC,10621
+Ren,REN,229
+Band Protocol,BAND,63138
+Decred,DCR,28
+Decentraland,MANA,77
+Cryptonex,CNX,58
+Insight Chain,INB,5371
+Gas,GAS,102
+Siacoin,SC,38
+HUSD,HUSD,11169
+Loopring,LRC,72
+Bitcoin Gold,BTG,23
+Bitshares,BTS,32
+Celsius Network,CEL,4303
+Blockstack,STX**,64375
+Aragon,ANT,182
+CyberVein,CVT,223
+ZB Token,ZB,4157
+Ocean Protocol,OCEAN**,22698
+Ravencoin,RVN,125
+Bytom,BTM,45
+Enjin Coin,ENJ,126
+Nano,NANO,35
+Serum,SRM,71697
+Status,SNT,53
+Nervos Network,CKB,62558
+Golem,GNT,49
+Holo,HOT*,51
+KuCoin Shares,KCS,62
+MonaCoin,MONA,75
+Nest Protocol,NEST,69928
+Tether Gold,XAUT,66956
+DxChain Token,DX,543
+Bitcoin Diamond,BCD,36
+Tokenize Xchange,TKX,65077
+Power Ledger,POWR,92
+Revain,REV**,114

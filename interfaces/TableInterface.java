@@ -1,6 +1,6 @@
 package interfaces;
 
-import coinClasses.UserCoin;
+import models.UserCoin;
 import java.util.LinkedList;
 import javafx.scene.control.ListView;
 
