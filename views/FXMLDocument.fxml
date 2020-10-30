@@ -45,7 +45,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="923.0">
                      <children>
-                        <fx:include source="../tabControllers/Tab3.fxml" />
+                        <fx:include source="../views/Tab3.fxml" />
                      </children>
                   </AnchorPane>
               </content>
@@ -54,7 +54,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="../tabControllers/Tab1.fxml" />
+                        <fx:include source="../views/Tab1.fxml" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -62,7 +62,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="../tabControllers/Tab2.fxml" />
+                        <fx:include source="../views/Tab2.fxml" />
                      </children>
                   </AnchorPane>
               </content>
