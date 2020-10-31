@@ -116,7 +116,7 @@ public class Tab3Controller implements Initializable{
             userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
             linkedUserHistoryMap.add(userHistoryMap);
         });
-        
+
     }
 
     /**
@@ -164,7 +164,7 @@ public class Tab3Controller implements Initializable{
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        tas.createFriendList(this.friendsListT3);
+        tas.createFriendList(this.friendsListT3, 0);
     }
 
     /**
