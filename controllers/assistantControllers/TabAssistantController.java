@@ -40,7 +40,7 @@ import controllers.assistantControllers.Theme;
  * @author Kyle
  */
 public class TabAssistantController {
-    
+
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private static final String UNAME = FXMLDocumentController.uname;
     private TableClass tbl;
@@ -84,9 +84,10 @@ public class TabAssistantController {
         this.tbl.displayTable();
         this.tbl.colorChangeCol("#09de57", "#ff0000");
     }
-    
+
     /**
      * Display coin table on the Dashboard
+     *
      * @param tableView
      * @param coinList
      */
@@ -102,12 +103,12 @@ public class TabAssistantController {
         this.tbl = new TableClass(tableView, coinList, colNames);
         this.tbl.displayTable();
         this.tbl.colorChangeCol("#09de57", "#ff0000");
-        
+
     }
-    
+
     /**
-     * This creates the right click menu on the onlineUsers list.
-     * It also maps each button to an action.
+     * This creates the right click menu on the onlineUsers list. It also maps
+     * each button to an action.
      *
      * @param _username
      * @param _savedCoinsList
@@ -116,9 +117,10 @@ public class TabAssistantController {
     public void createCells(String _username, ListView _savedCoinsList, LinkedList<UserCoin> _savedCoins) {
         this.tbl.createTableCells(_username, _savedCoinsList, _savedCoins);
     }
-    
+
     /**
      * Save coin using coinID and username.
+     *
      * @param userName
      * @param coinID
      */
@@ -129,9 +131,10 @@ public class TabAssistantController {
         }
         dbConn.close();
     }
-    
+
     /**
      * Pull saved coin data from database and add it to the accordion.
+     *
      * @param savedCoinsList
      * @param savedCoins
      */
@@ -142,11 +145,14 @@ public class TabAssistantController {
 
     /**
      * Change a users online status. i.e. when they log on/off .
+     *
      * @param _uname
      * @param _status
      */
     public void setOnlineStatus(String _uname, int _status) {
-        if(DEBUG){System.out.println("Update " + _uname + "'s online status");}
+        if (DEBUG) {
+            System.out.println("Update " + _uname + "'s online status");
+        }
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(_uname, _status);
         conn.close();
@@ -154,6 +160,7 @@ public class TabAssistantController {
 
     /**
      * Testing this method using piechart class.
+     *
      * @param coinList
      * @param pieChartCoins
      * @param comboBox
@@ -167,14 +174,15 @@ public class TabAssistantController {
 
     /**
      * Make pie chart for the dashboard.
+     *
      * @param coinList
      * @param pieChart
      */
-    public void PieChartDash(LinkedList<SingleCoin> coinList, PieChart pieChart){
+    public void PieChartDash(LinkedList<SingleCoin> coinList, PieChart pieChart) {
         PieChartClass pcc = new PieChartClass(coinList, pieChart);
         pcc.displayGraph();
     }
-    
+
     public void candleChart(Pane _pane) throws ParseException {
         CandleChartClass ccc = new CandleChartClass(_pane);
 //        CustomCandleChart newCcc = new CustomeCandleChart(_pane);
@@ -202,7 +210,7 @@ public class TabAssistantController {
         }
         pieChart.setData(pieChartData);
     }
-    
+
     /**
      * Call database returning a list of all users who are online.
      */
@@ -211,7 +219,7 @@ public class TabAssistantController {
         ListClass lcc = new ListClass(UNAME);
         lcc.populateOnlineUsers(onlineUsersList);
     }
-    
+
     /**
      * Call database returning a list of friends.
      */
@@ -223,34 +231,38 @@ public class TabAssistantController {
             friendsListT2.getItems().add(friendList.get(i));
         }
     }
-    
+
     public void multiBarChart(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap, int _numCoins, LinkedList<UserCoin> _userCoinList, TextArea _textArea) {
         BarChartClass bcc = new BarChartClass(_barChart, _linkedMap, _numCoins, _userCoinList, _textArea);
         bcc.displayGraph();
     }
 
     public void singleBarChart(LinkedHashMap<Double, String> _singleHistoryMap,
-                            String _timeSelection, BarChart _bc, TextArea _textArea) {
+            String _timeSelection, BarChart _bc, TextArea _textArea) {
         BarChartClass bcc = new BarChartClass(_singleHistoryMap, _timeSelection, _bc, _textArea);
         bcc.displayGraph();
     }
 
     /**
-     * This creates the right click menu on the onlineUsers list. 
-     * It also maps each button to an action.
+     * This creates the right click menu on the onlineUsers list. It also maps
+     * each button to an action.
      */
     public void listCells(ListView onlineUsersListT2, String uname) {
         ListClass lcc = new ListClass(uname);
-        lcc.populateFriends(onlineUsersListT2);
+        lcc.populateFriends(onlineUsersListT2, 0);
     }
-    
+
     public void createTable(TableView _tableDash, LinkedList<SingleCoin> _userSingleCoins) {
         TabAssistantController tas = new TabAssistantController();
         tas.coinTableDash(_tableDash, _userSingleCoins);
     }
-    
-    public void createFriendList(ListView friendsListT2) {
+
+    public void createFriendList(ListView friendsListT2, int _code) {
         ListClass lc = new ListClass(UNAME);
-        lc.populateFriends(friendsListT2);
+        if (_code == 0) {
+            lc.populateFriends(friendsListT2, 0);
+        } else {
+            lc.populateFriends(friendsListT2, 1);
+        }
     }
 }

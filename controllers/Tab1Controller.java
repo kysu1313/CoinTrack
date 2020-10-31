@@ -270,7 +270,7 @@ public class Tab1Controller implements Initializable{
         ast.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
         ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }
-    
+
     /**
      * Update coin prices in the database.
      */
@@ -316,7 +316,7 @@ public class Tab1Controller implements Initializable{
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        tas.createFriendList(this.friendsList);
+        tas.createFriendList(this.friendsList, 0);
     }
 
     /**
@@ -345,13 +345,13 @@ public class Tab1Controller implements Initializable{
     public void populateSavedCoins() {
         this.tas.populateSavedCoins(savedCoinsList, savedCoins);
     }
-    
+
     /**
-     * Populates the currency changer drop down combo box located 
+     * Populates the currency changer drop down combo box located
      * under the "edit" button in the menu bar.
      */
     private void populateCurrencyDropdown() {
-        
+
         try {
             FixerApi fca = new FixerApi();
             HashMap<String,String> map = fca.getSupportedSymbols();

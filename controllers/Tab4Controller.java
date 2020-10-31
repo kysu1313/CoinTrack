@@ -40,7 +40,7 @@ public class Tab4Controller implements Initializable {
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        tas.createFriendList(this.friendsList);
+        tas.createFriendList(this.friendsList, 1);
     }
 
     /**
