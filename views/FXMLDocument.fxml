@@ -67,6 +67,14 @@
                   </AnchorPane>
               </content>
             </Tab>
+            <Tab fx:id="tab4" text="Shared Coins">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <fx:include source="../views/Tab4.fxml" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
         </tabs>
       </TabPane>
     </children>
