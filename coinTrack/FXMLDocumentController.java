@@ -56,6 +56,7 @@ import controllers.AlertMessages;
 import controllers.Tab1Controller;
 import static controllers.Tab1Controller.DEBUG;
 import controllers.assistantControllers.Theme;
+import models.EmailValidation;
 
 /**
  *
@@ -207,7 +208,9 @@ public class FXMLDocumentController implements Initializable {
         }
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
+
             String toEmail3 = this.emailEntry.getText();
+            EmailValidation test = new EmailValidation(toEmail3);
             ConnectToDatabase conn = new ConnectToDatabase();
             if (conn.emailExists(toEmail3)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail3);
