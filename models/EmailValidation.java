@@ -17,8 +17,13 @@ public class EmailValidation {
         String url = "https://email-checker.p.rapidapi.com/verify/v1?email=" + email;
         ConnectToApi api = new ConnectToApi(url, this.web, this.key);
         JSONObject results = api.getJsonObject();
-        //System.out.println(results.toString());
         test = results.getString("status");
     }
+     public String getTest(){
+         return test;
+     }
+     public String setTest(String test){
+         return test;
+     }
 
 }
