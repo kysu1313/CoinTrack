@@ -23,7 +23,6 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -208,9 +207,7 @@ public class FXMLDocumentController implements Initializable {
         }
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
-
-            String toEmail3 = this.emailEntry.getText();
-            EmailValidation test = new EmailValidation(toEmail3);
+            String toEmail3 = this.emailEntry.getText();;
             ConnectToDatabase conn = new ConnectToDatabase();
             if (conn.emailExists(toEmail3)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail3);
@@ -234,7 +231,7 @@ public class FXMLDocumentController implements Initializable {
             }}
         } else {
             this.registerInfo.setFill(Color.RED);
-            this.registerInfo.setText("Username or Email already taken");
+            this.registerInfo.setText("Please follow on screen instructions");
         }
     }
 
@@ -346,15 +343,18 @@ public class FXMLDocumentController implements Initializable {
      */
     private boolean checkGoodInput() {
         boolean isGood = false;
+            String toEmail3 = this.emailEntry.getText();
+            EmailValidation test = new EmailValidation(toEmail3);
+            test.getTest();
         if (this.emailEntry.getText().isEmpty()) {
             AlertMessages.showErrorMessage("Register User", "Enter an email address.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter an email address");
             this.emailEntry.requestFocus();
-        } else if (!isEmailValid(this.emailEntry.getText().trim())) {
-            AlertMessages.showErrorMessage("Register User", "Email format is not correct.");
+        } else if ("invalid".equals(test.getTest())) {
+            AlertMessages.showErrorMessage("Register User", "Email is not valid.");
             this.registerInfo.setFill(Color.RED);
-            this.registerInfo.setText("Email format is not correct.");
+            this.registerInfo.setText("Email is not valid.");
             this.emailEntry.requestFocus();
         } else if (usernameEntry.getText().isEmpty()) {
             AlertMessages.showErrorMessage("Register User", "Enter a username.");
@@ -413,11 +413,6 @@ public class FXMLDocumentController implements Initializable {
                 scene.getStylesheets().add(theme.getTheme());
             }
         });
-    }
-
-    public boolean isEmailValid(String email) {
-        Matcher matcher = emailRegex.matcher(email);
-        return matcher.find();
     }
 
     public boolean isPasswordValid(String password) {
@@ -568,9 +563,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRecoveryEmail(ActionEvent event) {
         String toEmail = this.recoveryEmail.getText();
+            EmailValidation test = new EmailValidation(toEmail);
+            test.getTest();
         ConnectToDatabase conn = new ConnectToDatabase();
-        if (!isEmailValid(this.recoveryEmail.getText().trim())) {
-            AlertMessages.showErrorMessage("Forgot Password", "Email format is not correct.");
+        if (test.getTest() == "invalid") {
+            AlertMessages.showErrorMessage("Forgot Password", "Email is not valid.");
             this.recoveryEmail.requestFocus();
             return;
         }
