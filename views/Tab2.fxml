@@ -56,10 +56,6 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Text>
-            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT2" text="Log Out" translateX="70.0">
-               <tooltip>
-                  <Tooltip text="Log out changing your online status" />
-               </tooltip></Button>
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" orientation="VERTICAL" prefHeight="748.0" prefWidth="1183.0">
