@@ -164,22 +164,22 @@ public class Tab1Controller implements Initializable{
         txtAreaT1.setText("");
     }
 
-    @FXML
-    private void handleLogOutT1(ActionEvent event) {
-        if(DEBUG){System.out.println("logging out");}
-        Parent root;
-        try {
-            Tab1Controller.mainPage1 = new Stage();
-            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-            this.scene = new Scene(root);
-            Tab1Controller.mainPage1.setScene(this.scene);
-            Tab1Controller.mainPage1.show();
-            closeOldStage();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    @FXML
+//    private void handleLogOutT1(ActionEvent event) {
+//        if(DEBUG){System.out.println("logging out");}
+//        Parent root;
+//        try {
+//            Tab1Controller.mainPage1 = new Stage();
+//            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+//            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+//            this.scene = new Scene(root);
+//            Tab1Controller.mainPage1.setScene(this.scene);
+//            Tab1Controller.mainPage1.show();
+//            closeOldStage();
+//        } catch (IOException ex) {
+//            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     /**
      * Reset to default currency.

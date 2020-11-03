@@ -132,7 +132,6 @@
       <ToolBar layoutY="747.0" prefHeight="40.0" prefWidth="1183.0">
         <items>
           <Button mnemonicParsing="false" onAction="#refresh" text="Refresh" />
-            <Button fx:id="logoutBtn" mnemonicParsing="false" text="Logout" />
             <Text fx:id="textLabel" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" translateX="400.0">
                <font>
                   <Font name="System Bold" size="18.0" />

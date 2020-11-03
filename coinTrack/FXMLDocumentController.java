@@ -54,6 +54,7 @@ import javafx.util.StringConverter;
 import controllers.AlertMessages;
 import controllers.Tab1Controller;
 import static controllers.Tab1Controller.DEBUG;
+import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.Theme;
 import models.EmailValidation;
 
@@ -758,6 +759,25 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+    }
+    
+    @FXML
+    public void logout() {
+        System.out.println("Logourt");
+         Parent root;
+        try {
+            coinTrack.FXMLDocumentController.mainStage.close();
+            FXMLDocumentController.mainStage = new Stage();
+            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FXMLLogin.fxml"));
+            this.scene = new Scene(root);
+            mainStage.setScene(this.scene);
+            mainStage.show();
+            this.currentStage = mainStage;
+    
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

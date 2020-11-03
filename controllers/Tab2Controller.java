@@ -272,22 +272,22 @@ public class Tab2Controller implements Initializable{
      * Takes you back to log in screen.
      * @param event
      */
-    @FXML
-    private void handleLogOutT2(ActionEvent event) {
-        if (DEBUG){System.out.println("logging out");}
-        Parent root;
-            try {
-                Tab2Controller.mainPage2 = new Stage();
-                this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-                this.scene = new Scene(root);
-                Tab2Controller.mainPage2.setScene(this.scene);
-                Tab2Controller.mainPage2.show();
-                closeOldStage();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-    }
+//    @FXML
+//    private void handleLogOutT2(ActionEvent event) {
+//        if (DEBUG){System.out.println("logging out");}
+//        Parent root;
+//            try {
+//                Tab2Controller.mainPage2 = new Stage();
+//                this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+//                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
+//                this.scene = new Scene(root);
+//                Tab2Controller.mainPage2.setScene(this.scene);
+//                Tab2Controller.mainPage2.show();
+//                closeOldStage();
+//            } catch (IOException ex) {
+//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//    }
 
     /**
      * Change a users online status. i.e. when they log off .

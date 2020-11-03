@@ -38,10 +38,6 @@
                </tooltip></Button>
               <TextField fx:id="searchFieldT1" />
               <Button fx:id="searchBtnT1" accessibleHelp="Search for a specific cryptocurrency" disable="true" mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-            <Button fx:id="logOutBtn" mnemonicParsing="false" onAction="#handleLogOutT1" text="Log Out" translateX="150.0">
-               <tooltip>
-                  <Tooltip text="Log out changing your online status" />
-               </tooltip></Button>
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" layoutY="-1.0" orientation="VERTICAL" prefHeight="716.0" prefWidth="1183.0">
