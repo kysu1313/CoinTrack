@@ -249,7 +249,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("/views/SaveFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/views/SaveFXML.fxml"));
             Scene saveScene = new Scene(root);
             saveStage = new Stage();
             saveStage.setScene(saveScene);
