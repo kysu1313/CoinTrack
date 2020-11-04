@@ -94,10 +94,10 @@ public class Tab3Controller implements Initializable{
      * Get users saved coins from database then create SingleCoin objects
      * for each.
      */
-    private void getCoinList() {
+    private void getCoinList(String name) {
         ConnectToDatabase conn = new ConnectToDatabase();
-        this.userCoinList = conn.getSavedCoins(USERNAME);
-        this.friendList = conn.getFriendList(USERNAME);
+        this.userCoinList = conn.getSavedCoins(name);
+        this.friendList = conn.getFriendList(name);
         this.onlineUserList = conn.getOnlineUsers();
         conn.close();
         CoinRankApi cri = new CoinRankApi();
@@ -250,7 +250,7 @@ public class Tab3Controller implements Initializable{
         this.savedCoins = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
         this.textLabel.setText("Hello " + USERNAME);
-        getCoinList();
+        getCoinList(USERNAME);
         populateSearch();
         createTable();
         createPieChart();
