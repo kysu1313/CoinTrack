@@ -12,11 +12,9 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TitledPane;
 import models.UserCoin;
 
 /**
@@ -30,11 +28,9 @@ public class Tab4Controller implements Initializable {
     public static TabAssistantController tas;
     private LinkedList<UserCoin> savedCoins;
     private LinkedList<String> friendList;
-    //@FXML private Accordion accordianT1;
-    //@FXML private TitledPane savedTradesT1;
     @FXML private ListView savedCoinsList;
     @FXML private ListView friendsList;
-    @FXML private TableView<?> tableViewT1;
+    @FXML private TableView tableViewT1;
 
     /**
      * Call database returning a list of friends.
