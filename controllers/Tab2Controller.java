@@ -124,7 +124,6 @@ public class Tab2Controller implements Initializable{
     @FXML private ComboBox<String> comboBox;
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
-    @FXML private Text messageText;
     @FXML private Pane candlePane;
 
     // Bar Chart
@@ -570,10 +569,8 @@ public class Tab2Controller implements Initializable{
         this.tas = new TabAssistantController();
         // Save uname from login page.
         String uname = coinTrack.FXMLDocumentController.uname;
-        messageText.setText("Hello " + uname);
         this.uname = coinTrack.FXMLDocumentController.uname;
         System.out.println(DEBUG);
-        messageText.setText("Hello " + uname);
         linesToGraph = new LinkedList<>();
         seriesList = new LinkedList<>();
         coordsLabel = new Label();

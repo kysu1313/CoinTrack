@@ -21,8 +21,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane id="AnchorPane" prefHeight="822.0" prefWidth="1183.0" stylesheets="styles/Tab2Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Tab2Controller">
@@ -51,11 +49,6 @@
                   <Tooltip text="Select wether you want to add or remove the entered coin from the graph" />
                </tooltip></ComboBox>
             <Button fx:id="btnRefresh" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
-            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello " textAlignment="CENTER" translateX="30.0">
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Text>
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.8770161290322581" orientation="VERTICAL" prefHeight="748.0" prefWidth="1183.0">

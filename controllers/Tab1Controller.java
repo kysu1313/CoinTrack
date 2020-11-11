@@ -98,7 +98,6 @@ public class Tab1Controller implements Initializable{
     @FXML private WebView webViewT1;
     @FXML private CheckBox searchCoins;
     @FXML private CheckBox searchGlobalStats;
-    @FXML private Text messageText;
     @FXML private ToolBar bottomToolbar;
     @FXML private Button saveBtnT1;
 
@@ -393,7 +392,6 @@ public class Tab1Controller implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         this.tas = new TabAssistantController();
         this.uname = coinTrack.FXMLDocumentController.uname;
-        this.messageText.setText("Hello " + uname);
 //        this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();
         this.coinList = new LinkedList<>();
