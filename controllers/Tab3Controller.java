@@ -60,7 +60,6 @@ public class Tab3Controller implements Initializable{
     @FXML private ListView onlineUsersListT3;
     @FXML private VBox vbox;
     @FXML private TextField searchField;
-    @FXML private Text textLabel;
 
     @FXML private void handleSearch(ActionEvent event) {
         System.out.println("nothing here yet");
@@ -249,7 +248,6 @@ public class Tab3Controller implements Initializable{
         this.onlineUserList = new LinkedList<>();
         this.savedCoins = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
-        this.textLabel.setText("Hello " + USERNAME);
         getCoinList(USERNAME);
         populateSearch();
         createTable();

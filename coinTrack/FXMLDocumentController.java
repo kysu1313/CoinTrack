@@ -118,7 +118,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private TextField fileName;
     @FXML private RadioButton saveSavedCoins;
     @FXML private RadioButton saveAllCoins;
-
+    @FXML private Label lblWelcomeMessage;
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b"); // nice regex
     //========== Action Handlers ==========
     /**
@@ -758,7 +758,10 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage; 
+        if (this.lblWelcomeMessage != null) {
+            this.lblWelcomeMessage.setText("Hello " + uname);
+        }
     }
     
     @FXML
