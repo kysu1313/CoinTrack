@@ -403,6 +403,7 @@ public class ConnectToDatabase implements DatabaseInterface{
             // Insert statement, using prepared statements
             String query = "SELECT * from users where username = '" + _username + "'";
             // create the mysql insert preparedstatement
+            System.out.println(_username + " user");
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()) {

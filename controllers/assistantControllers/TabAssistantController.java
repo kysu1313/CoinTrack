@@ -34,6 +34,7 @@ import models.viewModels.PieChartClass;
 import models.viewModels.ListClass;
 import models.viewModels.TableClass;
 import controllers.assistantControllers.Theme;
+import models.viewModels.TableClassFriendsCoins;
 
 /**
  *
@@ -44,6 +45,7 @@ public class TabAssistantController {
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private static final String UNAME = FXMLDocumentController.uname;
     private TableClass tbl;
+    private TableClassFriendsCoins tblFriends;
     private static Theme theme;
     private static Scene scene = FXMLDocumentController.scene;
 
@@ -106,6 +108,21 @@ public class TabAssistantController {
 
     }
 
+    /**
+     * This method builds the table for friends coin
+     * @param tableView 
+     */
+    public void coinTableFriendsCoin(TableView tableView) {
+        this.tblFriends = new TableClassFriendsCoins(tableView);
+    }
+    
+    /**
+     * This method is used to populate the table with the friend's saved coins list.
+     * @param coinList 
+     */
+    public void displayFriendsCoins(LinkedList<UserCoin> coinList) {
+         this.tblFriends.displayTable(coinList);
+    }
     /**
      * This creates the right click menu on the onlineUsers list. It also maps
      * each button to an action.
@@ -257,6 +274,15 @@ public class TabAssistantController {
         tas.coinTableDash(_tableDash, _userSingleCoins);
     }
 
+    /**
+     * THIS calls and create the table object.
+     * @param _tableDash 
+     */
+    public void createTableFriendsCoins(TableView _tableDash) {
+        TabAssistantController tas = new TabAssistantController();
+        tas.coinTableFriendsCoin(_tableDash);
+    }
+    
     public void createFriendList(ListView friendsListT2, int _code) {
         ListClass lc = new ListClass(UNAME);
         if (_code == 0) {

@@ -37,6 +37,7 @@ public class ListClass implements ListClassInterface {
     public static String friendName;
     private ListView list;
     private LinkedList<UserCoin> savedCoins;
+    private LinkedList<UserCoin> savedCoinsFriends;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
 
@@ -202,9 +203,11 @@ public class ListClass implements ListClassInterface {
                 shareCoins.setOnAction(event -> {
                     ConnectToDatabase conn = new ConnectToDatabase();
                     this.friendName = cell.getItem();
-                    this.savedCoins = conn.getSavedCoins(friendName);
+                    this.savedCoinsFriends = conn.getSavedCoins(friendName);
+                    
+                    Tab4Controller.tas.displayFriendsCoins(savedCoinsFriends);
                     System.out.println(friendName);
-                    System.out.println(savedCoins);
+                    System.out.println(savedCoinsFriends);
                     conn.close();
                 });
                 contextMenu.getItems().add(shareCoins);
@@ -286,6 +289,7 @@ public class ListClass implements ListClassInterface {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY) {
+                    System.out.println("Clicked");
                     cmu.show(_list, event.getScreenX(), event.getScreenY());
                 }
             }
