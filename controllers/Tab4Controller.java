@@ -14,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import models.UserCoin;
 
 /**
@@ -31,7 +33,7 @@ public class Tab4Controller implements Initializable {
     @FXML private ListView savedCoinsList;
     @FXML private ListView friendsList;
     @FXML private TableView tableViewT1;
-
+    @FXML private TableView tableViewT11;
     /**
      * Call database returning a list of friends.
      */
@@ -57,5 +59,6 @@ public class Tab4Controller implements Initializable {
         this.tas = new TabAssistantController();
         populateSavedCoins();
         addFriendsToList();
-    }
+        this.tas.coinTableFriendsCoin(tableViewT11);
+    } 
 }
