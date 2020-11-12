@@ -27,7 +27,7 @@ import javafx.scene.input.ScrollEvent;
  * @author Kyle
  */
 public class BarChartClass implements interfaces.GraphInterface, interfaces.BarChartInterface{
-    
+
     private final static Tab CURR_TAB = FXMLDocumentController.currTab;
     private BarChart barChart;
     private LinkedList<LinkedHashMap<Double, String>> linkedMap;
@@ -39,7 +39,7 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     private LinkedHashMap<Double, String> singleHistoryMap;
     private String timeSelection;
     private TextArea textArea;
-    
+
     /**
      * Constructor for bar chart used in Tab 2.
      *
@@ -59,14 +59,13 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
         this.barChart.getData().clear();
         multiCoinData();
     }
-    
+
     /**
      * Constructor for bar chart used in Tab 3, "dashboard".
-     * @param _barChartData
-     * @param _series
      * @param _singleHistoryMap
      * @param _timeSelection
      * @param _bc
+     * @param _textArea
      */
     public BarChartClass(LinkedHashMap<Double, String> _singleHistoryMap,
                             String _timeSelection, BarChart _bc, TextArea _textArea) {
@@ -225,5 +224,5 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     public LinkedList<String> getElements() {
         return null;
     }
-    
+
 }

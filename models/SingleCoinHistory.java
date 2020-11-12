@@ -2,7 +2,7 @@ package models;
 /**
  * This class implements the historical data
  * of a single crypto currency.
- * 
+ *
  * - Kyle
  */
 
@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 
 public class SingleCoinHistory {
-    
+
     private final JSONArray OBJECT;
     private final int COIN_ID;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
@@ -20,10 +20,10 @@ public class SingleCoinHistory {
 
     /**
      * Constructor.
-     * This simply takes the JSONArray and id, 
-     * and saves the price and timestamp, 
+     * This simply takes the JSONArray and id,
+     * and saves the price and timestamp,
      * and adds the data to a linkedHashMap
-     * 
+     *
      * @param _jar
      * @param _id
      */
@@ -42,9 +42,9 @@ public class SingleCoinHistory {
             this.coinList.put(price, date);
         }
     }
-    
+
     // ========== GETTERS ==========
-    
+
     /**
      * Returns the LinkedHashMap of price and date
      * @return coinList
@@ -52,7 +52,7 @@ public class SingleCoinHistory {
     public LinkedHashMap<Double, String> getCoinList() {
         return this.coinList;
     }
-    
+
     /**
      * Returns the id of the specific crypto currency
      * @return coinId
@@ -60,5 +60,5 @@ public class SingleCoinHistory {
     public int getCoinId() {
         return this.COIN_ID;
     }
-    
+
 }
