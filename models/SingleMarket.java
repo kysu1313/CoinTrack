@@ -5,9 +5,10 @@ package models;
  * A market is an exchange for one or many types of cryptocurrencies.
  * @author Kyle
  */
+import interfaces.GlobalClassInterface;
 import org.json.JSONObject;
 
-public class SingleMarket {
+public class SingleMarket implements GlobalClassInterface{
     
     JSONObject arr;
     
@@ -48,6 +49,11 @@ public class SingleMarket {
     
     public void setBaseSymbol() {
         this.baseSymbol = arr.getString("baseSymbol");
+    }
+
+    @Override
+    public String getClassName() {
+        return "SingleMarket";
     }
     
 }

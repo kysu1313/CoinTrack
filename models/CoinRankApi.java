@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface {
+public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface, interfaces.GenericClassInterface {
 
     private Thread t;
     private HttpResponse<JsonNode> response;
@@ -29,6 +29,8 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
     private LinkedList<SingleCoin> coinList;
     private LinkedHashMap<String, String> namePrice;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
+    private static LinkedList<SingleCoin> staticCoinList;
+    private GenericLinkedList genericList;
 
     /**
      * Constructor, Automatically makes a call to the "coins" url and parses the
@@ -54,6 +56,7 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
             this.stats = data.getJSONObject("stats");
             this.coins = data.getJSONArray("coins");
             this.coinList = getCoins();
+            staticCoinList = getCoins();
     }
 
     /**
@@ -90,9 +93,9 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
         return t.isAlive();
     }
 
-    
+
     // ========== GETTERS ==========
-    
+
     /**
      * Update the coins in the database to their current prices, volume, etc.
      * @param _coinList
@@ -109,10 +112,9 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
                             coin.getNumberOfMarkets(), coin.getNumberOfExchanges(),
                             coin.getVolume(), coin.getMarketCap(), coin.getPrice(), 
                             coin.getChange(), coin.getRank());
-            
         });
     }
-    
+
     /**
      * Creates a LinkedList of each coin in the "coins" json array.
      * @return
@@ -152,10 +154,28 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
         return this.coinList;
     }
 
+    @Override
+    public LinkedList<Object> getGenericCoinList() {
+        LinkedList<Object> list = new LinkedList<>();
+        this.coinList.forEach((item) -> {
+            Object obj = item;
+            list.add(obj);
+        });
+        return list;
+    }
+
+    /**
+     * Return the static list of SingleCoin objects.
+     * @return
+     */
+    public static LinkedList<SingleCoin> getStaticCoinList(){
+        return staticCoinList;
+    }
+
     /**
      * Creates a LinkedHashMap of coin names and
      * their prices.
-     * @return 
+     * @return
      */
     @Override
     public LinkedHashMap<String, String> getNamePrice() {

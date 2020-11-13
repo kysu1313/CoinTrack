@@ -1,11 +1,13 @@
 package models;
 
+import interfaces.GlobalClassInterface;
+
 /**
  * This class represents a coin that has been saved by a user.
  * This class is used when pulling data from the database.
  * @author Parth
  */
-public class UserCoin {
+public class UserCoin implements GlobalClassInterface{
     private String symbol;
     private String name;
     private String username;
@@ -64,6 +66,9 @@ public class UserCoin {
     public String toString() {
         return  symbol + "  " + name;
     }
-    
-    
+
+    @Override
+    public String getClassName() {
+        return "UserCoin";
+    }
 }

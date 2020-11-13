@@ -5,11 +5,6 @@ import models.UserCoin;
 import interfaces.TableInterface;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Spliterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -26,9 +21,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
-import controllers.Tab1Controller;
 import static controllers.Tab1Controller.DEBUG;
 import controllers.assistantControllers.TabAssistantController;
+import models.CoinRankApi;
+import models.SingleMarket;
 
 /**
  * General class for making & displaying tables.
@@ -42,11 +38,45 @@ public class TableClass implements TableInterface{
     private final long CURRENCY_RATE;
     private final LinkedList<String> COLUMN_NAMES;
     private final WebView WEB_VIEW;
+    private CoinRankApi cri;
     private LinkedList<SingleCoin> coinList;
+    private static LinkedList<SingleCoin> staticCoinList;
     // List of columns to be added
     private LinkedList<TableColumn> cols;
+    private ObservableList<Object> obvObjList;
+
     private ObservableList<SingleCoin> obvList;
     private TableColumn changeCol;
+    private Class myClass;
+    private LinkedList<Object> objList;
+
+
+    public TableClass(String _classType, LinkedList<Object> _objList, TableView _tableViewT1, WebView _webView, LinkedList<String> _columnNames, long _currencyRate) {
+
+//        this.cri = new CoinRankApi();
+//        this.cri.join();
+//        this.coinList = this.cri.getCoinList();
+
+        if(_classType.equals("SingleCoin")){
+            this.myClass = SingleCoin.class;
+        } else if(_classType.equals("UserCoin")){
+            this.myClass = UserCoin.class;
+        } else if (_classType.equals("SingleMarket")){
+            this.myClass = SingleMarket.class;
+        }
+
+        this.objList = _objList;
+
+        this.TABLE_VIEW = _tableViewT1;
+        this.CURRENCY = null;
+        this.COLUMN_NAMES = _columnNames;
+        this.CURRENCY_RATE = _currencyRate;
+        this.WEB_VIEW = _webView;
+        staticCoinList = CoinRankApi.getStaticCoinList();
+        this.coinList = null;
+        this.cols = new LinkedList<>();
+        buildTableGeneral();
+    }
 
     /**
      * The table created by this constructor includes a WebView that displays
@@ -62,11 +92,19 @@ public class TableClass implements TableInterface{
      * @param _currencyRate
      */
     public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webView, LinkedList<String> _columnNames, String _currency, long _currencyRate) {
+
+//        this.cri = new CoinRankApi();
+//        this.cri.join();
+//        this.coinList = this.cri.getCoinList();
+
+
+
         this.TABLE_VIEW = _tableViewT1;
         this.CURRENCY = _currency;
         this.COLUMN_NAMES = _columnNames;
         this.CURRENCY_RATE = _currencyRate;
         this.WEB_VIEW = _webView;
+        staticCoinList = CoinRankApi.getStaticCoinList();
         this.coinList = _coinList;
         this.cols = new LinkedList<>();
         buildTable();
@@ -90,6 +128,26 @@ public class TableClass implements TableInterface{
         this.coinList = _coinList;
         this.cols = new LinkedList<>();
         buildTable();
+    }
+
+    private void buildTableGeneral() {
+//        Class<SingleCoin> sclass = SingleCoin.class;
+        this.COLUMN_NAMES.forEach((item) -> {
+            TableColumn col1 = new TableColumn(item);
+            this.cols.add(col1);
+        });
+        Field[] params = this.myClass.getDeclaredFields();
+        this.cols.forEach((item) -> {
+            for (Field fld : params) {
+                if (item.getText().toLowerCase().replace(" ", "").equals(fld.getName())) {
+                    item.setCellValueFactory(new PropertyValueFactory<>(item.getText().toLowerCase().replace(" ", "")));
+                }
+            }
+        });
+        setCurrency();
+        // Add columns to tableView
+        this.TABLE_VIEW.getColumns().addAll(this.cols);
+        this.obvObjList = FXCollections.observableArrayList(this.objList);
     }
 
     /**
@@ -125,6 +183,8 @@ public class TableClass implements TableInterface{
 
     /**
      * Add red / green colored text to indicate price changes.
+     * @param _colorUp
+     * @param _colorDown
      */
     @Override
     public void colorChangeCol(String _colorUp, String _colorDown) {

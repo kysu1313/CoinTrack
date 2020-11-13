@@ -7,6 +7,7 @@ package interfaces;
 
 import models.UserCoin;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -38,7 +39,7 @@ public interface DatabaseInterface {
     public String getEmailFromUsername(String _username);
     public String getUsernameFromEmail(String _email);
     public void changePassword(String _uname, String _newPassword);
-    public boolean getUserInfo(String _userName, String _userPass);
+    public HashMap<String, String> getUserInfo(String _userName);
     public String getSHA256(String _input);
     public void close();
     public LinkedList<UserCoin> getSavedCoins(String username);
