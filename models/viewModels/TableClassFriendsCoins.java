@@ -16,12 +16,13 @@ import models.UserCoin;
 
 /**
  *
- * @author 
+ * @author
  */
 public class TableClassFriendsCoins {
- private final TableView TABLE_VIEW;
+
+    private final TableView TABLE_VIEW;
     private ObservableList<UserCoin> obvList;
-    
+
 //    Instantiating the table view object
     public TableClassFriendsCoins(TableView tableView) {
         this.TABLE_VIEW = tableView;
@@ -32,26 +33,28 @@ public class TableClassFriendsCoins {
      * This method creates the table columns and add it to table view
      */
     private void buildTable() {
-        TableColumn<UserCoin, String> colID = new TableColumn<>("Coin Id");
-        TableColumn<UserCoin, String> colSymbol = new TableColumn<>("Symbol");
         TableColumn<UserCoin, String> colName = new TableColumn<>("Name");
+        TableColumn<UserCoin, String> colSymbol = new TableColumn<>("Symbol");
+        TableColumn<UserCoin, String> colPrice = new TableColumn<>("Price");
+        TableColumn<UserCoin, String> colID = new TableColumn<>("Coin Id");
 //        TableColumn<UserCoin, String> colUserID = new TableColumn<>("User Id");
-
-        colID.setCellValueFactory(new PropertyValueFactory<>("coinID"));
-        colSymbol.setCellValueFactory(new PropertyValueFactory<>("symbol"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        colSymbol.setCellValueFactory(new PropertyValueFactory<>("symbol"));
+        colPrice.setCellValueFactory(new PropertyValueFactory<>("Price"));
+        colID.setCellValueFactory(new PropertyValueFactory<>("coinID"));
 //        colUserID .setCellValueFactory(new PropertyValueFactory<>("userID"));
-        
-        colID.setPrefWidth(150);
-        colSymbol.setPrefWidth(150);
-        colName.setPrefWidth(150);
-              
-        this.TABLE_VIEW.getColumns().addAll(colID, colSymbol, colName);
-       
+        colID.setPrefWidth(100);
+        colSymbol.setPrefWidth(100);
+        colName.setPrefWidth(100);
+        colPrice.setPrefWidth(100);
+        this.TABLE_VIEW.getColumns().addAll(colName, colSymbol, colPrice, colID);
     }
+
     /**
-     * This method displays the coin list that is passed as a parameter in table.
-     * @param coinList 
+     * This method displays the coin list that is passed as a parameter in
+     * table.
+     *
+     * @param coinList
      */
     public void displayTable(LinkedList<UserCoin> coinList) {
         this.obvList = FXCollections.observableArrayList(coinList);

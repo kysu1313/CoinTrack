@@ -34,6 +34,7 @@ import models.viewModels.PieChartClass;
 import models.viewModels.ListClass;
 import models.viewModels.TableClass;
 import controllers.assistantControllers.Theme;
+import models.CoinHistory;
 import models.viewModels.TableClassFriendsCoins;
 
 /**
@@ -48,6 +49,16 @@ public class TabAssistantController {
     private TableClassFriendsCoins tblFriends;
     private static Theme theme;
     private static Scene scene = FXMLDocumentController.scene;
+    public LinkedList<UserCoin> userCoinList;
+    public static LinkedList<SingleCoin> coinList;
+    public LinkedList<SingleCoin> userSingleCoins;
+    public LinkedList<UserCoin> savedCoins;
+    public LinkedList<String> friendList;
+    public LinkedList<String> onlineUserList;
+    public final String TIMEFRAME = "24h";
+    public LinkedHashMap<Double, String> singleHistoryMap;
+    public LinkedHashMap<Double, String> userHistoryMap;
+    public LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
 
     /**
      * Add listener to theme menu item.
@@ -110,15 +121,15 @@ public class TabAssistantController {
 
     /**
      * This method builds the table for friends coin
-     * @param tableView 
+     * @param tableView
      */
     public void coinTableFriendsCoin(TableView tableView) {
         this.tblFriends = new TableClassFriendsCoins(tableView);
     }
-    
+
     /**
      * This method is used to populate the table with the friend's saved coins list.
-     * @param coinList 
+     * @param coinList
      */
     public void displayFriendsCoins(LinkedList<UserCoin> coinList) {
          this.tblFriends.displayTable(coinList);
@@ -276,13 +287,13 @@ public class TabAssistantController {
 
     /**
      * THIS calls and create the table object.
-     * @param _tableDash 
+     * @param _tableDash
      */
     public void createTableFriendsCoins(TableView _tableDash) {
         TabAssistantController tas = new TabAssistantController();
         tas.coinTableFriendsCoin(_tableDash);
     }
-    
+
     public void createFriendList(ListView friendsListT2, int _code) {
         ListClass lc = new ListClass(UNAME);
         if (_code == 0) {
@@ -290,5 +301,37 @@ public class TabAssistantController {
         } else {
             lc.populateFriends(friendsListT2, 1);
         }
+    }
+        /**
+     * Get users saved coins from database then create SingleCoin objects
+     * for each.
+     * @param name
+     * @param tabNumber
+     */
+    public void getCoinList(String name, int tabNumber) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        this.userCoinList = conn.getSavedCoins(name);
+        if(tabNumber == 3){
+            this.friendList = conn.getFriendList(name);
+        this.onlineUserList = conn.getOnlineUsers();
+        }
+        conn.close();
+        CoinRankApi cri = new CoinRankApi();
+        cri.run();
+        cri.join();
+        coinList = cri.getCoinList();
+        coinList.forEach((item) -> {
+            userCoinList.forEach((entry) -> {
+                if (item.getName().equalsIgnoreCase(entry.getName())){
+                    userSingleCoins.add(item);
+                }
+            });
+        });
+        this.singleHistoryMap = new CoinHistory().getSingleHistory();
+        this.userCoinList.forEach((item) -> {
+            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
+            linkedUserHistoryMap.add(userHistoryMap);
+        });
+
     }
 }
