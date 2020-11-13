@@ -9,8 +9,6 @@ import models.ConnectToDatabase;
 import models.UserCoin;
 import coinTrack.FXMLDocumentController;
 import interfaces.ListClassInterface;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
@@ -23,7 +21,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import controllers.AlertMessages;
 import static controllers.Tab1Controller.DEBUG;
-import controllers.Tab3Controller;
 import controllers.Tab4Controller;
 
 /**
@@ -135,6 +132,7 @@ public class ListClass implements ListClassInterface {
      * get the friend list.
      *
      * @param _friendList
+     * @param _code
      */
     public void populateFriends(ListView _friendList, int _code) {
         this.list = _friendList;
@@ -204,7 +202,7 @@ public class ListClass implements ListClassInterface {
                     ConnectToDatabase conn = new ConnectToDatabase();
                     this.friendName = cell.getItem();
                     this.savedCoinsFriends = conn.getSavedCoins(friendName);
-                    
+
                     Tab4Controller.tas.displayFriendsCoins(savedCoinsFriends);
                     System.out.println(friendName);
                     System.out.println(savedCoinsFriends);

@@ -5,9 +5,11 @@
  */
 package controllers;
 
+import coinTrack.FXMLDocumentController;
 import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -26,10 +28,9 @@ import models.UserCoin;
  */
 public class Tab4Controller implements Initializable {
 
-    private String uname;
+    private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     public static TabAssistantController tas;
     private LinkedList<UserCoin> savedCoins;
-    private LinkedList<String> friendList;
     @FXML private ListView savedCoinsList;
     @FXML private ListView friendsList;
     @FXML private TableView tableViewT1;
@@ -45,8 +46,14 @@ public class Tab4Controller implements Initializable {
      * Pull saved coin data from database and add it to the accordion.
      */
     public void populateSavedCoins() {
-        this.tas.populateSavedCoins(savedCoinsList, savedCoins);
+        tas.populateSavedCoins(savedCoinsList, savedCoins);
     }
+
+
+    private void createTable() {
+        Tab4Controller.tas.coinTableDash(this.tableViewT1, tas.userSingleCoins);
+    }
+
 
     /**
      * Initialize the tab
@@ -56,9 +63,18 @@ public class Tab4Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.tas = new TabAssistantController();
+        tas = new TabAssistantController();
+        tas.userCoinList = new LinkedList<>();
+        tas.userSingleCoins = new LinkedList<>();
+        tas.singleHistoryMap = new LinkedHashMap<>();
+        tas.userHistoryMap = new LinkedHashMap<>();
+        tas.linkedUserHistoryMap = new LinkedList<>();
+        tas.coinList = new LinkedList<>();
+        USERNAME = FXMLDocumentController.uname;
         populateSavedCoins();
         addFriendsToList();
-        this.tas.coinTableFriendsCoin(tableViewT11);
-    } 
+        tas.coinTableFriendsCoin(tableViewT11);
+        tas.getCoinList(USERNAME, 4);
+        createTable();
+    }
 }

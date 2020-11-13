@@ -39,15 +39,15 @@ public class Tab3Controller implements Initializable{
 
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
-    private LinkedList<UserCoin> userCoinList;
+    /*LinkedList<UserCoin> userCoinList;
     protected static LinkedList<SingleCoin> coinList;
-    private LinkedList<SingleCoin> userSingleCoins;
+    public LinkedList<SingleCoin> userSingleCoins;
     private LinkedList<UserCoin> savedCoins;
     private LinkedList<String> friendList;
     private LinkedList<String> onlineUserList;
-    private LinkedHashMap<Double, String> singleHistoryMap;
-    private LinkedHashMap<Double, String> userHistoryMap;
-    private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
+    LinkedHashMap<Double, String> singleHistoryMap;
+    LinkedHashMap<Double, String> userHistoryMap;
+    LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;*/
     private TextArea textArea;
     private TabAssistantController tas;
 
@@ -70,7 +70,7 @@ public class Tab3Controller implements Initializable{
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 LinkedList<Label> temp = new LinkedList<>();
-                coinList.forEach((item) -> {
+                tas.coinList.forEach((item) -> {
                     if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())) {
                         Label txt = new Label(item.getSymbol() + ": " + item.getName());
                         temp.add(txt);
@@ -90,40 +90,11 @@ public class Tab3Controller implements Initializable{
     }
 
     /**
-     * Get users saved coins from database then create SingleCoin objects
-     * for each.
-     */
-    private void getCoinList(String name) {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        this.userCoinList = conn.getSavedCoins(name);
-        this.friendList = conn.getFriendList(name);
-        this.onlineUserList = conn.getOnlineUsers();
-        conn.close();
-        CoinRankApi cri = new CoinRankApi();
-        cri.run();
-        cri.join();
-        coinList = cri.getCoinList();
-        coinList.forEach((item) -> {
-            userCoinList.forEach((entry) -> {
-                if (item.getName().equalsIgnoreCase(entry.getName())){
-                    userSingleCoins.add(item);
-                }
-            });
-        });
-        this.singleHistoryMap = new CoinHistory().getSingleHistory();
-        this.userCoinList.forEach((item) -> {
-            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
-            linkedUserHistoryMap.add(userHistoryMap);
-        });
-
-    }
-
-    /**
      * Create the table.
      * Uses tabAssistantController to format the table.
      */
     private void createTable() {
-        this.tas.coinTableDash(this.tableDash, this.userSingleCoins);
+        this.tas.coinTableDash(this.tableDash, this.tas.userSingleCoins);
     }
 
     /**
@@ -131,7 +102,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to create graph.
      */
     private void createPieChart() {
-        this.tas.PieChartDash(this.userSingleCoins, this.pieChartDash);
+        this.tas.PieChartDash(this.tas.userSingleCoins, this.pieChartDash);
     }
 
     /**
@@ -139,7 +110,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to create graph.
      */
     private void createBarChart() {
-        this.tas.multiBarChart(this.barChartDash, this.linkedUserHistoryMap, this.userCoinList.size(), this.userCoinList, this.textArea);
+        this.tas.multiBarChart(this.barChartDash, this.tas.linkedUserHistoryMap, this.tas.userCoinList.size(), this.tas.userCoinList, this.textArea);
         this.barChartDash.setLegendVisible(true);
     }
 
@@ -147,7 +118,7 @@ public class Tab3Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        this.tas.addOnlineUsers(this.onlineUserList, this.onlineUsersListT3);
+        this.tas.addOnlineUsers(this.tas.onlineUserList, this.onlineUsersListT3);
     }
 
     /**
@@ -170,7 +141,7 @@ public class Tab3Controller implements Initializable{
      * Add saved coins to the right side accordion.
      */
     private void populateSavedCoins() {
-        this.tas.populateSavedCoins(this.savedCoinsListT3, this.savedCoins);
+        this.tas.populateSavedCoins(this.savedCoinsListT3, this.tas.savedCoins);
     }
 
     /**
@@ -216,9 +187,9 @@ public class Tab3Controller implements Initializable{
      * This is updated when the user types something in the search field.
      */
     private void populateSearch() {
-        System.out.println(coinList.size());
-        for (int i = 0; i < coinList.size(); i++) {
-            Label tmp = new Label(coinList.get(i).getSymbol() + ": " + coinList.get(i).getName());
+        System.out.println(this.tas.coinList.size());
+        for (int i = 0; i < this.tas.coinList.size(); i++) {
+            Label tmp = new Label(this.tas.coinList.get(i).getSymbol() + ": " + this.tas.coinList.get(i).getName());
             this.vbox.getChildren().add(tmp);
             addListListener(tmp);
             tmp.setMaxWidth(Double.MAX_VALUE);
@@ -238,17 +209,17 @@ public class Tab3Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.tas = new TabAssistantController();
-        this.userCoinList = new LinkedList<>();
-        coinList = new LinkedList<>();
-        this.userSingleCoins = new LinkedList<>();
-        this.singleHistoryMap = new LinkedHashMap<>();
-        this.userHistoryMap = new LinkedHashMap<>();
-        this.linkedUserHistoryMap = new LinkedList<>();
-        this.friendList = new LinkedList<>();
-        this.onlineUserList = new LinkedList<>();
-        this.savedCoins = new LinkedList<>();
+        this.tas.userCoinList = new LinkedList<>();
+        this.tas.coinList = new LinkedList<>();
+        this.tas.userSingleCoins = new LinkedList<>();
+        this.tas.singleHistoryMap = new LinkedHashMap<>();
+        this.tas.userHistoryMap = new LinkedHashMap<>();
+        this.tas.linkedUserHistoryMap = new LinkedList<>();
+        this.tas.friendList = new LinkedList<>();
+        this.tas.onlineUserList = new LinkedList<>();
+        this.tas.savedCoins = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
-        getCoinList(USERNAME);
+        this.tas.getCoinList(USERNAME,3);
         populateSearch();
         createTable();
         createPieChart();
