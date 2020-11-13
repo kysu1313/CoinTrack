@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * @author Kyle
  */
 public interface CoinDataInterface {
-    
+
     public void start();
     public void join();
     public boolean isAlive();

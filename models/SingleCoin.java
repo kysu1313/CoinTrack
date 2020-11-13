@@ -6,12 +6,13 @@ package models;
  * with a specific cryptocurrency.
  * @author Kyle
  */
+import interfaces.GlobalClassInterface;
 import interfaces.SingleCoinInterface;
 import java.util.LinkedHashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class SingleCoin implements SingleCoinInterface{
+public class SingleCoin implements SingleCoinInterface, GlobalClassInterface{
     
     private JSONObject coinList;
     private int id;
@@ -233,6 +234,11 @@ public class SingleCoin implements SingleCoinInterface{
     
     public String getStringChange() {
         return this.stringChange;
+    }
+
+    @Override
+    public String getClassName() {
+        return "SingleCoin";
     }
 
     

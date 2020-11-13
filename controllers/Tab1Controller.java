@@ -266,6 +266,10 @@ public class Tab1Controller implements Initializable{
         this.coinNamePrice = this.cri.getNamePrice();
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
         TabAssistantController ast = new TabAssistantController();
+
+//        ast.coinGenericTable("SingleCoin", this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+//        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+
         ast.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
         ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }

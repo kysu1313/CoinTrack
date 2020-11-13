@@ -27,6 +27,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.LinkedList;
 import controllers.AlertMessages;
+import java.util.HashMap;
 
 public class ConnectToDatabase implements DatabaseInterface{
 
@@ -568,8 +569,24 @@ public class ConnectToDatabase implements DatabaseInterface{
      * @return
      */
     @Override
-    public boolean getUserInfo(String _userName, String _userPass) {
-        return false;
+    public HashMap<String, String> getUserInfo(String _userName) {
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from users where userName = '" + _userName + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                map.put("userID", Integer.toString(result.getInt("userID")));
+                map.put("isOnline", Boolean.toString(result.getBoolean("isOnline")));
+                map.put("userEmail", result.getString("userEmail"));
+                map.put("username", result.getString("username"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return map;
     }
 
     /**

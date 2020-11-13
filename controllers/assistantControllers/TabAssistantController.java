@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers.assistantControllers;
 
 import models.CoinRankApi;
@@ -11,7 +6,6 @@ import models.SingleCoin;
 import models.UserCoin;
 import coinTrack.FXMLDocumentController;
 import controllers.AlertMessages;
-import static coinTrack.FXMLDocumentController.scene;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -23,7 +17,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
@@ -34,10 +27,15 @@ import models.viewModels.PieChartClass;
 import models.viewModels.ListClass;
 import models.viewModels.TableClass;
 import controllers.assistantControllers.Theme;
+import models.User;
 import models.CoinHistory;
 import models.viewModels.TableClassFriendsCoins;
 
 /**
+ * This class contains methods that assist the tabControllers.
+ *
+ * Methods to create tables, lists and graphs are
+ * avaliable here.
  *
  * @author Kyle
  */
@@ -49,6 +47,7 @@ public class TabAssistantController {
     private TableClassFriendsCoins tblFriends;
     private static Theme theme;
     private static Scene scene = FXMLDocumentController.scene;
+    private static User currentUser;
     public LinkedList<UserCoin> userCoinList;
     public static LinkedList<SingleCoin> coinList;
     public LinkedList<SingleCoin> userSingleCoins;
@@ -60,6 +59,23 @@ public class TabAssistantController {
     public LinkedHashMap<Double, String> userHistoryMap;
     public LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
 
+ 
+
+    /**
+     * Set the current user
+     * @param _user
+     */
+    public void setCurrentUser(User _user){
+        currentUser = _user;
+    }
+
+    /**
+     * Get the current user
+     * @return User
+     */
+    public User getCurrentUser(){
+        return currentUser;
+    }
     /**
      * Add listener to theme menu item.
      */
@@ -79,6 +95,23 @@ public class TabAssistantController {
                 scene.getStylesheets().add(theme.getTheme());
             }
         });
+    }
+
+    public void coinGenericTable(String _classType, LinkedList<Object> _objList, TableView _tableViewT1, WebView _webView, long _currencyRate) {
+
+        // Create columns
+        SingleCoin sc = new SingleCoin();
+        LinkedList<String> colNames = new LinkedList<>();
+        // Add single coin param names for column names.
+        colNames.add("Symbol");
+        colNames.add("Name");
+        colNames.add("Price");
+        colNames.add("Rank");
+        colNames.add("Change");
+        colNames.add("Volume");
+        this.tbl = new TableClass("SingleCoin", _objList, _tableViewT1, _webView, colNames, _currencyRate);
+        this.tbl.displayTable();
+        this.tbl.colorChangeCol("#09de57", "#ff0000");
     }
 
     public void coinTable(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webViewT1, String _currency, long _currencyRate) {

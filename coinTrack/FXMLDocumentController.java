@@ -55,8 +55,10 @@ import controllers.AlertMessages;
 import controllers.Tab1Controller;
 import static controllers.Tab1Controller.DEBUG;
 import static controllers.Tab1Controller.tas;
+import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
 import models.EmailValidation;
+import models.User;
 
 /**
  *
@@ -65,9 +67,11 @@ import models.EmailValidation;
 public class FXMLDocumentController implements Initializable {
 
     public static String uname;
+    public static User user;
     public static Tab currTab;
     public static Scene scene;
     private static String tempUsernameStorage;
+    private TabAssistantController tas;
     private String code;
     private int _code;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
@@ -86,7 +90,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private PasswordField passwordEntry;
     @FXML private PasswordField passwordRepeatEntry;
     @FXML private Button registerSubmitBtn;
-    @FXML public static Stage mainStage;           // Need to make getters for public stuff
+    @FXML public static Stage mainStage;
     @FXML private static Stage forgotPassStage;
     @FXML private static Stage forgotUserStage;
     @FXML private static Stage resetPassStage;
@@ -119,7 +123,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private RadioButton saveSavedCoins;
     @FXML private RadioButton saveAllCoins;
     @FXML private Label lblWelcomeMessage;
-    Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b"); // nice regex
+    Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
     //========== Action Handlers ==========
     /**
      * Login button action handler. If the username and password are correct the
@@ -136,6 +140,8 @@ public class FXMLDocumentController implements Initializable {
             conn.setUserOnlineStatus(this.username.getText(), 1);
             uname = this.username.getText();
             System.out.println(uname);
+            user = new User(uname);
+            this.tas.setCurrentUser(user);
             // After login is successful, you are taken to the main page
             Parent root;
             try {
