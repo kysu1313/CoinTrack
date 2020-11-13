@@ -141,6 +141,7 @@ public class FXMLDocumentController implements Initializable {
             uname = this.username.getText();
             System.out.println(uname);
             user = new User(uname);
+            this.tas = new TabAssistantController();
             this.tas.setCurrentUser(user);
             // After login is successful, you are taken to the main page
             Parent root;
