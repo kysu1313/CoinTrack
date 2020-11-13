@@ -250,13 +250,14 @@ public class Tab1Controller implements Initializable{
         this.cri = new CoinRankApi();
         this.cri.join();
         this.coinList = this.cri.getCoinList();
+        tas.setCoinList(this.coinList);
         /**
          * Update coins in database. probably not necessary to run here.
          * It already runs at launch.
          */
         //updateCoinPricesDB();
         /**
-         * Add coins to new database table all_coins
+         * Add coins to new database table all_coins.
          * If there is a new coin it will be added here.
          */
         cri.updateDatabaseCoins(this.coinList);
@@ -394,7 +395,7 @@ public class Tab1Controller implements Initializable{
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.tas = new TabAssistantController();
+        tas = new TabAssistantController();
         this.uname = coinTrack.FXMLDocumentController.uname;
 //        this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();

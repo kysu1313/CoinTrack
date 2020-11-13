@@ -76,6 +76,24 @@ public class TabAssistantController {
     public User getCurrentUser(){
         return currentUser;
     }
+
+    /**
+     * Set coin list;
+     * @param _list
+     */
+    public void setCoinList(LinkedList<SingleCoin> _list){
+        coinList = _list;
+    }
+
+    /**
+     * Get coin list
+     * @param _list
+     * @return
+     */
+    public LinkedList<SingleCoin> getCoinList(LinkedList<SingleCoin> _list){
+        return coinList;
+    }
+
     /**
      * Add listener to theme menu item.
      */
