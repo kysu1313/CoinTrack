@@ -58,6 +58,7 @@ public class TabAssistantController {
     public LinkedHashMap<Double, String> singleHistoryMap;
     public LinkedHashMap<Double, String> userHistoryMap;
     public LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
+    private LinkedList<Object> objectList;
 
  
 
@@ -92,6 +93,14 @@ public class TabAssistantController {
      */
     public LinkedList<SingleCoin> getCoinList(LinkedList<SingleCoin> _list){
         return coinList;
+    }
+
+    public void setObjectList(LinkedList<Object> _objList){
+        this.objectList = _objList;
+    }
+
+    public LinkedList<Object> setObjectList(){
+        return this.objectList;
     }
 
     /**
