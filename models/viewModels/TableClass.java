@@ -46,9 +46,14 @@ public class TableClass implements TableInterface{
     private ObservableList<Object> obvObjList;
 
     private ObservableList<SingleCoin> obvList;
+
+    private ObservableList<SingleCoin> obvSingleCoinList;
+    private ObservableList<UserCoin> obvUserCoinList;
+    private ObservableList<SingleMarket> obvsingleMarketList;
     private TableColumn changeCol;
     private Class myClass;
     private LinkedList<Object> objList;
+    private TabAssistantController tas;
 
 
     public TableClass(String _classType, LinkedList<Object> _objList, TableView _tableViewT1, WebView _webView, LinkedList<String> _columnNames, long _currencyRate) {
@@ -57,12 +62,27 @@ public class TableClass implements TableInterface{
 //        this.cri.join();
 //        this.coinList = this.cri.getCoinList();
 
+        this.obvSingleCoinList = FXCollections.observableArrayList();
+        this.obvUserCoinList = FXCollections.observableArrayList();
+        this.obvsingleMarketList = FXCollections.observableArrayList();
+
+        this.tas = new TabAssistantController();
+
         if(_classType.equals("SingleCoin")){
             this.myClass = SingleCoin.class;
+            _objList.forEach(item -> {
+                obvSingleCoinList.add((SingleCoin)item);
+            });
         } else if(_classType.equals("UserCoin")){
             this.myClass = UserCoin.class;
+            _objList.forEach(item -> {
+                obvUserCoinList.add((UserCoin)item);
+            });
         } else if (_classType.equals("SingleMarket")){
             this.myClass = SingleMarket.class;
+            _objList.forEach(item -> {
+                obvsingleMarketList.add((SingleMarket)item);
+            });
         }
 
         this.objList = _objList;
@@ -131,6 +151,9 @@ public class TableClass implements TableInterface{
     }
 
     private void buildTableGeneral() {
+        this.objList.forEach(item -> {
+            System.out.println(item);
+        });
 //        Class<SingleCoin> sclass = SingleCoin.class;
         this.COLUMN_NAMES.forEach((item) -> {
             TableColumn col1 = new TableColumn(item);
@@ -147,7 +170,7 @@ public class TableClass implements TableInterface{
         setCurrency();
         // Add columns to tableView
         this.TABLE_VIEW.getColumns().addAll(this.cols);
-        this.obvObjList = FXCollections.observableArrayList(this.objList);
+        this.obvObjList = FXCollections.observableArrayList(this.obvSingleCoinList);
     }
 
     /**

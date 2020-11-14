@@ -261,14 +261,17 @@ public class Tab1Controller implements Initializable{
          * If there is a new coin it will be added here.
          */
         cri.updateDatabaseCoins(this.coinList);
+
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
         this.coinList = this.cri.getCoinList();
         this.coinNamePrice = this.cri.getNamePrice();
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
         TabAssistantController ast = new TabAssistantController();
+        
+        tas.setObjectList(this.cri.getGenericCoinList());
 
-//        ast.coinGenericTable("SingleCoin", this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+//        ast.coinGenericTable("SingleCoin", this.cri.getGenericCoinList(), this.tableViewT1, this.webViewT1, this.currencyRate);
 //        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
 
         ast.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
