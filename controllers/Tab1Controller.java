@@ -268,14 +268,30 @@ public class Tab1Controller implements Initializable{
         this.coinNamePrice = this.cri.getNamePrice();
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
         TabAssistantController ast = new TabAssistantController();
-        
+
         tas.setObjectList(this.cri.getGenericCoinList());
 
-//        ast.coinGenericTable("SingleCoin", this.cri.getGenericCoinList(), this.tableViewT1, this.webViewT1, this.currencyRate);
-//        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+        LinkedList<String> colNames = new LinkedList<>();
+        // Add single coin param names for column names.
+        colNames.add("Symbol");
+        colNames.add("Name");
+        colNames.add("Price");
+        colNames.add("Rank");
+        colNames.add("Change");
+        colNames.add("Volume");
 
-        ast.coinTable(this.tableViewT1, this.coinList, this.webViewT1, this.selectedCurrency, this.currencyRate);
+        //Uncomment to display SingleCoin table (all coins)
+        ast.coinGenericTable("SingleCoin", this.cri.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
         ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+
+        LinkedList<String> colNamesSaved = new LinkedList<>();
+        colNamesSaved.add("Symbol");
+        colNamesSaved.add("Name");
+        colNamesSaved.add("coinID");
+
+        //Uncomment to show table of saved coins
+//        ast.coinGenericTable("UserCoin", this.tas.getObjUserCoinList(this.uname), colNamesSaved, this.tableViewT1, this.webViewT1, this.currencyRate);
+//        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
     }
 
     /**

@@ -30,8 +30,9 @@ import models.SingleMarket;
  * General class for making & displaying tables.
  *
  * @author Kyle
+ * @param <T>
  */
-public class TableClass implements TableInterface{
+public class TableClass<T> implements TableInterface{
 
     private final TableView TABLE_VIEW;
     private final String CURRENCY;
@@ -45,6 +46,8 @@ public class TableClass implements TableInterface{
     private LinkedList<TableColumn> cols;
     private ObservableList<Object> obvObjList;
 
+    private LinkedList<T> listT;
+    private LinkedList<?> openList;
     private ObservableList<SingleCoin> obvList;
 
     private ObservableList<SingleCoin> obvSingleCoinList;
@@ -56,11 +59,7 @@ public class TableClass implements TableInterface{
     private TabAssistantController tas;
 
 
-    public TableClass(String _classType, LinkedList<Object> _objList, TableView _tableViewT1, WebView _webView, LinkedList<String> _columnNames, long _currencyRate) {
-
-//        this.cri = new CoinRankApi();
-//        this.cri.join();
-//        this.coinList = this.cri.getCoinList();
+    public TableClass(String _classType, LinkedList<T> _objList, TableView _tableViewT1, WebView _webView, LinkedList<String> _columnNames, long _currencyRate) {
 
         this.obvSingleCoinList = FXCollections.observableArrayList();
         this.obvUserCoinList = FXCollections.observableArrayList();
@@ -70,22 +69,14 @@ public class TableClass implements TableInterface{
 
         if(_classType.equals("SingleCoin")){
             this.myClass = SingleCoin.class;
-            _objList.forEach(item -> {
-                obvSingleCoinList.add((SingleCoin)item);
-            });
+            this.openList = (LinkedList<SingleCoin>)_objList;
         } else if(_classType.equals("UserCoin")){
             this.myClass = UserCoin.class;
-            _objList.forEach(item -> {
-                obvUserCoinList.add((UserCoin)item);
-            });
+            this.openList = (LinkedList<UserCoin>)_objList;
         } else if (_classType.equals("SingleMarket")){
             this.myClass = SingleMarket.class;
-            _objList.forEach(item -> {
-                obvsingleMarketList.add((SingleMarket)item);
-            });
+            this.openList = (LinkedList<SingleMarket>)_objList;
         }
-
-        this.objList = _objList;
 
         this.TABLE_VIEW = _tableViewT1;
         this.CURRENCY = null;
@@ -151,7 +142,7 @@ public class TableClass implements TableInterface{
     }
 
     private void buildTableGeneral() {
-        this.objList.forEach(item -> {
+        this.openList.forEach(item -> {
             System.out.println(item);
         });
 //        Class<SingleCoin> sclass = SingleCoin.class;
@@ -170,7 +161,7 @@ public class TableClass implements TableInterface{
         setCurrency();
         // Add columns to tableView
         this.TABLE_VIEW.getColumns().addAll(this.cols);
-        this.obvObjList = FXCollections.observableArrayList(this.obvSingleCoinList);
+        this.obvObjList = FXCollections.observableArrayList(this.openList);
     }
 
     /**
@@ -260,13 +251,12 @@ public class TableClass implements TableInterface{
                                 }
                             }
                         };
-                        
                     }
                 });
             }
         });
     }
-    
+
     /**
      * Add a double click that displays the currencies logo.
      */
@@ -292,7 +282,7 @@ public class TableClass implements TableInterface{
             return row;
         });
     }
-    
+
     /**
      * This creates the right click menu on the onlineUsers list.
      * It also maps each button to an action.
@@ -333,8 +323,10 @@ public class TableClass implements TableInterface{
      */
     @Override
     public void displayTable() {
-        this.TABLE_VIEW.setItems(this.obvList);
+        this.TABLE_VIEW.setItems(this.obvObjList);
         this.TABLE_VIEW.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        this.TABLE_VIEW.setItems(this.obvList);openList
+//        this.TABLE_VIEW.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
 }
