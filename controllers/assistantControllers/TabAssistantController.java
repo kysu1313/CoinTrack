@@ -29,6 +29,7 @@ import models.viewModels.TableClass;
 import controllers.assistantControllers.Theme;
 import models.User;
 import models.CoinHistory;
+import models.GetMarketsApi;
 import models.viewModels.TableClassFriendsCoins;
 
 /**
@@ -127,6 +128,15 @@ public class TabAssistantController<T> {
     }
 
     /**
+     * Return the generic list of market objects;
+     * @return
+     */
+    public LinkedList<T> getObjMarketList() {
+        GetMarketsApi gma = new GetMarketsApi();
+        return gma.getGenericMarketList();
+    }
+
+    /**
      * Add listener to theme menu item.
      */
     public void addThemeListener() {
@@ -148,17 +158,6 @@ public class TabAssistantController<T> {
     }
 
     public void coinGenericTable(String _classType, LinkedList<Object> _objList, LinkedList<String> _colNames, TableView _tableViewT1, WebView _webView, long _currencyRate) {
-
-        // Create columns
-//        SingleCoin sc = new SingleCoin();
-//        LinkedList<String> colNames = new LinkedList<>();
-//        // Add single coin param names for column names.
-//        colNames.add("Symbol");
-//        colNames.add("Name");
-//        colNames.add("Price");
-//        colNames.add("Rank");
-//        colNames.add("Change");
-//        colNames.add("Volume");
 
         this.tbl = new TableClass(_classType, _objList, _tableViewT1, _webView, _colNames, _currencyRate);
         this.tbl.displayTable();

@@ -49,9 +49,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import models.GetMarketsApi;
+import models.SingleMarket;
 import models.viewModels.ListClass;
 
 /**
@@ -100,10 +103,12 @@ public class Tab1Controller implements Initializable{
     @FXML private CheckBox searchGlobalStats;
     @FXML private ToolBar bottomToolbar;
     @FXML private Button saveBtnT1;
+    @FXML private RadioButton allCoinsBtn;
+    @FXML private RadioButton savedCoinsBtn;
+    @FXML private RadioButton marketsBtn;
 
     // Table View
     @FXML public TableView<SingleCoin> tableViewT1;
-
 
     /**
      * Search for a specific coin.
@@ -135,16 +140,20 @@ public class Tab1Controller implements Initializable{
     @FXML
     private void handleScan(ActionEvent event) {
         System.out.println("Scanning");
-        if (searchGlobalStats.isSelected() && searchCoins.isSelected()){
+        boolean allCoins = this.allCoinsBtn.isSelected();
+        boolean savedCoinsbtn = this.savedCoinsBtn.isSelected();
+        boolean markets = this.marketsBtn.isSelected();
+//        this.marketsBtn.isSelected()
+        if (searchGlobalStats.isSelected() || allCoins || savedCoinsbtn || markets){
             tableViewT1.getItems().clear();
             tableViewT1.getColumns().clear();
             txtAreaT1.setText("");
             displayGlobalStats();
             displayCoinText();
-        } else if (searchGlobalStats.isSelected()){
+        } else if (searchGlobalStats.isSelected() || allCoins || savedCoinsbtn || markets){
             txtAreaT1.setText("");
             displayGlobalStats();
-        } else if (searchCoins.isSelected()) {
+        } else if (searchCoins.isSelected() || allCoins || savedCoinsbtn || markets) {
             tableViewT1.getItems().clear();
             tableViewT1.getColumns().clear();
             if(DEBUG){System.out.println("search coins");}
@@ -163,29 +172,30 @@ public class Tab1Controller implements Initializable{
         txtAreaT1.setText("");
     }
 
-//    @FXML
-//    private void handleLogOutT1(ActionEvent event) {
-//        if(DEBUG){System.out.println("logging out");}
-//        Parent root;
-//        try {
-//            Tab1Controller.mainPage1 = new Stage();
-//            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-//            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-//            this.scene = new Scene(root);
-//            Tab1Controller.mainPage1.setScene(this.scene);
-//            Tab1Controller.mainPage1.show();
-//            closeOldStage();
-//        } catch (IOException ex) {
-//            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-
     /**
      * Reset to default currency.
      */
     @FXML
     private void handleResetCurr(ActionEvent event) {
         resetCurrency();
+    }
+
+    @FXML
+    private void handleAllCoins(ActionEvent event) {
+        this.savedCoinsBtn.setSelected(false);
+        this.marketsBtn.setSelected(false);
+    }
+
+    @FXML
+    private void handleSavedCoins(ActionEvent event) {
+        this.allCoinsBtn.setSelected(false);
+        this.marketsBtn.setSelected(false);
+    }
+
+    @FXML
+    private void handleMarkets(ActionEvent event) {
+        this.savedCoinsBtn.setSelected(false);
+        this.allCoinsBtn.setSelected(false);
     }
 
     @FXML
@@ -198,9 +208,11 @@ public class Tab1Controller implements Initializable{
 
     @FXML
     private void handleTest(ActionEvent event) throws ParseException, IOException {
-        /**
-         * This is a test button
-         */
+        GetMarketsApi gma = new GetMarketsApi();
+        gma.getGenericMarketList().forEach(item -> {
+            SingleMarket sm = (SingleMarket)item;
+            System.out.println(item.getClass());
+        });
     }
 
     @FXML
@@ -256,6 +268,7 @@ public class Tab1Controller implements Initializable{
          * It already runs at launch.
          */
         //updateCoinPricesDB();
+
         /**
          * Add coins to new database table all_coins.
          * If there is a new coin it will be added here.
@@ -268,30 +281,39 @@ public class Tab1Controller implements Initializable{
         this.coinNamePrice = this.cri.getNamePrice();
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
         TabAssistantController ast = new TabAssistantController();
-
         tas.setObjectList(this.cri.getGenericCoinList());
 
-        LinkedList<String> colNames = new LinkedList<>();
-        // Add single coin param names for column names.
-        colNames.add("Symbol");
-        colNames.add("Name");
-        colNames.add("Price");
-        colNames.add("Rank");
-        colNames.add("Change");
-        colNames.add("Volume");
-
-        //Uncomment to display SingleCoin table (all coins)
-        ast.coinGenericTable("SingleCoin", this.cri.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
-        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
-
-        LinkedList<String> colNamesSaved = new LinkedList<>();
-        colNamesSaved.add("Symbol");
-        colNamesSaved.add("Name");
-        colNamesSaved.add("coinID");
-
-        //Uncomment to show table of saved coins
-//        ast.coinGenericTable("UserCoin", this.tas.getObjUserCoinList(this.uname), colNamesSaved, this.tableViewT1, this.webViewT1, this.currencyRate);
-//        ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+        // Determine which radio button is pressed then display corresponding data.
+        if (this.allCoinsBtn.isSelected()) {
+            LinkedList<String> colNames = new LinkedList<>();
+            // Add single coin param names for column names.
+            colNames.add("Symbol");
+            colNames.add("Name");
+            colNames.add("Price");
+            colNames.add("Rank");
+            colNames.add("Change");
+            colNames.add("Volume");
+            ast.coinGenericTable("SingleCoin", this.cri.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
+            ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+        } else if (this.savedCoinsBtn.isSelected()) {
+            LinkedList<String> colNamesSaved = new LinkedList<>();
+            colNamesSaved.add("Symbol");
+            colNamesSaved.add("Name");
+            colNamesSaved.add("coinID");
+            ast.coinGenericTable("UserCoin", tas.getObjUserCoinList(this.uname), colNamesSaved, this.tableViewT1, this.webViewT1, this.currencyRate);
+            ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+        } else if (this.marketsBtn.isSelected()) {
+            LinkedList<String> colMarkets = new LinkedList<>();
+            colMarkets.add("rank");
+            colMarkets.add("baseSymbol");
+            colMarkets.add("quoteSymbol");
+            colMarkets.add("sourceName");
+            colMarkets.add("tickerClose");
+            colMarkets.add("marketShare");
+            colMarkets.add("price");
+            ast.coinGenericTable("SingleMarket", tas.getObjMarketList(), colMarkets, this.tableViewT1, this.webViewT1, this.currencyRate);
+            ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+        }
     }
 
     /**

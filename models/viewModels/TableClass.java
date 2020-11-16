@@ -142,19 +142,21 @@ public class TableClass<T> implements TableInterface{
     }
 
     private void buildTableGeneral() {
-        this.openList.forEach(item -> {
-            System.out.println(item);
-        });
 //        Class<SingleCoin> sclass = SingleCoin.class;
         this.COLUMN_NAMES.forEach((item) -> {
             TableColumn col1 = new TableColumn(item);
             this.cols.add(col1);
         });
         Field[] params = this.myClass.getDeclaredFields();
+        for (int i = 0; i < params.length; i++) {
+            System.out.println(params[i].getName());
+
+        }
         this.cols.forEach((item) -> {
             for (Field fld : params) {
-                if (item.getText().toLowerCase().replace(" ", "").equals(fld.getName())) {
-                    item.setCellValueFactory(new PropertyValueFactory<>(item.getText().toLowerCase().replace(" ", "")));
+                if (item.getText().toLowerCase().replace(" ", "").equals(fld.getName().toLowerCase())) {
+                    item.setCellValueFactory(new PropertyValueFactory<>(fld.getName()));
+                    System.out.println(fld.getName());
                 }
             }
         });
@@ -182,6 +184,7 @@ public class TableClass<T> implements TableInterface{
             this.cols.add(col1);
         });
         Field[] params = sclass.getDeclaredFields();
+
         this.cols.forEach((item) -> {
             for (Field fld : params) {
                 if (item.getText().toLowerCase().replace(" ", "").equals(fld.getName())) {
@@ -235,7 +238,7 @@ public class TableClass<T> implements TableInterface{
         // Change text color of "change" column if positive or negative change.
         // Default: col5 and col3
         this.cols.forEach((item) -> {
-            if (item.getText().equalsIgnoreCase("price")) {
+            if (item.getText().equalsIgnoreCase("price") && this.myClass == SingleCoin.class) {
                 item.setCellFactory(new Callback<TableColumn, TableCell>() {
                     public TableCell call(TableColumn param) {
                         return new TableCell<SingleCoin, String>() {
