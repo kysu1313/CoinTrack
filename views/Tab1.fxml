@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -26,6 +27,9 @@
                <tooltip>
                   <Tooltip text="Select all coins to view a list of coins in a table" />
                </tooltip></CheckBox>
+            <RadioButton fx:id="allCoinsBtn" onAction="#handleAllCoins" mnemonicParsing="false" text="All Coins" />
+            <RadioButton fx:id="savedCoinsBtn" onAction="#handleSavedCoins" mnemonicParsing="false" text="Saved Coins" />
+            <RadioButton fx:id="marketsBtn" onAction="#handleMarkets" mnemonicParsing="false" text="Markets" />
               <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true">
                <tooltip>
                   <Tooltip text="Scan all avaliable cryptocurrencies" />
