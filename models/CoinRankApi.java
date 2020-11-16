@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface, interfaces.GenericClassInterface {
+public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterface, interfaces.GenericClassInterface {
 
     private Thread t;
     private HttpResponse<JsonNode> response;
@@ -152,6 +152,14 @@ public final class CoinRankApi implements Runnable, interfaces.CoinDataInterface
 
     public LinkedList<SingleCoin> getCoinList() {
         return this.coinList;
+    }
+
+    public LinkedList<T> getTList(){
+        LinkedList<T> lst = new LinkedList<>();
+        this.coinList.forEach(item -> {
+            lst.add((T)item);
+        });
+        return lst;
     }
 
     @Override
