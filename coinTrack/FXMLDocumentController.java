@@ -58,6 +58,7 @@ import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
 import java.awt.Desktop;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -121,6 +122,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private FileChooser fileChooser;
     @FXML private ImageView imageView;
     @FXML private Image image;
+    @FXML private CheckBox selectBox;
     @FXML private final Desktop desktop = Desktop.getDesktop();
 //    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
@@ -354,22 +356,15 @@ public class FXMLDocumentController implements Initializable {
 
         file = fileChooser.showOpenDialog(browseStage);
         if (file != null) {
-            try{
-                desktop.open(file);
-            }catch(IOException ex){
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            /*
             image = new Image(file.toURI().toString(), 100, 150, true, true);
             imageView = new ImageView(image);
             imageView.setFitWidth(100);
             imageView.setFitHeight(150);
             imageView.setPreserveRatio(true);
-            layout.setCenter(imageView);*/
+            layout.setCenter(imageView);
         }
 
     }
-
     /**
      * Verifies the path entered to save file.
      * @param path
@@ -437,7 +432,12 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
 
-        } else {
+        } else if (selectBox.isSelected() && image != null){
+            AlertMessages.showErrorMessage("Register User", "Since you've chosen a picture, please uncheck the box");
+        }else if (selectBox.isSelected() == false && image == null){
+            AlertMessages.showErrorMessage("Register User", "Either upload a picture or choose select later");
+        }
+        else {
             isGood = true;
         }
         return isGood;
