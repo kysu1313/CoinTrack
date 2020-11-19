@@ -40,7 +40,7 @@ public class TableClassFriendsCoins {
 //        TableColumn<UserCoin, String> colUserID = new TableColumn<>("User Id");
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colSymbol.setCellValueFactory(new PropertyValueFactory<>("symbol"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<>("Price"));
+        colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         colID.setCellValueFactory(new PropertyValueFactory<>("coinID"));
 //        colUserID .setCellValueFactory(new PropertyValueFactory<>("userID"));
         colID.setPrefWidth(100);
