@@ -122,6 +122,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private FileChooser fileChooser;
     @FXML private ImageView imageView;
     @FXML private Image image;
+    @FXML private String path;
     @FXML private CheckBox selectBox;
     @FXML private final Desktop desktop = Desktop.getDesktop();
 //    @FXML private ComboBox<Theme> themeComboBox;
@@ -355,6 +356,8 @@ public class FXMLDocumentController implements Initializable {
         );
 
         file = fileChooser.showOpenDialog(browseStage);
+        path = file.getAbsolutePath();
+        System.out.println(path);
         if (file != null) {
             image = new Image(file.toURI().toString(), 100, 150, true, true);
             imageView = new ImageView(image);
@@ -432,12 +435,9 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
 
-        } else if (selectBox.isSelected() && image != null){
-            AlertMessages.showErrorMessage("Register User", "Since you've chosen a picture, please uncheck the box");
-        }else if (selectBox.isSelected() == false && image == null){
-            AlertMessages.showErrorMessage("Register User", "Either upload a picture or choose select later");
-        }
-        else {
+        } else if (image == null){
+            AlertMessages.showErrorMessage("Register User", "Please choose a picture");
+        }else {
             isGood = true;
         }
         return isGood;
@@ -503,7 +503,7 @@ public class FXMLDocumentController implements Initializable {
             String uname = this.usernameEntry.getText();
             String pass = this.passwordEntry.getText();
             // If all good, submit info to DB
-            conn.userDatabase(0, email, uname, pass);
+            conn.userDatabase(0, email, uname, pass, path);
             conn.close();
             // Save username so it can be displayed in the application
             this.uname = uname;

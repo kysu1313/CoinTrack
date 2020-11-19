@@ -15,17 +15,17 @@ import java.util.LinkedList;
  * @author Kyle
  */
 public interface DatabaseInterface {
-    
-    public void addCoinToDatabase(int _coinID, String _uuid, String _slug, 
+
+    public void addCoinToDatabase(int _coinID, String _uuid, String _slug,
                             String _symbol, String _name,
-                            int _numMarkets, int _numExchanges, 
-                            int _volume, int _marketCap, String _price, 
+                            int _numMarkets, int _numExchanges,
+                            int _volume, int _marketCap, String _price,
                             double _change, int _coinRank);
     public boolean checkIfCoinExists(String _uuid);
     public void updateCoinPrices(int _id, double _newPrice, double _newChange, int _newVolume);
     public void coinDatabase(String _uuid, String _symbol, String _name, String _price, Date _date);
     public boolean insertSavedCoin(String userName, int _coin_id);
-    public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword);
+    public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword, String _profilePicture);
     public void setUserOnlineStatus(String _username, int _isOnline);
     public int getCoinID(String _symbol);
     public LinkedList<String> getOnlineUsers();
@@ -45,7 +45,7 @@ public interface DatabaseInterface {
     public LinkedList<UserCoin> getSavedCoins(String username);
     public LinkedList<String> getAllCoins();
     public boolean deleteSavedCoin(UserCoin userCoin);
-    
-    
-    
+
+
+
 }
