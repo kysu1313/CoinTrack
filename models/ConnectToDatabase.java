@@ -65,10 +65,10 @@ public class ConnectToDatabase implements DatabaseInterface{
      * @param _coinRank
      */
     @Override
-    public void addCoinToDatabase(int _coinID, String _uuid, String _slug, 
+    public void addCoinToDatabase(int _coinID, String _uuid, String _slug,
                             String _symbol, String _name,
-                            int _numMarkets, int _numExchanges, 
-                            int _volume, int _marketCap, String _price, 
+                            int _numMarkets, int _numExchanges,
+                            int _volume, int _marketCap, String _price,
                             double _change, int _coinRank) {
         try {
             // Parse price to a float because DB requires it.
@@ -106,11 +106,11 @@ public class ConnectToDatabase implements DatabaseInterface{
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Check if a coin already exists in the database.
      * @param _uuid
-     * @return 
+     * @return
      */
     @Override
     public boolean checkIfCoinExists(String _uuid) {
@@ -227,16 +227,17 @@ public class ConnectToDatabase implements DatabaseInterface{
      * @param _userEmail
      * @param _userName
      * @param _userPassword
+     * @param _profilePicture
      */
     @Override
-    public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword) {
+    public void userDatabase(int _online, String _userEmail, String _userName, String _userPassword, String _profilePicture) {
         try {
             /**
              * This works
              */
             // Insert statement, using prepared statements
-            String query = " INSERT INTO users (isOnline, userEmail, userName, userPassword)"
-                    + " VALUES (?, ?, ?, ?)";
+            String query = " INSERT INTO users (isOnline, userEmail, userName, userPassword, profilePicture)"
+                    + " VALUES (?, ?, ?, ?, ?)";
             String hashedPass = getSHA256(_userPassword);
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
@@ -244,6 +245,7 @@ public class ConnectToDatabase implements DatabaseInterface{
             preparedStmt.setString(2, _userEmail);
             preparedStmt.setString(3, _userName);
             preparedStmt.setString(4, hashedPass);
+            preparedStmt.setString(5, _profilePicture);
             // execute the preparedstatement
             preparedStmt.execute();
             if (DEBUG){System.out.println("Registration Success");}
@@ -263,7 +265,7 @@ public class ConnectToDatabase implements DatabaseInterface{
     public void setUserOnlineStatus(String _username, int _isOnline) {
         try {
             // Insert statement, using prepared statements
-            String query = " UPDATE users SET isOnline = " + "'" + _isOnline + "'" 
+            String query = " UPDATE users SET isOnline = " + "'" + _isOnline + "'"
                     + " WHERE username = " + "'" + _username + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
@@ -550,7 +552,7 @@ public class ConnectToDatabase implements DatabaseInterface{
         try {
             String hashedPass = getSHA256(_newPassword);
             // Update row value
-            String query = " UPDATE users SET userPassword = " + "'" + hashedPass + "'" 
+            String query = " UPDATE users SET userPassword = " + "'" + hashedPass + "'"
                     + " WHERE username = " + "'" + _uname + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
@@ -698,7 +700,7 @@ public class ConnectToDatabase implements DatabaseInterface{
     }
 
     /**
-     * This method checks that the coin user is saved previously or not. 
+     * This method checks that the coin user is saved previously or not.
      * @param id
      * @param _coin_id
      * @return
