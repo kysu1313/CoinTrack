@@ -57,6 +57,11 @@ import static controllers.Tab1Controller.DEBUG;
 import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
+import java.awt.Desktop;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser.ExtensionFilter;
 import models.EmailValidation;
 import models.User;
 
@@ -98,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private static Stage registerStage;
     @FXML private static Stage currentStage;
     @FXML private static Stage saveStage;
+    @FXML private static Stage browseStage;
     @FXML private Text registerInfo;
     @FXML private TextField recoveryEmail;
     @FXML private TextField recoveryCode;
@@ -110,6 +116,12 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Tab dashboard;
     @FXML private Tab tab1;
     @FXML private Tab tab2;
+    @FXML private BorderPane layout;
+    @FXML private File file;
+    @FXML private FileChooser fileChooser;
+    @FXML private ImageView imageView;
+    @FXML private Image image;
+    @FXML private final Desktop desktop = Desktop.getDesktop();
 //    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
     @FXML public static MenuItem lightMenuItem;
@@ -326,6 +338,36 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("get dir");
         this.saveLoc = directoryChooser.showDialog(saveStage);
         this.saveLocation.setText(this.saveLoc.toString());
+    }
+
+    /**
+     * Handles the browse button click in the register stage
+     * it browse an image.
+     * @param event
+     */
+    @FXML
+    private void handleBrowsePicture(ActionEvent event) {
+        fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+        );
+
+        file = fileChooser.showOpenDialog(browseStage);
+        if (file != null) {
+            try{
+                desktop.open(file);
+            }catch(IOException ex){
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            /*
+            image = new Image(file.toURI().toString(), 100, 150, true, true);
+            imageView = new ImageView(image);
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(150);
+            imageView.setPreserveRatio(true);
+            layout.setCenter(imageView);*/
+        }
+
     }
 
     /**
@@ -765,12 +807,12 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage; 
+        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
         if (this.lblWelcomeMessage != null) {
             this.lblWelcomeMessage.setText("Hello " + uname);
         }
     }
-    
+
     @FXML
     public void logout() {
         System.out.println("Logourt");
@@ -784,7 +826,7 @@ public class FXMLDocumentController implements Initializable {
             mainStage.setScene(this.scene);
             mainStage.show();
             this.currentStage = mainStage;
-    
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
