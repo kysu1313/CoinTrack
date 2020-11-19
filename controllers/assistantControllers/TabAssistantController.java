@@ -114,14 +114,26 @@ public class TabAssistantController<T> {
     }
 
     /**
-     * Return generic Saved Coin linked list.
+     * Return generic User Coin linked list.
      * @param _username
-     * @return uscn
+     * @return temp
      */
     public LinkedList<T> getObjUserCoinList(String _username){
         ConnectToDatabase conn = new ConnectToDatabase();
         LinkedList<T> temp = new LinkedList<>();
         conn.getSavedCoins(UNAME).forEach(item -> {
+            temp.add((T)item);
+        });
+        return temp;
+    }
+
+    /**
+     * Return generic User Coin linked list.
+     * @return temp
+     */
+    public LinkedList<T> getObjSavedCoinList(){
+        LinkedList<T> temp = new LinkedList<>();
+        this.userSingleCoins.forEach(item -> {
             temp.add((T)item);
         });
         return temp;
@@ -157,26 +169,18 @@ public class TabAssistantController<T> {
         });
     }
 
+    /**
+     * Creates the full table on Tab 1
+     * @param _classType
+     * @param _objList
+     * @param _colNames
+     * @param _tableViewT1
+     * @param _webView
+     * @param _currencyRate
+     */
     public void coinGenericTable(String _classType, LinkedList<Object> _objList, LinkedList<String> _colNames, TableView _tableViewT1, WebView _webView, long _currencyRate) {
 
         this.tbl = new TableClass(_classType, _objList, _tableViewT1, _webView, _colNames, _currencyRate);
-        this.tbl.displayTable();
-        this.tbl.colorChangeCol("#09de57", "#ff0000");
-    }
-
-    public void coinTable(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webViewT1, String _currency, long _currencyRate) {
-
-        // Create columns
-        SingleCoin sc = new SingleCoin();
-        LinkedList<String> colNames = new LinkedList<>();
-        // Add single coin param names for column names.
-        colNames.add("Symbol");
-        colNames.add("Name");
-        colNames.add("Price");
-        colNames.add("Rank");
-        colNames.add("Change");
-        colNames.add("Volume");
-        this.tbl = new TableClass(_tableViewT1, _coinList, _webViewT1, colNames, _currency, _currencyRate);
         this.tbl.displayTable();
         this.tbl.colorChangeCol("#09de57", "#ff0000");
     }
@@ -196,10 +200,11 @@ public class TabAssistantController<T> {
         colNames.add("Symbol");
         colNames.add("Price");
         colNames.add("Change");
-        this.tbl = new TableClass(tableView, coinList, colNames);
+        TabAssistantController tas = new TabAssistantController();
+        LinkedList<T> objList = getObjSavedCoinList();
+        this.tbl = new TableClass("SingleCoin", tableView, objList, colNames);
         this.tbl.displayTable();
         this.tbl.colorChangeCol("#09de57", "#ff0000");
-
     }
 
     /**
