@@ -11,15 +11,17 @@ public class UserCoin implements GlobalClassInterface{
     private String symbol;
     private String name;
     private String username;
+    private double price;
     private int coinID;
     private int userID;
 
-    public UserCoin(String symbol, String coin, String username, int coinID, int userID) {
+    public UserCoin(String symbol, String coin, String username, int coinID, int userID, double price) {
         this.symbol = symbol;
         this.name = coin;
         this.username = username;
         this.coinID = coinID;
         this.userID = userID;
+        this.price = price;
     }
 
     public int getUserID() {
@@ -62,6 +64,15 @@ public class UserCoin implements GlobalClassInterface{
         this.coinID = coinID;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    
     @Override
     public String toString() {
         return  symbol + "  " + name;
