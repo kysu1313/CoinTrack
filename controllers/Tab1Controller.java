@@ -273,7 +273,7 @@ public class Tab1Controller implements Initializable{
          * Add coins to new database table all_coins.
          * If there is a new coin it will be added here.
          */
-        cri.updateDatabaseCoins(this.coinList);
+        this.cri.updateDatabaseCoins(this.coinList);
 
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}

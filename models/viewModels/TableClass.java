@@ -102,43 +102,58 @@ public class TableClass<T> implements TableInterface{
      * @param _currency
      * @param _currencyRate
      */
-    public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webView, LinkedList<String> _columnNames, String _currency, long _currencyRate) {
-
-//        this.cri = new CoinRankApi();
-//        this.cri.join();
-//        this.coinList = this.cri.getCoinList();
-
-
-
-        this.TABLE_VIEW = _tableViewT1;
-        this.CURRENCY = _currency;
-        this.COLUMN_NAMES = _columnNames;
-        this.CURRENCY_RATE = _currencyRate;
-        this.WEB_VIEW = _webView;
-        staticCoinList = CoinRankApi.getStaticCoinList();
-        this.coinList = _coinList;
-        this.cols = new LinkedList<>();
-        buildTable();
-    }
+//    public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webView, LinkedList<String> _columnNames, String _currency, long _currencyRate) {
+//
+////        this.cri = new CoinRankApi();
+////        this.cri.join();
+////        this.coinList = this.cri.getCoinList();
+//
+//
+//
+//        this.TABLE_VIEW = _tableViewT1;
+//        this.CURRENCY = _currency;
+//        this.COLUMN_NAMES = _columnNames;
+//        this.CURRENCY_RATE = _currencyRate;
+//        this.WEB_VIEW = _webView;
+//        staticCoinList = CoinRankApi.getStaticCoinList();
+//        this.coinList = _coinList;
+//        this.cols = new LinkedList<>();
+//        buildTable();
+//    }
 
     /**
      * This table is a slimmed down version that does not include a WebView.
      *
      * Currently it is used on the dashboard.
      *
+     * @param _classType
      * @param _tableViewT1
-     * @param _coinList
+     * @param _objList
      * @param _columnNames
      */
-    public TableClass(TableView<SingleCoin> _tableViewT1, LinkedList<SingleCoin> _coinList, LinkedList<String> _columnNames) {
+    public TableClass(String _classType, TableView _tableViewT1, LinkedList<T> _objList, LinkedList<String> _columnNames) {
+        
+        this.tas = new TabAssistantController();
+
+        if(_classType.equals("SingleCoin")){
+            this.myClass = SingleCoin.class;
+            this.openList = (LinkedList<SingleCoin>)_objList;
+        } else if(_classType.equals("UserCoin")){
+            this.myClass = UserCoin.class;
+            this.openList = (LinkedList<UserCoin>)_objList;
+        } else if (_classType.equals("SingleMarket")){
+            this.myClass = SingleMarket.class;
+            this.openList = (LinkedList<SingleMarket>)_objList;
+        }
+
         this.TABLE_VIEW = _tableViewT1;
         this.COLUMN_NAMES = _columnNames;
         this.CURRENCY = "USD";
         this.CURRENCY_RATE = 1;
         this.WEB_VIEW = null;
-        this.coinList = _coinList;
+        this.listT = _objList;
         this.cols = new LinkedList<>();
-        buildTable();
+        buildTableGeneral();
     }
 
     private void buildTableGeneral() {
@@ -148,19 +163,14 @@ public class TableClass<T> implements TableInterface{
             this.cols.add(col1);
         });
         Field[] params = this.myClass.getDeclaredFields();
-        for (int i = 0; i < params.length; i++) {
-            System.out.println(params[i].getName());
-
-        }
         this.cols.forEach((item) -> {
             for (Field fld : params) {
                 if (item.getText().toLowerCase().replace(" ", "").equals(fld.getName().toLowerCase())) {
                     item.setCellValueFactory(new PropertyValueFactory<>(fld.getName()));
-                    System.out.println(fld.getName());
                 }
             }
         });
-        setCurrency();
+//        setCurrency();
         // Add columns to tableView
         this.TABLE_VIEW.getColumns().addAll(this.cols);
         this.obvObjList = FXCollections.observableArrayList(this.openList);
@@ -209,7 +219,7 @@ public class TableClass<T> implements TableInterface{
             if (item.getText().equalsIgnoreCase("change")) {
                 item.setCellFactory(new Callback<TableColumn, TableCell>() {
                     public TableCell call(TableColumn param) {
-                        return new TableCell<SingleCoin, Number>() {
+                        return new TableCell<Object, Number>() {
                             @Override
                             protected void updateItem(Number item, boolean empty) {
                                 // calling super here is very important - don't skip this!
@@ -328,8 +338,6 @@ public class TableClass<T> implements TableInterface{
     public void displayTable() {
         this.TABLE_VIEW.setItems(this.obvObjList);
         this.TABLE_VIEW.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//        this.TABLE_VIEW.setItems(this.obvList);openList
-//        this.TABLE_VIEW.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
 }
