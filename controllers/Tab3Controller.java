@@ -29,6 +29,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static controllers.Tab1Controller.DEBUG;
+import models.CoinDatabaseConnection;
 
 /**
  * Tab controller for the dashboard, "tab 3".
@@ -39,15 +40,6 @@ public class Tab3Controller implements Initializable{
 
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
-    /*LinkedList<UserCoin> userCoinList;
-    protected static LinkedList<SingleCoin> coinList;
-    public LinkedList<SingleCoin> userSingleCoins;
-    private LinkedList<UserCoin> savedCoins;
-    private LinkedList<String> friendList;
-    private LinkedList<String> onlineUserList;
-    LinkedHashMap<Double, String> singleHistoryMap;
-    LinkedHashMap<Double, String> userHistoryMap;
-    LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;*/
     private TextArea textArea;
     private TabAssistantController tas;
 
@@ -146,15 +138,14 @@ public class Tab3Controller implements Initializable{
 
     /**
      * Save coin using coinID and username.
+     * Calls coinDatabaseConnection which links to
+     * actual database class.
      * @param userName
      * @param coinID
      */
-    private void saveCoin(String userName, int coinID) {
-        ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
-            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
-        }
-        dbConn.close();
+    private void saveCoin(String _userName, int _coinID) {
+        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+        coinConn.saveCoin(_userName, _coinID);
     }
 
     /**

@@ -50,6 +50,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import models.CoinDatabaseConnection;
 import models.viewModels.BarChartClass;
 import models.viewModels.LineChartClass;
 
@@ -148,7 +149,7 @@ public class Tab2Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleScanT2(ActionEvent event) {
+    private void handleScanT2(ActionEvent _event) {
         if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
             if (DEBUG){System.out.println("bar chart selected");}
             barChart.getData().clear();
@@ -183,7 +184,7 @@ public class Tab2Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleSearchT2(ActionEvent event) {
+    private void handleSearchT2(ActionEvent _event) {
         if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
             if (DEBUG){System.out.println("bar chart selected");}
             this.barChart.getData().clear();
@@ -240,7 +241,7 @@ public class Tab2Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleClearT2(ActionEvent event) {
+    private void handleClearT2(ActionEvent _event) {
         this.barChart.getData().clear();
         this.barChart.layout();
         this.pieChart.getData().clear();
@@ -257,42 +258,9 @@ public class Tab2Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleComboBox(ActionEvent event) {
+    private void handleComboBox(ActionEvent _event) {
         this.timeSelection = this.comboBox.getValue();
     }
-
-    /**
-     * Handle log out button click.
-     * Takes you back to log in screen.
-     * @param event
-     */
-//    @FXML
-//    private void handleLogOutT2(ActionEvent event) {
-//        if (DEBUG){System.out.println("logging out");}
-//        Parent root;
-//            try {
-//                Tab2Controller.mainPage2 = new Stage();
-//                this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
-//                root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-//                this.scene = new Scene(root);
-//                Tab2Controller.mainPage2.setScene(this.scene);
-//                Tab2Controller.mainPage2.show();
-//                closeOldStage();
-//            } catch (IOException ex) {
-//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//    }
-
-    /**
-     * Change a users online status. i.e. when they log off .
-     * @param _uname
-     * @param _status
-     */
-//    private void setOnlineStatus(String _uname, int _status) {
-//        ConnectToDatabase conn = new ConnectToDatabase();
-//        conn.setUserOnlineStatus(_uname, _status);
-//        conn.close();
-//    }
 
     /**
      * Display historical data for a single coin
@@ -368,12 +336,15 @@ public class Tab2Controller implements Initializable{
         this.barChart.setData(this.barChartData);
     }
 
-    private void saveCoin(String userName, int coinID) {
-        ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
-            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
-        }
-        dbConn.close();
+    /**
+     * Save coin using coinDatabaseConnection class which calls
+     * the actual database class.
+     * @param _userName
+     * @param _coinID
+     */
+    private void saveCoin(String _userName, int _coinID) {
+        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+        coinConn.saveCoin(_userName, _coinID);
     }
 
     /**
@@ -416,6 +387,10 @@ public class Tab2Controller implements Initializable{
         tas.friendList(this.friendList, this.uname, this.friendsListT2);
     }
 
+    /**
+     * Creates the candlestick chart.
+     * @throws ParseException
+     */
     private void displayCandleChart() throws ParseException {
         tas.candleChart(this.candlePane);
     }
@@ -483,6 +458,10 @@ public class Tab2Controller implements Initializable{
         });
     }
 
+    /**
+     * Refresh lists of saved coins.
+     * @param event
+     */
     @FXML
     private void refresh(ActionEvent event) {
         populateSavedCoins();
@@ -560,7 +539,7 @@ public class Tab2Controller implements Initializable{
 
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle _resources) {
         this.tas = new TabAssistantController();
         // Save uname from login page.
         String uname = coinTrack.FXMLDocumentController.uname;
@@ -597,6 +576,6 @@ public class Tab2Controller implements Initializable{
         comboBox.setItems(TIMES);
         scanBtnT2.setDisable(true);
         addRemoveComboBox.setVisible(false);
-        addContextMenuToList(); 
+        addContextMenuToList();
     }
 }
