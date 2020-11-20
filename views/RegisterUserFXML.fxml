@@ -9,24 +9,24 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="393.0" prefWidth="459.0" stylesheets="styles/RegisterUserStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="393.0" prefWidth="459.0" stylesheets="styles/RegisterUserStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
-      <Label layoutX="198.0" layoutY="76.0" text="Username" textFill="WHITE">
+      <Label layoutX="198.0" layoutY="76.0" text="Username">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="202.0" layoutY="132.0" text="Password" textFill="WHITE">
+      <Label layoutX="202.0" layoutY="132.0" text="Password">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="213.0" layoutY="15.0" text="Email" textFill="WHITE">
+      <Label layoutX="213.0" layoutY="15.0" text="Email">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="registerLabel" layoutX="184.0" layoutY="188.0" text="Repeat Password" textFill="WHITE" />
+      <Label fx:id="registerLabel" layoutX="184.0" layoutY="188.0" text="Repeat Password" />
       <TextField fx:id="emailEntry" blendMode="SCREEN" layoutX="155.0" layoutY="42.0" />
       <TextField fx:id="usernameEntry" blendMode="SCREEN" layoutX="155.0" layoutY="103.0" />
       <PasswordField fx:id="passwordEntry" blendMode="SCREEN" layoutX="156.0" layoutY="152.0" />
@@ -36,7 +36,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Text fx:id="registerInfo" fill="WHITE" layoutX="63.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We probably won't sell your data" textAlignment="CENTER" wrappingWidth="332.05078125">
+      <Text fx:id="registerInfo" layoutX="63.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="We probably won't sell your data" textAlignment="CENTER" wrappingWidth="332.05078125">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

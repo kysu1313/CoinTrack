@@ -9,15 +9,11 @@ and open the template in the editor.
 */
 
 .root {
-     -fx-background-image: url("Background.jpg");
+     -fx-background-color: #696969;
 }
 
 .button {
-    -fx-background-color: 
-        #000000,
-        linear-gradient(#7ebcea, #2f4b8f),
-        linear-gradient(#426ab7, #263e75),
-        linear-gradient(#395cab, #223768);
+    -fx-background-color: #000000;
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 9 17 9 17;
@@ -26,11 +22,7 @@ and open the template in the editor.
 }
 
 .button:pressed {
-    -fx-background-color: 
-        #000000,
-        linear-gradient(#f03a3a, #a32929),
-        linear-gradient(#426ab7, #263e75),
-        linear-gradient(#395cab, #223768);
+    -fx-background-color: #000000;
     -fx-background-insets: 0,1,2,3;
     -fx-background-radius: 3,2,2,2;
     -fx-padding: 9 17 9 17;
