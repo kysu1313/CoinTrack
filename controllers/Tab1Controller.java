@@ -53,6 +53,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import models.CoinDatabaseConnection;
 import models.GetMarketsApi;
 import models.SingleMarket;
 import models.viewModels.ListClass;
@@ -138,7 +139,7 @@ public class Tab1Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleScan(ActionEvent event) {
+    private void handleScan(ActionEvent _event) {
         System.out.println("Scanning");
         boolean allCoins = this.allCoinsBtn.isSelected();
         boolean savedCoinsbtn = this.savedCoinsBtn.isSelected();
@@ -166,7 +167,7 @@ public class Tab1Controller implements Initializable{
      * @param event
      */
     @FXML
-    private void handleClearT1(ActionEvent event) {
+    private void handleClearT1(ActionEvent _event) {
         System.out.println("clearing data");
         tableViewT1.getItems().clear();
         txtAreaT1.setText("");
@@ -176,38 +177,60 @@ public class Tab1Controller implements Initializable{
      * Reset to default currency.
      */
     @FXML
-    private void handleResetCurr(ActionEvent event) {
+    private void handleResetCurr(ActionEvent _event) {
         resetCurrency();
     }
 
+    /**
+     * Radio button on Tab 1 for all coin search
+     * @param _event
+     */
     @FXML
-    private void handleAllCoins(ActionEvent event) {
+    private void handleAllCoins(ActionEvent _event) {
         this.savedCoinsBtn.setSelected(false);
         this.marketsBtn.setSelected(false);
     }
 
+    /**
+     * Radio button on Tab 1 for saved coin search
+     * @param _event
+     */
     @FXML
-    private void handleSavedCoins(ActionEvent event) {
+    private void handleSavedCoins(ActionEvent _event) {
         this.allCoinsBtn.setSelected(false);
         this.marketsBtn.setSelected(false);
     }
 
+    /**
+     * Radio button on Tab 1 for market search.
+     * @param _event
+     */
     @FXML
-    private void handleMarkets(ActionEvent event) {
+    private void handleMarkets(ActionEvent _event) {
         this.savedCoinsBtn.setSelected(false);
         this.allCoinsBtn.setSelected(false);
     }
 
+    /**
+     * Debug button enables debug for entire application.
+     * @param _event
+     */
     @FXML
-    private void handleDebug(ActionEvent event) {
+    private void handleDebug(ActionEvent _event) {
         if (this.debugBtn.isArmed()) {
             System.out.println("Debug mode enabled");
             this.DEBUG = true;
         }
     }
 
+    /**
+     * Test button, used for any feature being tested.
+     * @param _event
+     * @throws ParseException
+     * @throws IOException
+     */
     @FXML
-    private void handleTest(ActionEvent event) throws ParseException, IOException {
+    private void handleTest(ActionEvent _event) throws ParseException, IOException {
         GetMarketsApi gma = new GetMarketsApi();
         gma.getGenericMarketList().forEach(item -> {
             SingleMarket sm = (SingleMarket)item;
@@ -215,8 +238,12 @@ public class Tab1Controller implements Initializable{
         });
     }
 
+    /**
+     * Creates the save view where users can save coin lists.
+     * @param _event
+     */
     @FXML
-    private void handleSaveT1(ActionEvent event) throws IOException {
+    private void handleSaveT1(ActionEvent _event) throws IOException {
         this.cri = new CoinRankApi();
         if(DEBUG){System.out.println("logging out");}
         Parent root;
@@ -320,18 +347,15 @@ public class Tab1Controller implements Initializable{
      * Update coin prices in the database.
      */
     private void updateCoinPricesDB() {
-        ConnectToDatabase conn = new ConnectToDatabase();
         if (this.coinList.isEmpty()) {
             this.cri = new CoinRankApi();
             this.cri.run();
             this.cri.join();
             this.coinList = this.cri.getCoinList();
         }
-        this.coinList.forEach((item) -> {
-            conn.updateCoinPrices(item.getId(), Double.parseDouble(item.getPrice()),
-                    item.getChange(), item.getVolume());
-        });
-        conn.close();
+        
+        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+        coinConn.updateMultipleCoins(this.coinList);
     }
 
     /**
@@ -376,12 +400,9 @@ public class Tab1Controller implements Initializable{
      * @param userName
      * @param coinID
      */
-    private void saveCoin(String userName, int coinID) {
-        ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(userName, coinID)) {
-            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
-        }
-        dbConn.close();
+    private void saveCoin(String _userName, int _coinID) {
+        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+        coinConn.saveCoin(_userName, _coinID);
     }
 
     /**
@@ -438,15 +459,12 @@ public class Tab1Controller implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         tas = new TabAssistantController();
         this.uname = coinTrack.FXMLDocumentController.uname;
-//        this.assistT1 = new Tab1AssistantController();
         this.editBtn = new Menu();
         this.coinList = new LinkedList<>();
         // Set default currency
         this.selectedCurrency = "USD";
         this.currencyRate = 1;
-//        populateCurrencyDropdown();
         populateSavedCoins();
-//        createFriendListCells();
         addOnlineUsersToList();
         addFriendsToList();
         updateCoinPricesDB();

@@ -90,38 +90,6 @@ public class TableClass<T> implements TableInterface{
     }
 
     /**
-     * The table created by this constructor includes a WebView that displays
-     * the logo of the coin when it is double clicked.
-     *
-     * Mainly used in Tab 1
-     *
-     * @param _tableViewT1
-     * @param _coinList
-     * @param _webView
-     * @param _columnNames
-     * @param _currency
-     * @param _currencyRate
-     */
-//    public TableClass(TableView _tableViewT1, LinkedList<SingleCoin> _coinList, WebView _webView, LinkedList<String> _columnNames, String _currency, long _currencyRate) {
-//
-////        this.cri = new CoinRankApi();
-////        this.cri.join();
-////        this.coinList = this.cri.getCoinList();
-//
-//
-//
-//        this.TABLE_VIEW = _tableViewT1;
-//        this.CURRENCY = _currency;
-//        this.COLUMN_NAMES = _columnNames;
-//        this.CURRENCY_RATE = _currencyRate;
-//        this.WEB_VIEW = _webView;
-//        staticCoinList = CoinRankApi.getStaticCoinList();
-//        this.coinList = _coinList;
-//        this.cols = new LinkedList<>();
-//        buildTable();
-//    }
-
-    /**
      * This table is a slimmed down version that does not include a WebView.
      *
      * Currently it is used on the dashboard.
@@ -157,7 +125,6 @@ public class TableClass<T> implements TableInterface{
     }
 
     private void buildTableGeneral() {
-//        Class<SingleCoin> sclass = SingleCoin.class;
         this.COLUMN_NAMES.forEach((item) -> {
             TableColumn col1 = new TableColumn(item);
             this.cols.add(col1);
@@ -170,7 +137,6 @@ public class TableClass<T> implements TableInterface{
                 }
             }
         });
-//        setCurrency();
         // Add columns to tableView
         this.TABLE_VIEW.getColumns().addAll(this.cols);
         this.obvObjList = FXCollections.observableArrayList(this.openList);
