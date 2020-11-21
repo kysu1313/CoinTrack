@@ -100,7 +100,7 @@ public class TableClass<T> implements TableInterface{
      * @param _columnNames
      */
     public TableClass(String _classType, TableView _tableViewT1, LinkedList<T> _objList, LinkedList<String> _columnNames) {
-        
+
         this.tas = new TabAssistantController();
 
         if(_classType.equals("SingleCoin")){
@@ -124,6 +124,17 @@ public class TableClass<T> implements TableInterface{
         buildTableGeneral();
     }
 
+    /**
+     * Build table using the generic list cast as a specific object.
+     *
+     * The parameter names for the class of objects to be displayed are linked
+     * to each column. i.e: column1.getName() == class.parameter.name
+     *
+     * The column names must be the same as the parameter names. They can,
+     * however, have capital letters and spaces.
+     *
+     * @param colList
+     */
     private void buildTableGeneral() {
         this.COLUMN_NAMES.forEach((item) -> {
             TableColumn col1 = new TableColumn(item);

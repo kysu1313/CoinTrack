@@ -1,5 +1,6 @@
 package models;
 
+import controllers.AlertMessages;
 import interfaces.GenericClassInterface;
 import interfaces.UserInterface;
 import java.util.HashMap;
@@ -53,6 +54,28 @@ public class User implements GenericClassInterface, UserInterface{
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(this.USERNAME, 1);
         conn.close();
+    }
+
+    public static boolean isPasswordValid(String password) {
+        if(password.length() < 8) {
+            AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
+            return true;
+        }
+        boolean isCapital = false;
+        boolean isNumber = false;
+        for (int i = 0; i < password.length(); i++) {
+           char ch = password.charAt(i);
+
+           if (Character.isUpperCase(ch)) {
+               isCapital = true;
+           } else if (Character.isDigit(ch)) {
+               isNumber = true;
+           }
+        }
+        if (!isCapital || !isNumber) {
+            AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
+        }
+       return !isCapital && !isNumber;
     }
 
     @Override
