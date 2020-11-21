@@ -8,6 +8,7 @@ package controllers;
  */
 import controllers.assistantControllers.TabAssistantController;
 import models.AlphaVantage;
+import models.User;
 import models.CoinHistory;
 import models.CoinRankApi;
 import models.ConnectToDatabase;
@@ -249,7 +250,7 @@ public class Tab1Controller implements Initializable{
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            this.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+            FXMLDocumentController.user.onlineStatus(0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             Tab1Controller.mainPage1.setScene(this.scene);

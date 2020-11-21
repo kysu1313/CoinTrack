@@ -265,14 +265,14 @@ public class TabAssistantController<T> {
      * @param _uname
      * @param _status
      */
-    public void setOnlineStatus(String _uname, int _status) {
-        if (DEBUG) {
-            System.out.println("Update " + _uname + "'s online status");
-        }
-        ConnectToDatabase conn = new ConnectToDatabase();
-        conn.setUserOnlineStatus(_uname, _status);
-        conn.close();
-    }
+//    public void setOnlineStatus(String _uname, int _status) {
+//        if (DEBUG) {
+//            System.out.println("Update " + _uname + "'s online status");
+//        }
+//        ConnectToDatabase conn = new ConnectToDatabase();
+//        conn.setUserOnlineStatus(_uname, _status);
+//        conn.close();
+//    }
 
     /**
      * Testing this method using piechart class.

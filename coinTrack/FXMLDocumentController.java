@@ -182,7 +182,7 @@ public class FXMLDocumentController implements Initializable {
                     @Override
                     public void handle(Event event) {
                             System.out.println("Closing");
-                            controllers.Tab1Controller.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+//                            controllers.Tab1Controller.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
                             getCurrentStage().close();
                     }
                 });
@@ -235,7 +235,7 @@ public class FXMLDocumentController implements Initializable {
         }
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
-            String toEmail3 = this.emailEntry.getText();;
+            String toEmail3 = this.emailEntry.getText();
             ConnectToDatabase conn = new ConnectToDatabase();
             if (conn.emailExists(toEmail3)) {
             tempUsernameStorage = conn.getUsernameFromEmail(toEmail3);
@@ -421,7 +421,7 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Enter a password");
             this.passwordEntry.requestFocus();
 
-        } else if (isPasswordValid( this.passwordEntry.getText())) {
+        } else if (User.isPasswordValid(this.passwordEntry.getText())) {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText(" Password must be 8 characters long and should contain a digit and an uppercase letter.");
             this.passwordEntry.requestFocus();
@@ -470,29 +470,29 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
-    public boolean isPasswordValid(String password) {
-        if(password.length() < 8) {
-            AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
-            return true;
-        }
-        boolean isCapital = false;
-        boolean isNumber = false;
-
-        for (int i = 0; i < password.length(); i++) {
-           char ch = password.charAt(i);
-
-           if (Character.isUpperCase(ch)) {
-               isCapital = true;
-           } else if (Character.isDigit(ch)) {
-               isNumber = true;
-           }
-        }
-
-        if (!isCapital || !isNumber) {
-            AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
-        }
-       return !isCapital && !isNumber;
-    }
+//    public boolean isPasswordValid(String password) {
+//        if(password.length() < 8) {
+//            AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
+//            return true;
+//        }
+//        boolean isCapital = false;
+//        boolean isNumber = false;
+//
+//        for (int i = 0; i < password.length(); i++) {
+//           char ch = password.charAt(i);
+//
+//           if (Character.isUpperCase(ch)) {
+//               isCapital = true;
+//           } else if (Character.isDigit(ch)) {
+//               isNumber = true;
+//           }
+//        }
+//
+//        if (!isCapital || !isNumber) {
+//            AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
+//        }
+//       return !isCapital && !isNumber;
+//    }
 
     /**
      * Checks if a username already exists in database.
@@ -825,7 +825,7 @@ public class FXMLDocumentController implements Initializable {
         try {
             coinTrack.FXMLDocumentController.mainStage.close();
             FXMLDocumentController.mainStage = new Stage();
-            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
+//            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             mainStage.setScene(this.scene);
