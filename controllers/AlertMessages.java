@@ -9,10 +9,15 @@ import javafx.scene.control.Alert;
 
 /**
  *
- * @author 
+ * @author Parth
  */
 public class AlertMessages {
     
+    /**
+     * This method is used to show the alert message of Error type.
+     * @param title title of alert box
+     * @param message to display
+     */
     public static void showErrorMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -20,6 +25,11 @@ public class AlertMessages {
         alert.show();
     }
     
+    /**
+     * This method is used to show the alert message of INFORMATION type
+     * @param title title of alert box
+     * @param message to display
+     */
     public static void showInformationMessage(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
