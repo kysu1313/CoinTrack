@@ -38,6 +38,7 @@ public interface DatabaseInterface {
     public boolean emailExists(String _userEmail);
     public String getEmailFromUsername(String _username);
     public String getUsernameFromEmail(String _email);
+    public String getPicturePath(String _username);
     public void changePassword(String _uname, String _newPassword);
     public HashMap<String, String> getUserInfo(String _userName);
     public String getSHA256(String _input);

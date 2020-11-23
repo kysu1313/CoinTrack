@@ -5,28 +5,30 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="393.0" prefWidth="459.0" stylesheets="styles/RegisterUserStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="393.0" prefWidth="459.0" stylesheets="styles/RegisterUserStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController">
    <children>
       <Label layoutX="198.0" layoutY="76.0" text="Username">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label layoutX="202.0" layoutY="132.0" text="Password">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label layoutX="213.0" layoutY="15.0" text="Email">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="registerLabel" layoutX="184.0" layoutY="188.0" text="Repeat Password" />
+      <Label fx:id="registerLabel" layoutX="184.0" layoutY="188.0" text="Repeat Password">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Label>
       <TextField fx:id="emailEntry" blendMode="SCREEN" layoutX="155.0" layoutY="42.0" />
       <TextField fx:id="usernameEntry" blendMode="SCREEN" layoutX="155.0" layoutY="103.0" />
       <PasswordField fx:id="passwordEntry" blendMode="SCREEN" layoutX="156.0" layoutY="152.0" />
@@ -43,6 +45,5 @@
       </Text>
       <Button fx:id="BackBtn" mnemonicParsing="false" onAction="#handleBackToMain" text="Back" />
       <Button fx:id="browse" layoutX="316.0" layoutY="322.0" mnemonicParsing="false" onAction="#handleBrowsePicture" prefHeight="39.0" prefWidth="81.0" text="Browse " textAlignment="RIGHT" textFill="#011011" />
-      <BorderPane fx:id="layout" layoutX="14.0" layoutY="54.0" prefHeight="98.0" prefWidth="132.0" />
    </children>
 </AnchorPane>

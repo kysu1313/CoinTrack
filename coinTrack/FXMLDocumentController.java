@@ -58,11 +58,13 @@ import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
 import java.awt.Desktop;
+import java.awt.image.BufferedImage;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javax.imageio.ImageIO;
 import models.EmailValidation;
 import models.User;
 
@@ -138,6 +140,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private RadioButton saveSavedCoins;
     @FXML private RadioButton saveAllCoins;
     @FXML private Label lblWelcomeMessage;
+    @FXML private BorderPane layout1;
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
     //========== Action Handlers ==========
     /**
@@ -159,6 +162,7 @@ public class FXMLDocumentController implements Initializable {
 //        if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
         if (user.validateLogin()) {
             this.lblStatus.setText("Login Success");
+
 //            conn.setUserOnlineStatus(this.username.getText(), 1);
             user.onlineStatus(1);
             this.tas = new TabAssistantController();
@@ -354,25 +358,18 @@ public class FXMLDocumentController implements Initializable {
      * @param event
      */
     @FXML
-    private void handleBrowsePicture(ActionEvent event) {
+    private void handleBrowsePicture(ActionEvent event) throws IOException {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
         );
-
         file = fileChooser.showOpenDialog(browseStage);
+        if(file != null){
         path = file.getAbsolutePath();
-        System.out.println(path);
-        if (file != null) {
-            image = new Image(file.toURI().toString(), 100, 150, true, true);
-            imageView = new ImageView(image);
-            imageView.setFitWidth(100);
-            imageView.setFitHeight(150);
-            imageView.setPreserveRatio(true);
-            layout.setCenter(imageView);
+        image = new Image("file:///" + path);
         }
-
     }
+
     /**
      * Verifies the path entered to save file.
      * @param path
@@ -815,6 +812,16 @@ public class FXMLDocumentController implements Initializable {
         FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
         if (this.lblWelcomeMessage != null) {
             this.lblWelcomeMessage.setText("Hello " + uname);
+        }
+        if(this.layout1 !=null){
+            ConnectToDatabase conn = new ConnectToDatabase();
+            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
+            image = new Image("file:///" + picturePath);
+            imageView = new ImageView(image);
+            imageView.setFitWidth(50);
+            imageView.setFitHeight(50);
+            imageView.setPreserveRatio(true);
+            layout1.setCenter(imageView);
         }
     }
 

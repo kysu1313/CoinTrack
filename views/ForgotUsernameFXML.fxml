@@ -6,10 +6,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="297.0" prefWidth="414.0" stylesheets="styles/ForgotUsernameStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController"> 
+<AnchorPane id="AnchorPane" prefHeight="297.0" prefWidth="414.0" stylesheets="styles/ForgotUsernameStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="coinTrack.FXMLDocumentController"> 
    <children>
       <Button fx:id="recoveryEmailBtn" layoutX="132.0" layoutY="163.0" mnemonicParsing="false" onAction="#handleForgotUsernameEmail" prefHeight="39.0" prefWidth="150.0" text="Recover Username" />
-      <TextField fx:id="recoveryEmail" alignment="BOTTOM_LEFT" layoutX="133.0" layoutY="106.0" promptText="Email" />
+      <TextField fx:id="recoveryEmail" alignment="BOTTOM_LEFT" layoutX="133.0" layoutY="106.0" promptText="Email">
+         <font>
+            <Font name="System Bold Italic" size="12.0" />
+         </font></TextField>
       <Text layoutX="91.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter your email address" wrappingWidth="248.13671875">
          <font>
             <Font name="System Bold" size="20.0" />
