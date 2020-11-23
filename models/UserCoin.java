@@ -15,14 +15,16 @@ public class UserCoin implements GlobalClassInterface{
     private int coinID;
     private int userID;
 
-    public UserCoin(String symbol, String coin, String username, int coinID, int userID, double price) {
-        this.symbol = symbol;
-        this.name = coin;
-        this.username = username;
-        this.coinID = coinID;
-        this.userID = userID;
-        this.price = price;
+    public UserCoin(String _symbol, String _coin, String _username, int _coinID, int _userID, double _price) {
+        this.symbol = _symbol;
+        this.name = _coin;
+        this.username = _username;
+        this.coinID = _coinID;
+        this.userID = _userID;
+        this.price = _price;
     }
+
+    /* ======= SETTERS ======= */
 
     public int getUserID() {
         return userID;

@@ -6,12 +6,13 @@ package models;
  * - Kyle
  */
 
+import interfaces.SingleCoinHistoryInterface;
 import java.util.LinkedHashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class SingleCoinHistory {
+public class SingleCoinHistory implements SingleCoinHistoryInterface{
 
     private final JSONArray OBJECT;
     private final int COIN_ID;
@@ -49,6 +50,7 @@ public class SingleCoinHistory {
      * Returns the LinkedHashMap of price and date
      * @return coinList
      */
+    @Override
     public LinkedHashMap<Double, String> getCoinList() {
         return this.coinList;
     }
@@ -57,6 +59,7 @@ public class SingleCoinHistory {
      * Returns the id of the specific crypto currency
      * @return coinId
      */
+    @Override
     public int getCoinId() {
         return this.COIN_ID;
     }
