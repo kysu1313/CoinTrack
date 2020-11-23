@@ -49,7 +49,9 @@ public class Tab4Controller implements Initializable {
         tas.populateSavedCoins(savedCoinsList, savedCoins);
     }
 
-
+   /**
+    * 
+    */
     private void createTable() {
         Tab4Controller.tas.coinTableDash(this.tableViewT1, tas.userSingleCoins);
     }

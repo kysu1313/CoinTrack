@@ -825,6 +825,9 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    /**
+     * This method is used to perform the logout function.
+     */
     @FXML
     public void logout() {
         System.out.println("Logourt");

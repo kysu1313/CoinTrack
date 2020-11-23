@@ -24,53 +24,115 @@ public class UserCoin implements GlobalClassInterface{
         this.price = price;
     }
 
-    public int getUserID() {
-        return userID;
-    }
+    // ========== GETTERS ==========
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
+    /** return symbol of coin
+     * 
+     * @return symbol
+     */
     public String getSymbol() {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
+    /**Return name of coin
+     * 
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+     /**Return username of coin
+     * 
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getCoinID() {
-        return coinID;
-    }
-
-    public void setCoinID(int coinID) {
-        this.coinID = coinID;
-    }
-
+     /**Return price of coin
+     * 
+     * @return price
+     */
     public double getPrice() {
         return price;
     }
 
+     /**Return coinID of coin
+     * 
+     * @return coinID
+     */
+    public int getCoinID() {
+        return coinID;
+    }
+
+     /**Return userID of coin
+     * 
+     * @return userID
+     */
+    public int getUserID() {
+        return userID;
+    }
+    
+    /**
+     * 
+     * @return class name
+     */
+    @Override
+    public String getClassName() {
+        return "UserCoin";
+    }
+    // ========== SETTERS ==========
+
+    /**
+     * 
+     * @param symbol 
+     */
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    /**
+     * 
+     * @param name 
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    /**
+     * 
+     * @param username 
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * 
+     * @param price 
+     */
     public void setPrice(double price) {
         this.price = price;
     }
+
+    /**
+     * 
+     * @param coinID 
+     */
+    public void setCoinID(int coinID) {
+        this.coinID = coinID;
+    }
+
+    /**
+     * 
+     * @param userID 
+     */
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+   
+    
 
     
     @Override
@@ -78,8 +140,5 @@ public class UserCoin implements GlobalClassInterface{
         return  symbol + "  " + name;
     }
 
-    @Override
-    public String getClassName() {
-        return "UserCoin";
-    }
+    
 }
