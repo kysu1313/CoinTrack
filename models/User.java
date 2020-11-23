@@ -49,7 +49,7 @@ public class User implements GenericClassInterface, UserInterface{
         conn.close();
         return accepted;
     }
-    
+
     public void onlineStatus(int _value) {
         ConnectToDatabase conn = new ConnectToDatabase();
         conn.setUserOnlineStatus(this.USERNAME, 1);

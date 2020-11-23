@@ -546,6 +546,27 @@ public class ConnectToDatabase implements DatabaseInterface{
         }
         return username;
     }
+    /**
+     * returns the path of the profile picture associated with the given username
+     * @param _username
+     * @return
+     */
+    @Override
+    public String getPicturePath(String _username){
+        boolean isvalid = true;
+        String profilePicture = "";
+        try{
+            String query = "SELECT * from users where username = '" + _username + "'";
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()){
+                profilePicture = result.getString("ProfilePicture");
+            }
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
+        return profilePicture;
+    }
 
     @Override
     public void changePassword(String _uname, String _newPassword) {
