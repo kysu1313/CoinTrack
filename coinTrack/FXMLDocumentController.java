@@ -796,7 +796,26 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-
+    /**
+     * Displaying the profile picture
+     */
+    private void profilePicture(){
+        if(this.layout1 != null){
+            ConnectToDatabase conn = new ConnectToDatabase();
+            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
+            if("".equals(picturePath)){
+                Image image1 = new Image("/styles/bitCoin.jpg");
+                imageView = new ImageView(image1);
+            }else{
+                image = new Image("file:///" + picturePath);
+                imageView = new ImageView(image);
+            }
+            imageView.setFitWidth(50);
+            imageView.setFitHeight(30);
+            imageView.setPreserveRatio(true);
+            layout1.setCenter(imageView);
+        }
+    }
     /**
      * This is supposed to return the current stage so it can be closed. But I
      * don't think it works...
@@ -810,18 +829,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+        profilePicture();
         if (this.lblWelcomeMessage != null) {
             this.lblWelcomeMessage.setText("Hello " + uname);
-        }
-        if(this.layout1 !=null){
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-            image = new Image("file:///" + picturePath);
-            imageView = new ImageView(image);
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(50);
-            imageView.setPreserveRatio(true);
-            layout1.setCenter(imageView);
         }
     }
 
