@@ -556,8 +556,11 @@ public class ConnectToDatabase implements DatabaseInterface{
         boolean isvalid = true;
         String profilePicture = "";
         try{
+            // Insert statement, using prepared statements
             String query = "SELECT * from users where username = '" + _username + "'";
+             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            // execute the preparedstatement
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()){
                 profilePicture = result.getString("ProfilePicture");
