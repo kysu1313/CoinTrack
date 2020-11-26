@@ -6,6 +6,7 @@ package controllers;
  * are displaying graphs, searches, accordion.
  */
 
+import coinTrack.FXMLDocumentController;
 import controllers.assistantControllers.TabAssistantController;
 import models.CoinHistory;
 import models.CoinRankApi;
@@ -51,6 +52,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.CoinDatabaseConnection;
+import models.User;
 import models.viewModels.BarChartClass;
 import models.viewModels.LineChartClass;
 
@@ -59,12 +61,12 @@ import models.viewModels.LineChartClass;
  * @author Kyle
  */
 public class Tab2Controller implements Initializable{
-    
+
+    private final User USER = FXMLDocumentController.user;
     private CoinHistory coinHistory;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private int coinsToGraph = 25;
-//    private boolean isSingleCoinScan;
     private CoinRankApi coinList;
     private String timeSelection;
     private int tabSelection;
@@ -75,13 +77,16 @@ public class Tab2Controller implements Initializable{
             observableArrayList("3", "5", "7", "15", "25", "35", "50");
     private final ObservableList<String> ADDREMOVE = FXCollections.
             observableArrayList("add", "remove");
-    private static Stage mainPage2;
+    private final int COIN_ID_LOCATION = 0;
+    private final int TAB1 = 1;
+    private final int TAB2 = 2;
+    private final int TAB3 = 3;
+    private final int TAB4 = 4;
+//    private static Stage mainPage2;
     private String uname;
     private LinkedList<String> onlineUsers;
     private LinkedList<String> friendList;
     private LinkedList<UserCoin> savedCoins;
-    private HashMap<String, XYChart.Series> seriesMap;
-    private LinkedList<XYChart.Series> seriesList;
     private LinkedList<String> linesToGraph;
     private LinkedList<XYChart.Data<String, Number>> dataList;
     private Tab currTab;
@@ -99,7 +104,7 @@ public class Tab2Controller implements Initializable{
     @FXML private Tab barChartTab;
     @FXML private Tab pieChartTab;
     @FXML private Tab lineChartTab;
-    @FXML private Tab webTab;
+//    @FXML private Tab webTab;
     @FXML private Tab candleTab;
     @FXML private ComboBox addRemoveComboBox;
     @FXML public static Label coordsLabel;
@@ -112,11 +117,8 @@ public class Tab2Controller implements Initializable{
     @FXML private ContextMenu cm;
 
     // Bottom portion Tab 2
-    @FXML private SplitMenuButton splitMenuT2;
     @FXML private TextField searchFieldT2;
-    @FXML private SplitMenuButton numCoins;
     @FXML private TextArea txtAreaT2;
-    @FXML private Spinner<String> spinnerT2;
     @FXML private ComboBox<String> comboBox;
     @FXML private Button scanBtnT2;
     @FXML private Button searchBtnT2;
@@ -303,7 +305,7 @@ public class Tab2Controller implements Initializable{
         } else {
             char ch = this.searchFieldT2.getText().charAt(0);
             if (Character.isAlphabetic(ch)){
-                CoinHistory coinHist = new CoinHistory(0, this.searchFieldT2.getText(), this.timeSelection);
+                CoinHistory coinHist = new CoinHistory(this.COIN_ID_LOCATION, this.searchFieldT2.getText(), this.timeSelection);
                 this.singleHistoryMap = coinHist.getSingleHistory();
             } else {
                 int temp = Integer.parseInt(this.searchFieldT2.getText());
@@ -342,10 +344,13 @@ public class Tab2Controller implements Initializable{
      * @param _userName
      * @param _coinID
      */
-    private void saveCoin(String _userName, int _coinID) {
-        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
-        coinConn.saveCoin(_userName, _coinID);
+    private void saveCoin(int _coinID) {
+        this.USER.saveCoin(_coinID);
     }
+
+
+//        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+//        coinConn.saveCoin(_userName, _coinID);
 
     /**
      * Populate saved coin side area.
@@ -369,7 +374,7 @@ public class Tab2Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        tas.addOnlineUsers(this.onlineUsers, this.onlineUsersListT2);
+        this.tas.addOnlineUsers(this.onlineUsers, this.onlineUsersListT2);
     }
 
     /**
@@ -377,14 +382,14 @@ public class Tab2Controller implements Initializable{
      * It also maps each button to an action.
      */
     private void createListCells() {
-        tas.listCells(this.onlineUsersListT2, this.uname);
+        this.tas.listCells(this.onlineUsersListT2, this.uname);
     }
 
     /**
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        tas.friendList(this.friendList, this.uname, this.friendsListT2);
+        this.tas.friendList(this.friendList, this.uname, this.friendsListT2);
     }
 
     /**
@@ -392,7 +397,7 @@ public class Tab2Controller implements Initializable{
      * @throws ParseException
      */
     private void displayCandleChart() throws ParseException {
-        tas.candleChart(this.candlePane);
+        this.tas.candleChart(this.candlePane);
     }
 
     /**
@@ -412,10 +417,11 @@ public class Tab2Controller implements Initializable{
             @Override
             public void changed(ObservableValue<? extends Tab> ov, Tab oldTab, Tab currentTab) {
                 if (DEBUG){System.out.println("Tab Change");}
+                // Unable to use 'this' keyword here due to lambda expression.
                 if (currentTab == barChartTab) {
                     currTab = barChartTab;
                     comboBox.setValue("Timeframe");
-                    tabSelection = 1;
+                    tabSelection = TAB1;
                     scanBtnT2.setDisable(true);
                     searchBtnT2.setDisable(false);
                     addRemoveComboBox.setVisible(false);
@@ -423,7 +429,7 @@ public class Tab2Controller implements Initializable{
                 } else if (currentTab == pieChartTab) {
                     currTab = pieChartTab;
                     comboBox.setValue("Number of coins");
-                    tabSelection = 2;
+                    tabSelection = TAB2;
                     searchBtnT2.setDisable(true);
                     scanBtnT2.setDisable(false);
                     addRemoveComboBox.setVisible(false);
@@ -431,7 +437,7 @@ public class Tab2Controller implements Initializable{
                 } else if (currentTab == lineChartTab) {
                     currTab = lineChartTab;
                     comboBox.setValue("Timeframe");
-                    tabSelection = 3;
+                    tabSelection = TAB3;
                     searchBtnT2.setDisable(false);
                     scanBtnT2.setDisable(true);
                     addRemoveComboBox.setVisible(true);
@@ -441,7 +447,7 @@ public class Tab2Controller implements Initializable{
                 } else if (currentTab == candleTab) {
                     currTab = candleTab;
                     comboBox.setValue("Timeframe");
-                    tabSelection = 4;
+                    tabSelection = TAB4;
                     searchBtnT2.setDisable(false);
                     scanBtnT2.setDisable(true);
                     addRemoveComboBox.setVisible(true);
@@ -546,7 +552,7 @@ public class Tab2Controller implements Initializable{
         this.uname = coinTrack.FXMLDocumentController.uname;
         System.out.println(DEBUG);
         linesToGraph = new LinkedList<>();
-        seriesList = new LinkedList<>();
+//        seriesList = new LinkedList<>();
         coordsLabel = new Label();
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
@@ -561,7 +567,7 @@ public class Tab2Controller implements Initializable{
         lineChartData = FXCollections.observableArrayList();
         pieChart.setTitle("Coin Prices");
         lineChart.setTitle("Compare Prices");
-        seriesMap = new HashMap<>();
+//        seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
         series2 = new BarChart.Series<>();

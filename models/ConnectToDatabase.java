@@ -756,6 +756,49 @@ public class ConnectToDatabase implements DatabaseInterface{
             return false;
         }
     }
+
+    /**
+     * Returns the users ID from their username.
+     * @param _uname
+     * @return
+     */
+    public int getUserId(String _uname) {
+        // Default id negative
+        int id = -1;
+        try {
+            // Insert statement, using prepared statements
+            String query = "SELECT * from users where username = '" + _uname + "'";
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = this.con.prepareStatement(query);
+            ResultSet result = preparedStmt.executeQuery(query);
+            while(result.next()) {
+                id = result.getInt("userID");
+                System.out.println(_uname + ": " + id);
+            }
+            return id;
+        } catch (SQLException ex) {
+            System.out.println("Error in DB Connection: " + ex);
+            return id;
+        }
+    }
+
+    /**
+     * Delete a saved coin using username and the coins ID.
+     * @param _user
+     * @param _coinID
+     * @return
+     */
+    public boolean deleteSavedCoin(User _user, int _coinID) {
+        try {
+            String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + _user.getUserID() + " AND `user_coins`.`coin_id` = " + _coinID;
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate(query);
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Error in DB Connection: " + ex);
+            return false;
+        }
+    }
 }
 
 

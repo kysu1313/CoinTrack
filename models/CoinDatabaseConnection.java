@@ -56,4 +56,17 @@ public class CoinDatabaseConnection {
         }
         dbConn.close();
     }
+
+    /**
+     * Delete a coin saved by the user.
+     * @param _user
+     * @param _coinID
+     */
+    public void deleteCoin(User _user, int _coinID) {
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.deleteSavedCoin(_user, _coinID)) {
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
+        }
+        dbConn.close();
+    }
 }
