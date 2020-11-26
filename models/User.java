@@ -1,5 +1,6 @@
 package models;
 
+import static coinTrack.FXMLDocumentController.uname;
 import controllers.AlertMessages;
 import interfaces.GenericClassInterface;
 import interfaces.GlobalClassInterface;
@@ -15,6 +16,7 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
 
     private final String USERNAME;
     private final String PASSWORD;
+    private final int USER_ID;
     private final ConnectToDatabase CONN;
     private final LinkedList<UserCoin> USER_COINS;
     private final HashMap<String, String> USER_DATA;
@@ -24,12 +26,19 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
         this.USERNAME = _username;
         this.PASSWORD = _password;
         this.CONN = new ConnectToDatabase();
+        this.USER_ID = this.CONN.getUserId(uname);
         this.USER_COINS = this.CONN.getSavedCoins(_username);
         this.USER_DATA = this.CONN.getUserInfo(_username);
         this.CONN.close();
     }
 
-    // ============= GETTERS ============= //
+    public void saveCoin(int _coinID) {
+        ConnectToDatabase dbConn = new ConnectToDatabase();
+        if (dbConn.insertSavedCoin(this.USERNAME, _coinID)) {
+            AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
+        }
+        dbConn.close();
+    }
 
     /**
      * Return a generic list of userCoin objects.
@@ -92,9 +101,15 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
        return !isCapital && !isNumber;
     }
 
+        // ============= GETTERS ============= //
+
     @Override
     public String getUsername(){
         return this.USERNAME;
+    }
+
+    public int getUserID() {
+        return this.USER_ID;
     }
 
     @Override
