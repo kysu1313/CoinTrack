@@ -33,7 +33,7 @@ public class ConnectToApi implements ApiInterface{
             if (resp.getStatus() != 200) {
                 this.status = false;
             }
-            System.out.println("Status: " + resp.getStatus());
+            if (DEBUG) {System.out.println("Status: " + resp.getStatus());}
             this.response = resp.getBody().toString();
             this.job = new JSONObject(resp.getBody().toString());
         } catch (UnirestException ex) {

@@ -39,6 +39,9 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     private LinkedHashMap<Double, String> singleHistoryMap;
     private String timeSelection;
     private TextArea textArea;
+    private final String FORMAT = "#%06x";
+    private final int OFFSET = 0xffffff;
+    private final String STYLE_LOC = "-fx-bar-fill: ";
 
     /**
      * Constructor for bar chart used in Tab 2.
@@ -90,8 +93,6 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      * Display single coin graph.
      */
     public void displaySingleGraph() {
-//        this.barChartData.add(this.series);
-//        this.barChart.setData(this.barChartData);
         this.barChart.getData().add(this.series);
         alternateColors("green", "red");
         scaleGraph();
@@ -134,7 +135,7 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
     }
 
     /**
-     * Create data series for the multi coin bar chart. 
+     * Create data series for the multi coin bar chart.
      * Used on Tab 3, "dashboard".
      */
     private void multiCoinData() {
@@ -159,10 +160,13 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
             this.serLst.add(series);
             // Create random colors for each bar
             Random rand = new Random();
-            this.colors.add(String.format("#%06x", rand.nextInt(0xffffff + 1)));
+            this.colors.add(String.format(this.FORMAT, rand.nextInt(this.OFFSET + 1)));
         }
     }
 
+    /**
+     * Add a color to the graph.
+     */
     @Override
     public void colorGraph() {
         this.linkedMap.forEach((item) -> {
@@ -171,12 +175,17 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
                 if (count >= this.numCoins) {break;}
                 double price = entry.getKey();
                 Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                n.setStyle("-fx-bar-fill: " + colors.get(count));
+                n.setStyle(this.STYLE_LOC + colors.get(count));
                 count++;
             }
         });
     }
 
+    /**
+     * Create alternating colors for graph.
+     * @param _upColor
+     * @param _downColor
+     */
     @Override
     public void alternateColors(String _upColor, String _downColor) {
         double lastPrice = 0;
@@ -187,10 +196,10 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
             if (count < this.singleHistoryMap.size()){
                 if (price > lastPrice) {
                     Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: " + _upColor);
+                    n.setStyle(this.STYLE_LOC + _upColor);
                 } else {
                     Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle("-fx-bar-fill: " + _downColor);
+                    n.setStyle(this.STYLE_LOC + _downColor);
                 }
             }
         }

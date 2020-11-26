@@ -23,13 +23,9 @@
                <tooltip>
                   <Tooltip text="Select global stats to view current global coin statistics" />
                </tooltip></CheckBox>
-              <CheckBox fx:id="searchCoins" mnemonicParsing="false" text="All Coins">
-               <tooltip>
-                  <Tooltip text="Select all coins to view a list of coins in a table" />
-               </tooltip></CheckBox>
-            <RadioButton fx:id="allCoinsBtn" onAction="#handleAllCoins" mnemonicParsing="false" text="All Coins" />
-            <RadioButton fx:id="savedCoinsBtn" onAction="#handleSavedCoins" mnemonicParsing="false" text="Saved Coins" />
-            <RadioButton fx:id="marketsBtn" onAction="#handleMarkets" mnemonicParsing="false" text="Markets" />
+            <RadioButton fx:id="allCoinsBtn" mnemonicParsing="false" onAction="#handleAllCoins" text="All Coins" />
+            <RadioButton fx:id="savedCoinsBtn" mnemonicParsing="false" onAction="#handleSavedCoins" text="Saved Coins" />
+            <RadioButton fx:id="marketsBtn" mnemonicParsing="false" onAction="#handleMarkets" text="Markets" />
               <Button fx:id="scanBtnT1" accessibleHelp="Scan for updates on coin prices" defaultButton="true" mnemonicParsing="false" onAction="#handleScan" text="Scan" underline="true">
                <tooltip>
                   <Tooltip text="Scan all avaliable cryptocurrencies" />
@@ -113,7 +109,7 @@
       <ToolBar fx:id="bottomToolbar" layoutY="757.0" prefHeight="35.0" prefWidth="1183.0">
         <items>
             <CheckBox fx:id="debugBtn" mnemonicParsing="false" onAction="#handleDebug" text="Debug" />
-          <Button fx:id="resetCurr" mnemonicParsing="false" onAction="#handleResetCurr" text="Reset Currency" />
+          <Button fx:id="resetCurr" disable="true" mnemonicParsing="false" onAction="#handleResetCurr" text="Reset Currency" />
             <Button fx:id="testBtn" mnemonicParsing="false" onAction="#handleTest" text="Test" />
             <Button fx:id="saveBtnT1" mnemonicParsing="false" onAction="#handleSaveT1" text="Save" />
         </items>
