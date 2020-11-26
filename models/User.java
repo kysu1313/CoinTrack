@@ -7,6 +7,8 @@ import interfaces.GlobalClassInterface;
 import interfaces.UserInterface;
 import java.util.HashMap;
 import java.util.LinkedList;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * This class represents a user's account.
@@ -101,7 +103,39 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
        return !isCapital && !isNumber;
     }
 
+
         // ============= GETTERS ============= //
+
+    /**
+     * Checks if a username already exists in database.
+
+     * @return
+     */
+    public static boolean usernameAcceptable(String _uname, String _password, String _email, String _imgPath, Text _registerText) {
+        // Call DB connection class
+        ConnectToDatabase conn = new ConnectToDatabase();
+        // Check is username exists in DB
+        if (!conn.usernameExists(_uname) && !conn.emailExists(_email)) {
+            // If all good, submit info to DB
+            conn.userDatabase(0, _email, _uname, _password, _imgPath);
+            conn.close();
+            // Save username so it can be displayed in the application
+            // After login is successful, you are taken to the main page
+            _registerText.setFill(Color.GREEN);
+            _registerText.setText("SUCCESS!");
+            return true;
+        } else if (conn.usernameExists(_uname)){
+            AlertMessages.showErrorMessage("Register User", "Username already taken. Try another one.");
+            _registerText.setText("Username already taken. Try another one.");
+            _registerText.setFill(Color.RED);
+            return false;
+        } else
+            AlertMessages.showErrorMessage("Register User", "Email already taken. Try another one.");
+            _registerText.setText("Email already taken. Try another one.");
+            _registerText.setFill(Color.RED);
+            return false;
+    }
+
 
     @Override
     public String getUsername(){
