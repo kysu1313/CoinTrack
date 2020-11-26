@@ -142,6 +142,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private Label lblWelcomeMessage;
     @FXML private BorderPane layout1;
     Pattern emailRegex = Pattern.compile("\\b[\\w.%-]+@[\\w]+\\.[A-Za-z]{2,4}\\b");
+
     //========== Action Handlers ==========
     /**
      * Login button action handler. If the username and password are correct the
@@ -461,62 +462,23 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
-//    public boolean isPasswordValid(String password) {
-//        if(password.length() < 8) {
-//            AlertMessages.showErrorMessage("Register User", "Password must be 8 characters long.");
-//            return true;
-//        }
-//        boolean isCapital = false;
-//        boolean isNumber = false;
-//
-//        for (int i = 0; i < password.length(); i++) {
-//           char ch = password.charAt(i);
-//
-//           if (Character.isUpperCase(ch)) {
-//               isCapital = true;
-//           } else if (Character.isDigit(ch)) {
-//               isNumber = true;
-//           }
-//        }
-//
-//        if (!isCapital || !isNumber) {
-//            AlertMessages.showErrorMessage("Register User", "Password must contain a digit and an uppercase letter.");
-//        }
-//       return !isCapital && !isNumber;
-//    }
-
     /**
      * Checks if a username already exists in database.
 
      * @return
      */
     private boolean usernameAcceptable() {
-        // Call DB connection class
-        ConnectToDatabase conn = new ConnectToDatabase();
-        // Check is username exists in DB
-        if (!conn.usernameExists(this.usernameEntry.getText()) && !conn.emailExists(this.emailEntry.getText())) {
-            String email = this.emailEntry.getText();
-            String uname = this.usernameEntry.getText();
-            String pass = this.passwordEntry.getText();
-            // If all good, submit info to DB
-            conn.userDatabase(0, email, uname, pass, path);
-            conn.close();
-            // Save username so it can be displayed in the application
-            this.uname = uname;
-            // After login is successful, you are taken to the main page
-            this.registerInfo.setFill(Color.GREEN);
-            this.registerInfo.setText("SUCCESS!");
+        String uname = this.usernameEntry.getText();
+        String password = this.passwordEntry.getText();
+        String email = this.emailEntry.getText();
+        String imgPath = this.path;
+        if (User.usernameAcceptable(uname, password, email, imgPath, this.registerInfo)){
+            User user = new User(uname, password);
+            FXMLDocumentController.user = user;
             return true;
-        } else if (conn.usernameExists(this.usernameEntry.getText())){
-            AlertMessages.showErrorMessage("Register User", "Username already taken. Try another one.");
-            this.registerInfo.setText("Username already taken. Try another one.");
-            this.registerInfo.setFill(Color.RED);
+        } else {
             return false;
-        } else
-            AlertMessages.showErrorMessage("Register User", "Email already taken. Try another one.");
-            this.registerInfo.setText("Email already taken. Try another one.");
-            this.registerInfo.setFill(Color.RED);
-            return false;
+        }
     }
 
     /**
