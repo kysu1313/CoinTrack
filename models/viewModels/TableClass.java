@@ -23,6 +23,7 @@ import javafx.scene.web.WebView;
 import javafx.util.Callback;
 import static controllers.Tab1Controller.DEBUG;
 import controllers.assistantControllers.TabAssistantController;
+import models.CoinDatabaseConnection;
 import models.CoinRankApi;
 import models.SingleMarket;
 
@@ -279,33 +280,72 @@ public class TableClass<T> implements TableInterface{
      */
     @Override
     public void createTableCells(String _username, ListView _savedCoinsList, LinkedList<UserCoin> _savedCoins) {
-        ContextMenu cm2 = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Save Coin");
-        TabAssistantController tas = new TabAssistantController();
-        mi1.setOnAction(event -> {
+        
+        if (this.myClass.equals(SingleCoin.class)) {
+            ContextMenu cm2 = new ContextMenu();
+            MenuItem mi1 = new MenuItem("Save Coin");
+            TabAssistantController tas = new TabAssistantController();
+            mi1.setOnAction(event -> {
                 SingleCoin item = (SingleCoin) TABLE_VIEW.getSelectionModel().getSelectedItem();
                 tas.saveCoin(_username, item.getId());
-                if(DEBUG){System.out.println("Added " + item.getName() + " to saved coin list");}
+                if (DEBUG) {
+                    System.out.println("Added " + item.getName() + " to saved coin list");
+                }
                 tas.populateSavedCoins(_savedCoinsList, _savedCoins);
             });
-        ContextMenu menu = new ContextMenu();
-        menu.getItems().add(mi1);
-        this.TABLE_VIEW.setContextMenu(menu);
-        tas.populateSavedCoins(_savedCoinsList, _savedCoins);
+            ContextMenu menu = new ContextMenu();
+            menu.getItems().add(mi1);
+            this.TABLE_VIEW.setContextMenu(menu);
+            tas.populateSavedCoins(_savedCoinsList, _savedCoins);
 
-        cm2.getItems().add(mi1);
-        MenuItem mi2 = new MenuItem("Share Coin");
-        cm2.getItems().add(mi2);
-        MenuItem mi3 = new MenuItem("Track Coin");
-        cm2.getItems().add(mi3);
-        this.TABLE_VIEW.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if (t.getButton() == MouseButton.SECONDARY) {
-                    cm2.show(TABLE_VIEW, t.getScreenX(), t.getScreenY());
+            cm2.getItems().add(mi1);
+            MenuItem mi2 = new MenuItem("Share Coin");
+            cm2.getItems().add(mi2);
+            MenuItem mi3 = new MenuItem("Track Coin");
+            cm2.getItems().add(mi3);
+            this.TABLE_VIEW.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
+                    if (t.getButton() == MouseButton.SECONDARY) {
+                        cm2.show(TABLE_VIEW, t.getScreenX(), t.getScreenY());
+                    }
                 }
-            }
-        });
+            });
+        } else if (this.myClass.equals(UserCoin.class)) {
+            ContextMenu cm2 = new ContextMenu();
+            MenuItem mi1 = new MenuItem("Remove Coin");
+            TabAssistantController tas = new TabAssistantController();
+            CoinDatabaseConnection cdb = new CoinDatabaseConnection();
+            mi1.setOnAction(event -> {
+                UserCoin item = (UserCoin) TABLE_VIEW.getSelectionModel().getSelectedItem();
+
+
+
+                if (DEBUG) {
+                    System.out.println("Added " + item.getName() + " to saved coin list");
+                }
+                tas.populateSavedCoins(_savedCoinsList, _savedCoins);
+            });
+            ContextMenu menu = new ContextMenu();
+            menu.getItems().add(mi1);
+            this.TABLE_VIEW.setContextMenu(menu);
+            tas.populateSavedCoins(_savedCoinsList, _savedCoins);
+
+            cm2.getItems().add(mi1);
+            MenuItem mi2 = new MenuItem("Share Coin");
+            cm2.getItems().add(mi2);
+            MenuItem mi3 = new MenuItem("Track Coin");
+            cm2.getItems().add(mi3);
+            this.TABLE_VIEW.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
+                    if (t.getButton() == MouseButton.SECONDARY) {
+                        cm2.show(TABLE_VIEW, t.getScreenX(), t.getScreenY());
+                    }
+                }
+            });
+        }
+        
     }
 
     /**

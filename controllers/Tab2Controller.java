@@ -472,6 +472,9 @@ public class Tab2Controller implements Initializable{
 
     private LinkedHashMap<Double, String> userHistoryMap;
 
+    /**
+     * Add right click menu to saved coins list on left side of window.
+     */
     private void addContextMenuToList() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem graphCoin = new MenuItem("Graph Coin");
@@ -480,6 +483,9 @@ public class Tab2Controller implements Initializable{
         savedCoinsListT2.setContextMenu(contextMenu);
     }
 
+    /**
+     * Create graph for selected saved graph.
+     */
     private void createGraphsForSavedCoins() {
         if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
             if (DEBUG){System.out.println("bar chart selected");}
