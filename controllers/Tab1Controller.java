@@ -65,6 +65,7 @@ import models.viewModels.ListClass;
  */
 public class Tab1Controller implements Initializable{
 
+    private final User USER = FXMLDocumentController.user;
     private LinkedHashMap<String, String> coinNamePrice; //
     private LinkedList<SingleCoin> coinList; //
     private int count;
@@ -146,20 +147,20 @@ public class Tab1Controller implements Initializable{
         boolean savedCoinsbtn = this.savedCoinsBtn.isSelected();
         boolean markets = this.marketsBtn.isSelected();
 //        this.marketsBtn.isSelected()
-        if (searchGlobalStats.isSelected() || allCoins || savedCoinsbtn || markets){
+        if (searchGlobalStats.isSelected() && (allCoins || savedCoinsbtn || markets)){
             tableViewT1.getItems().clear();
             tableViewT1.getColumns().clear();
             txtAreaT1.setText("");
             displayGlobalStats();
             displayCoinText();
-        } else if (searchGlobalStats.isSelected() || allCoins || savedCoinsbtn || markets){
+        } else if (searchGlobalStats.isSelected()){
             txtAreaT1.setText("");
             displayGlobalStats();
         } else if (searchCoins.isSelected() || allCoins || savedCoinsbtn || markets) {
-            tableViewT1.getItems().clear();
-            tableViewT1.getColumns().clear();
-            if(DEBUG){System.out.println("search coins");}
-            displayCoinText();
+//            tableViewT1.getItems().clear();
+//            tableViewT1.getColumns().clear();
+//            if(DEBUG){System.out.println("search coins");}
+//            displayCoinText();
         }
     }
 
@@ -252,7 +253,7 @@ public class Tab1Controller implements Initializable{
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            FXMLDocumentController.user.onlineStatus(0);
+            this.USER.onlineStatus(0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             Tab1Controller.mainPage1.setScene(this.scene);
@@ -324,13 +325,13 @@ public class Tab1Controller implements Initializable{
             colNames.add("Change");
             colNames.add("Volume");
             ast.coinGenericTable("SingleCoin", this.cri.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
-            ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
+            ast.createCells(this.USER.getUsername(), this.savedCoinsList, this.savedCoins);
         } else if (this.savedCoinsBtn.isSelected()) {
             LinkedList<String> colNamesSaved = new LinkedList<>();
             colNamesSaved.add("Symbol");
             colNamesSaved.add("Name");
             colNamesSaved.add("coinID");
-            ast.coinGenericTable("UserCoin", tas.getObjUserCoinList(this.uname), colNamesSaved, this.tableViewT1, this.webViewT1, this.currencyRate);
+            ast.coinGenericTable("UserCoin", tas.getObjUserCoinList(this.USER.getUsername()), colNamesSaved, this.tableViewT1, this.webViewT1, this.currencyRate);
             ast.createCells(this.uname, this.savedCoinsList, this.savedCoins);
         } else if (this.marketsBtn.isSelected()) {
             LinkedList<String> colMarkets = new LinkedList<>();
@@ -380,7 +381,7 @@ public class Tab1Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        ListClass lc = new ListClass(this.uname);
+        ListClass lc = new ListClass(this.USER.getUsername());
         lc.populateOnlineUsers(onlineUsersList);
     }
 
@@ -404,8 +405,7 @@ public class Tab1Controller implements Initializable{
      * @param coinID
      */
     private void saveCoin(String _userName, int _coinID) {
-        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
-        coinConn.saveCoin(_userName, _coinID);
+        this.USER.saveCoin(_coinID);
     }
 
     /**
@@ -441,8 +441,9 @@ public class Tab1Controller implements Initializable{
                     public void handle(ActionEvent e) {
                         previousCurrency = selectedCurrency;
                         selectedCurrency = cb.getValue().toString().split(":")[0];
-                        currencyRate = fca.getExchangeRate("USD", selectedCurrency); //previousCurrency
+                        currencyRate = fca.getExchangeRate("USD", selectedCurrency);
                         System.out.println(previousCurrency + " x " + currencyRate + " = " + selectedCurrency);
+                        // Failsafe, incase api messes up and returns a zero
                         if (currencyRate == 0){currencyRate = 1;}
                         if (DEBUG){System.out.println("currency rate: " + currencyRate);}
                     }
@@ -467,6 +468,8 @@ public class Tab1Controller implements Initializable{
         // Set default currency
         this.selectedCurrency = "USD";
         this.currencyRate = 1;
+//        this.cu = new CheckBox();
+//        this.debugBtn.setDisable(true);
         populateSavedCoins();
         addOnlineUsersToList();
         addFriendsToList();

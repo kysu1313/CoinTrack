@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static controllers.Tab1Controller.DEBUG;
 import models.CoinDatabaseConnection;
+import models.User;
 
 /**
  * Tab controller for the dashboard, "tab 3".
@@ -38,6 +39,7 @@ import models.CoinDatabaseConnection;
 
 public class Tab3Controller implements Initializable{
 
+    private final User USER = FXMLDocumentController.user;
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
     private TextArea textArea;
@@ -144,8 +146,9 @@ public class Tab3Controller implements Initializable{
      * @param coinID
      */
     private void saveCoin(String _userName, int _coinID) {
-        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
-        coinConn.saveCoin(_userName, _coinID);
+        this.USER.saveCoin(_coinID);
+//        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
+//        coinConn.saveCoin(_userName, _coinID);
     }
 
     /**

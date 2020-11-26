@@ -10,6 +10,7 @@ package models;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -41,11 +42,7 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
     }
 
     /**
-     * TODO: fix?
-     *
-     * Created a threaded version of this class.
-     *
-     * idk if this is a good way to do this or not....
+     * Threaded version of this class.
      */
     @Override
     public void run() {
@@ -152,10 +149,34 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
         return temp;
     }
 
+    /**
+     * Return a hash map of statistics for the coin ranked at '_index'.
+     * @param _index: how far down from the
+     * @return
+     */
+    public HashMap<String, Number> getStats(int _index) {
+        HashMap<String, Number> map = new HashMap<>();
+        this.coinList.forEach(item -> {
+            System.out.println("");
+        });
+        return map;
+    }
+
+    /**
+     * Return the main linked list of SingleCoins
+     * @return
+     */
+    @Override
     public LinkedList<SingleCoin> getCoinList() {
         return this.coinList;
     }
 
+    /**
+     * Returns the generic linked list of coins.
+     * This is mainly used for building graphs.
+     * @return
+     */
+    @Override
     public LinkedList<T> getTList(){
         LinkedList<T> lst = new LinkedList<>();
         this.coinList.forEach(item -> {
@@ -164,6 +185,10 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
         return lst;
     }
 
+    /**
+     * Returns a linked list of coin objects.
+     * @return
+     */
     @Override
     public LinkedList<Object> getGenericCoinList() {
         LinkedList<Object> list = new LinkedList<>();

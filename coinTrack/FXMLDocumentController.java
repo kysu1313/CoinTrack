@@ -151,19 +151,13 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     public void login(ActionEvent event) {
-        ConnectToDatabase conn = new ConnectToDatabase();
-        // If statement for testing purposes
 
         uname = this.username.getText();
         String password = this.txtPassword.getText();
-        System.out.println(uname);
         user = new User(uname, password);
-
-//        if (conn.validateLogin(this.username.getText(), this.txtPassword.getText())) {
         if (user.validateLogin()) {
             this.lblStatus.setText("Login Success");
 
-//            conn.setUserOnlineStatus(this.username.getText(), 1);
             user.onlineStatus(1);
             this.tas = new TabAssistantController();
             this.tas.setCurrentUser(user);
@@ -198,7 +192,7 @@ public class FXMLDocumentController implements Initializable {
         } else {
             this.lblStatus.setText("Login Failed");
         }
-        conn.close();
+//        conn.close();
     }
 
     /**
