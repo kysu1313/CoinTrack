@@ -118,7 +118,7 @@ public class ListClass implements ListClassInterface {
             @Override
             public void handle(MouseEvent event) {
                 ContextMenu cm;
-                if (event.getButton() == MouseButton.SECONDARY) {
+                 if (event.getButton() == MouseButton.SECONDARY) {
                     cm = new ContextMenu();
                     cm.show(_onlineUserList, event.getScreenX(), event.getScreenY());
                 }
@@ -254,7 +254,7 @@ public class ListClass implements ListClassInterface {
                     AlertMessages.showErrorMessage("Add FAIL", "WOW, really? Trying to add yourself as a friend?");
                 } else {
                     conn.addFriend(UNAME, friendName);
-                    populateFriends(_list, 0);
+                    populateOnlineUsers(_list);
                     if (DEBUG) {
                         System.out.println("Added " + friendName + " to friend list");
                     }
