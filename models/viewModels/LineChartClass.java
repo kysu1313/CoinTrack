@@ -51,6 +51,9 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         createData();
     }
 
+    /**
+     * Display the line chart to screen.
+     */
     @Override
     public void displayGraph() {
         this.LINE_CHART.setTitle("Viewing the past " + this.TIME_SELECTION + " of: " + this.LINES.peek());
@@ -68,12 +71,20 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         // Not implemented yet
     }
 
+    /**
+     * Add specified coin data to the graph.
+     * @param _coin
+     */
     @Override
     public void addCoin(String _coin) {
         this.LINES.add(_coin);
         createData();
     }
 
+    /**
+     * Remove specified coin from graph.
+     * @param _coin
+     */
     @Override
     public void removeCoin(String _coin) {
         this.LINE_CHART.getData().clear();
@@ -85,16 +96,20 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         createData();
     }
 
+    /**
+     * Clear all coin data from chart.
+     */
     @Override
     public void clearChart() {
-//        this.lineChart.getData().clear();
         this.LINE_CHART.layout();
-//        this.lineChartData.clear();
         this.seriesList.forEach((entry) -> {
             entry.getData().removeAll();
         });
     }
-    
+
+    /**
+     * Clean data and add it to the lineChart series.
+     */
     private void createData() {
         // For every coin entered, create a new CoinHistory object.
         for (String line : this.LINES) {
@@ -137,11 +152,20 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         // TODO: implement
     }
 
+    /**
+     * Get the lines currently on the chart.
+     * @return
+     */
     @Override
     public LinkedList<String> getElements() {
         return this.LINES;
     }
-    
+
+    /**
+     * Get coordinates of the line chart.
+     * @param lineChart
+     * @return
+     */
     public Label getLineChartCoords(LineChart<String, Number> lineChart) {
         final Axis<String> xAxis = lineChart.getXAxis();
         final Axis<Number> yAxis = lineChart.getYAxis();
@@ -199,5 +223,4 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
 
         return cursorCoords;
     }
-    
 }

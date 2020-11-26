@@ -1,10 +1,10 @@
 package models;
 /**
- * This class accesses the Coin History api. 
- * The main function of the class is to 
+ * This class accesses the Coin History api.
+ * The main function of the class is to
  * loop through the url's in the api call
  * to retrieve historical data on each coin.
- * 
+ *
  * - Kyle
  */
 
@@ -19,10 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public final class CoinHistory implements Runnable, CoinHistoryInterface{
-    
+
     private LinkedList<SingleCoin> history;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
+    private static final int NUM_COINS = 70;
     private double change;
     private Thread t;
     private SingleCoin single;
@@ -50,25 +51,36 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
             ParseCoinName newName = new ParseCoinName(_name);
             coinId = newName.getId();
         }
-            String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
-            // Call API connector class
-            JSONObject resp = new ConnectToApi(url, 
-                    "coinranking1.p.rapidapi.com",
-                    "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
-            JSONObject data = resp.getJSONObject("data");
-            change = data.getDouble("change");
-            // JSONArray containing price history for the particular coin.
-            JSONArray histArr = data.getJSONArray("history");
-            // Create the individual SingleCoinHistory object
-            // Pass the JSONArray and the id of the coin.
-            single = new SingleCoin(histArr, _id);
-            // Loop through the response adding data to a hashMap
-            for (int i = 0; i < histArr.length(); i++) {
-                JSONObject temp = histArr.getJSONObject(i);
-                Double price = temp.getDouble("price");
-                String date = "" + temp.getInt("timestamp");
-                singleHistoryMap.put(price, date);
+        String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
+        // Call API connector class
+        ConnectToApi response = new ConnectToApi(url,
+                "coinranking1.p.rapidapi.com",
+                "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc");
+        // Prevent coins with no data from being added to a graph and breaking things.
+        if (response.getStatus() && response.getJsonObject().has("data")){
+            JSONObject resp = response.getJsonObject();
+            JSONObject data = new JSONObject();
+            data = resp.getJSONObject("data");
+
+            if (data.has("change")) {
+                change = data.getDouble("change");
+                // JSONArray containing price history for the particular coin.
+                JSONArray histArr = data.getJSONArray("history");
+                // Create the individual SingleCoinHistory object
+                // Pass the JSONArray and the id of the coin.
+                single = new SingleCoin(histArr, _id);
+                // Loop through the response adding data to a hashMap
+                for (int i = 0; i < histArr.length(); i++) {
+                    JSONObject temp = histArr.getJSONObject(i);
+                    Double price = temp.getDouble("price");
+                    String date = "" + temp.getInt("timestamp");
+                    singleHistoryMap.put(price, date);
+                }
+            } else {
+                change = 0.0;
             }
+        }
+        
     }
 
     @Override
@@ -76,7 +88,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
         history = new LinkedList<>();
         if (DEBUG){System.out.println("Calling coinRank history api");}
         // Increment the coin "id" for each call. Not sure how many coins there are though.
-        for (int i = 1; i < 70; i++) {
+        for (int i = 1; i < NUM_COINS; i++) {
             String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
             // For each response, extract body, data, and change
             JSONObject resp = new ConnectToApi(url, 

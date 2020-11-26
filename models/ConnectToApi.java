@@ -18,6 +18,7 @@ public class ConnectToApi implements ApiInterface{
     
     private JSONObject job;
     private String response;
+    private boolean status;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     
     // Constructor for all rapid apis
@@ -28,12 +29,19 @@ public class ConnectToApi implements ApiInterface{
                     .header("x-rapidapi-host", _endpoint)
                     .header("x-rapidapi-key", _key)
                     .asJson();
+            this.status = true;
+            if (resp.getStatus() != 200) {
+                this.status = false;
+            }
+            System.out.println("Status: " + resp.getStatus());
             this.response = resp.getBody().toString();
             this.job = new JSONObject(resp.getBody().toString());
         } catch (UnirestException ex) {
             Logger.getLogger(ConnectToApi.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    // ========== GETTERS ========== //
 
     @Override
     public JSONObject getJsonObject() {
@@ -44,9 +52,9 @@ public class ConnectToApi implements ApiInterface{
     public String getResponseString() {
         return this.response;
     }
-    
-//    public String testing() {
-//        return
-//    }
+
+    public boolean getStatus() {
+        return this.status;
+    }
     
 }
