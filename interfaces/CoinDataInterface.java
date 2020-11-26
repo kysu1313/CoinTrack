@@ -29,5 +29,5 @@ public interface CoinDataInterface {
     public int getTotalExchanges();
     public int getTotalMarketCap();
     public int getTotal24hVolume();
-    
+    public LinkedList getTList();
 }

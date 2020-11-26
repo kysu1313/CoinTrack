@@ -233,10 +233,10 @@ public class Tab1Controller implements Initializable{
      */
     @FXML
     private void handleTest(ActionEvent _event) throws ParseException, IOException {
-        GetMarketsApi gma = new GetMarketsApi();
-        gma.getGenericMarketList().forEach(item -> {
-            SingleMarket sm = (SingleMarket)item;
-            System.out.println(item.getClass());
+        CoinRankApi cri = new CoinRankApi();
+        cri.getSortedCoinList().forEach(item -> {
+            SingleCoin sc = (SingleCoin)item;
+            System.out.println(sc.getName() + ": " + sc.getPrice());
         });
     }
 
