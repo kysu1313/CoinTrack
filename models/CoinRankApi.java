@@ -118,6 +118,7 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      */
     private LinkedList<SingleCoin> getCoins() {
         LinkedList<SingleCoin> tmpList = new LinkedList<>();
+
         for (int i = 0; i < this.coins.length()-1; i++) {
             JSONObject obj = this.coins.getJSONObject(i);
             SingleCoin coin = new SingleCoin(obj);
@@ -133,14 +134,15 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
     @Override
     public LinkedList<SingleCoin> getSortedCoinList() {
         LinkedList<SingleCoin> temp = this.getCoinList();
+
         Collections.sort(temp, (SingleCoin o1, SingleCoin o2) -> {
             double p1 = Double.parseDouble(o1.getPrice());
             double p2 = Double.parseDouble(o2.getPrice());
             if (p1 < p2) {
-                return -1;
+                return 1;
             }
             if (p1 > p2) {
-                return 1;
+                return -1;
             }
             return 0;
         });

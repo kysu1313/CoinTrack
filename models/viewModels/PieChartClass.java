@@ -25,6 +25,9 @@ public class PieChartClass implements interfaces.GraphInterface{
     private ComboBox<String> comboBox;
     private ObservableList<PieChart.Data> pieChartData;
     private PieChart pieChart;
+    private final int FULL_LIST = 50;
+    private final double ROUND = 100000d;
+    private int offset;
 
     /**
      * Creates a pie chart from the given list of SingleCoins.
@@ -74,29 +77,38 @@ public class PieChartClass implements interfaces.GraphInterface{
         // Not implemented yet
     }
 
+    /**
+     * Create graph for Tab 2. Full graph.
+     */
     private void createFullGraph() {
-        // Make sure the thread is finished
-//        this.coinList.join();
         LinkedList<SingleCoin> temp = this.coinList.getSortedCoinList();
         this.pieChartCoins = Integer.parseInt(this.comboBox.getValue());
+        // Prevent out of bounds error. List only goes up to 49 from api now for some reason.
+        if (this.pieChartCoins == this.FULL_LIST) {
+            this.offset = 2;
+        }
         // Loops over SingleCoin list and adds data to pieChart
-        for (int i = 0; i <= this.pieChartCoins - 1; i++) {
+        for (int i = 0; i <= this.pieChartCoins - this.offset; i++) {
             SingleCoin coin = temp.get(i);
             double price = Double.parseDouble(coin.getPrice());
             // Allow 5 decimal places
-            double rounded = (double) Math.round(price * 100000d) / 100000d;
+            double rounded = (double) Math.round(price * this.ROUND) / this.ROUND;
             this.pieChartData.add(new PieChart.Data(coin.getName(), rounded));
         }
     }
-    
+
+    /**
+     * Create graph for dashboard. Partial graph.
+     */
     private void createPartialGraph() {
         this.pieChartData = FXCollections.observableArrayList();
+        
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= this.singleCoinList.size() - 1; i++) {
             SingleCoin coin = this.singleCoinList.get(i);
             double price = Double.parseDouble(coin.getPrice());
             // Allow 5 decimal places
-            double rounded = (double) Math.round(price * 100000d) / 100000d;
+            double rounded = (double) Math.round(price * this.ROUND) / this.ROUND;
             this.pieChartData.add(new PieChart.Data(coin.getName(), rounded));
         }
     }

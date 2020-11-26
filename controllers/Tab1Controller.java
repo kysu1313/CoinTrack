@@ -234,6 +234,8 @@ public class Tab1Controller implements Initializable{
     @FXML
     private void handleTest(ActionEvent _event) throws ParseException, IOException {
         CoinRankApi cri = new CoinRankApi();
+        cri.start();
+        cri.join();
         cri.getSortedCoinList().forEach(item -> {
             SingleCoin sc = (SingleCoin)item;
             System.out.println(sc.getName() + ": " + sc.getPrice());

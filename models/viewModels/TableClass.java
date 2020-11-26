@@ -88,6 +88,7 @@ public class TableClass<T> implements TableInterface{
         this.coinList = null;
         this.cols = new LinkedList<>();
         buildTableGeneral();
+        addDoubleClick();
     }
 
     /**
@@ -253,25 +254,28 @@ public class TableClass<T> implements TableInterface{
      */
     @Override
     public void addDoubleClick() {
-        this.TABLE_VIEW.setRowFactory(tv -> {
-            TableRow<SingleCoin> row = new TableRow<>();
-            row.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                        SingleCoin rowData = row.getItem();
-                        System.out.println(rowData);
-                        String imgPath = rowData.getIconUrl();
+        if (this.myClass.equals(SingleCoin.class)) {
+            this.TABLE_VIEW.setRowFactory(tv -> {
+                TableRow<SingleCoin> row = new TableRow<>();
+                row.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                            SingleCoin rowData = row.getItem();
+                            System.out.println(rowData);
+                            String imgPath = rowData.getIconUrl();
 
-                        // Attempting to resize the coin logo image.
-                        WEB_VIEW.setPrefHeight(56);
-                        WEB_VIEW.setPrefWidth(56);
-                        WEB_VIEW.getEngine().load(imgPath);
+                            // Attempting to resize the coin logo image.
+                            WEB_VIEW.setPrefHeight(20);
+                            WEB_VIEW.setPrefWidth(20);
+                            WEB_VIEW.getEngine().load(imgPath);
+                        }
                     }
-                }
+                });
+                return row;
             });
-            return row;
-        });
+        }
+
     }
 
     /**
