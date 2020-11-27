@@ -50,34 +50,37 @@ public class SingleCoin implements SingleCoinInterface, GlobalClassInterface{
      * @param job
      */
     public SingleCoin(JSONObject job) {
-        coinList = job;
+        this.coinList = job;
 
-        id = coinList.getInt("id");
-        uuid = coinList.getString("uuid").replace("'", "");
-        slug = coinList.getString("slug");
-        symbol = coinList.getString("symbol");
-        name = coinList.getString("name");
-        iconType = coinList.getString("iconType");
-        iconUrl = coinList.getString("iconUrl");
-//        websiteUrl = coinList.getString("websiteUrl");
-        confirmedSupply = coinList.getBoolean("confirmedSupply");
-        numberOfMarkets = coinList.getInt("numberOfMarkets");
-        numberOfExchanges = coinList.getInt("numberOfExchanges");
-        type = coinList.getString("type");
-        marketCap = coinList.getInt("marketCap");
-        price = coinList.getString("price");
-//        circulatingSupply = coinList.getInt("circulatingSupply");
-//        totalSupply = coinList.getInt("totalSupply");
-        approvedSupply = coinList.getBoolean("approvedSupply");
-        firstSeen = coinList.getInt("firstSeen");
-        rank = coinList.getInt("rank");
-        change = coinList.getDouble("change");
-        volume = coinList.getInt("volume");
+        this.id = this.coinList.getInt("id");
+        this.uuid = this.coinList.getString("uuid").replace("'", "");
+        this.slug = this.coinList.getString("slug");
+        this.symbol = this.coinList.getString("symbol");
+        this.name = this.coinList.getString("name");
+        this.iconType = this.coinList.getString("iconType");
+        this.iconUrl = this.coinList.getString("iconUrl");
+        this.confirmedSupply = this.coinList.getBoolean("confirmedSupply");
+        this.numberOfMarkets = this.coinList.getInt("numberOfMarkets");
+        this.numberOfExchanges = this.coinList.getInt("numberOfExchanges");
+        this.type = this.coinList.getString("type");
+        this.marketCap = this.coinList.getInt("marketCap");
+        this.price = this.coinList.getString("price");
+        this.approvedSupply = this.coinList.getBoolean("approvedSupply");
+        this.firstSeen = this.coinList.getInt("firstSeen");
+        this.rank = this.coinList.getInt("rank");
+        this.change = this.coinList.getDouble("change");
+        this.volume = this.coinList.getInt("volume");
 
-        stringChange = "" + change;
+        this.stringChange = "" + this.change;
     }
-    
-    public SingleCoin() {}
+
+    /**
+     * This constructor is used for testing purposes.
+     * @param _price
+     */
+    public SingleCoin(String _price) {
+        this.price = _price;
+    }
 
     /**
      * Constructor for JSONArray.

@@ -150,15 +150,52 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
     }
 
     /**
-     * Return a hash map of statistics for the coin ranked at '_index'.
-     * @param _index: how far down from the
+     * Get sorted version of any list of SingleCoins.
+     * @param _list
      * @return
      */
-    public HashMap<String, Number> getStats(int _index) {
-        HashMap<String, Number> map = new HashMap<>();
-        this.coinList.forEach(item -> {
-            System.out.println("");
+    public LinkedList<SingleCoin> getSortedCoinList(LinkedList<SingleCoin> _list) {
+        Collections.sort(_list, (SingleCoin o1, SingleCoin o2) -> {
+            double p1 = Double.parseDouble(o1.getPrice());
+            double p2 = Double.parseDouble(o2.getPrice());
+            if (p1 < p2) {
+                return 1;
+            }
+            if (p1 > p2) {
+                return -1;
+            }
+            return 0;
         });
+        return _list;
+    }
+
+    /**
+     * Return a hash map of statistics for a list of SingleCoin objects.
+     *
+     * This is used for the test case.
+     *
+     * @param _list
+     * @return
+     */
+    public HashMap<String, Number> getStats(LinkedList<SingleCoin> _list) {
+        HashMap<String, Number> map = new HashMap<>();
+        LinkedList<SingleCoin> sorted = this.getSortedCoinList(_list);
+        double total = 0;
+        int medianLoc =(_list.size()+1)/2;
+        double median = Double.parseDouble(_list.get((_list.size()+1)/2).getPrice());
+        double range = Double.parseDouble(sorted.get(sorted.size()-1).getPrice()) - Double.parseDouble(sorted.get(0).getPrice());
+        double highestPrice = Double.parseDouble(sorted.get(sorted.size()-1).getPrice());
+        double lowestPrice = Double.parseDouble(sorted.get(0).getPrice());
+        for (int i = 0; i < sorted.size()-1; i++) {
+            total += Double.parseDouble(sorted.get(i).getPrice());
+        }
+        double mean = total / _list.size();
+        map.put("Highest Price", highestPrice);
+        map.put("Lowest Price", lowestPrice);
+        map.put("Range", range);
+        map.put("Median", median);
+        map.put("Mean", mean);
+        map.put("Total", total);
         return map;
     }
 
