@@ -58,13 +58,11 @@ import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
 import java.awt.Desktop;
-import java.awt.image.BufferedImage;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javax.imageio.ImageIO;
 import models.EmailValidation;
 import models.User;
 
@@ -125,7 +123,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML private ImageView imageView;
     @FXML private Image image;
     @FXML private String path;
-    @FXML private CheckBox selectBox;
+    @FXML private CheckBox skip;
     @FXML private final Desktop desktop = Desktop.getDesktop();
 //    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
@@ -242,6 +240,7 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println(tempUsernameStorage);
             }
             conn.close();
+            //when _code = 1 it will send a welcome message
             _code = 1;
             Email sendMail = new Email(toEmail3, this.tempUsernameStorage, _code);
             Parent root;
@@ -353,7 +352,7 @@ public class FXMLDocumentController implements Initializable {
      * @param event
      */
     @FXML
-    private void handleBrowsePicture(ActionEvent event) throws IOException {
+    private void handleBrowsePicture() throws IOException {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
@@ -361,7 +360,27 @@ public class FXMLDocumentController implements Initializable {
         file = fileChooser.showOpenDialog(browseStage);
         if(file != null){
         path = file.getAbsolutePath();
-        image = new Image("file:///" + path);
+        }
+    }
+
+        /**
+     * Displaying the profile picture
+     */
+    private void profilePicture(){
+        if(this.layout1 != null){
+            ConnectToDatabase conn = new ConnectToDatabase();
+            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
+            if("".equals(picturePath)){
+                Image image1 = new Image("/styles/bitCoin.jpg");
+                imageView = new ImageView(image1);
+            }else{
+                image = new Image("file:///" + picturePath);
+                imageView = new ImageView(image);
+            }
+            imageView.setFitWidth(50);
+            imageView.setFitHeight(30);
+            imageView.setPreserveRatio(true);
+            layout1.setCenter(imageView);
         }
     }
 
@@ -432,8 +451,11 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
 
-        } else if (image == null){
-            AlertMessages.showErrorMessage("Register User", "Please choose a picture");
+        } else if (skip.isSelected() && this.path != null){
+            AlertMessages.showErrorMessage("Register User", "Please uncheck the box as you've already chosen a picture");
+
+        }else if (this.path == null && !skip.isSelected()){
+            AlertMessages.showErrorMessage("Register User", "Please choose a picture or check the box");
         }else {
             isGood = true;
         }
@@ -471,6 +493,9 @@ public class FXMLDocumentController implements Initializable {
         String uname = this.usernameEntry.getText();
         String password = this.passwordEntry.getText();
         String email = this.emailEntry.getText();
+        if(skip.isSelected()){
+            path = "";
+        }
         String imgPath = this.path;
         if (User.usernameAcceptable(uname, password, email, imgPath, this.registerInfo)){
             User user = new User(uname, password);
@@ -752,26 +777,7 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    /**
-     * Displaying the profile picture
-     */
-    private void profilePicture(){
-        if(this.layout1 != null){
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-            if("".equals(picturePath)){
-                Image image1 = new Image("/styles/bitCoin.jpg");
-                imageView = new ImageView(image1);
-            }else{
-                image = new Image("file:///" + picturePath);
-                imageView = new ImageView(image);
-            }
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(30);
-            imageView.setPreserveRatio(true);
-            layout1.setCenter(imageView);
-        }
-    }
+
     /**
      * This is supposed to return the current stage so it can be closed. But I
      * don't think it works...
