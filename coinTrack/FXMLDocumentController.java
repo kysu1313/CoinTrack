@@ -57,11 +57,14 @@ import static controllers.Tab1Controller.DEBUG;
 import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
+import java.awt.Desktop;
+import java.awt.image.BufferedImage;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javax.imageio.ImageIO;
 import models.EmailValidation;
 import models.User;
 
@@ -120,10 +123,10 @@ public class FXMLDocumentController implements Initializable {
     @FXML private File file;
     @FXML private FileChooser fileChooser;
     @FXML private ImageView imageView;
-    @FXML public Image image;
+    @FXML private Image image;
     @FXML private String path;
-    @FXML public CheckBox skip;
- //   @FXML private final Desktop desktop = Desktop.getDesktop();
+    @FXML private CheckBox selectBox;
+    @FXML private final Desktop desktop = Desktop.getDesktop();
 //    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
     @FXML public static MenuItem lightMenuItem;
@@ -236,7 +239,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
-
             String toEmail3 = this.emailEntry.getText();
             ConnectToDatabase conn = new ConnectToDatabase();
             if (conn.emailExists(toEmail3)) {
@@ -245,7 +247,6 @@ public class FXMLDocumentController implements Initializable {
                 System.out.println(tempUsernameStorage);
             }
             conn.close();
-            //when _code = 1 it will send a welcome message
             _code = 1;
             Email sendMail = new Email(toEmail3, this.tempUsernameStorage, _code);
             Parent root;
@@ -357,7 +358,7 @@ public class FXMLDocumentController implements Initializable {
      * @param event
      */
     @FXML
-    private void handleBrowsePicture() throws IOException {
+    private void handleBrowsePicture(ActionEvent event) throws IOException {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
@@ -365,27 +366,7 @@ public class FXMLDocumentController implements Initializable {
         file = fileChooser.showOpenDialog(browseStage);
         if(file != null){
         path = file.getAbsolutePath();
-        }
-    }
-
-     /**
-     * Displaying the profile picture
-     */
-    private void profilePicture(){
-        if(this.layout1 != null){
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-            if("".equals(picturePath)){
-                Image image1 = new Image("/styles/bitCoin.jpg");
-                imageView = new ImageView(image1);
-            }else{
-                image = new Image("file:///" + picturePath);
-                imageView = new ImageView(image);
-            }
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(30);
-            imageView.setPreserveRatio(true);
-            layout1.setCenter(imageView);
+        image = new Image("file:///" + path);
         }
     }
 
@@ -456,12 +437,8 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
 
-        } else if (image != null && skip.isSelected()){
-            AlertMessages.showErrorMessage("Register User", "Please uncheck the box as you've already chosen a picture");
-
-        }else if (image == null && !skip.isSelected()){
-            AlertMessages.showErrorMessage("Register User", "Please choose a picture or check the box");
-
+        } else if (image == null){
+            AlertMessages.showErrorMessage("Register User", "Please choose a picture");
         }else {
             isGood = true;
         }
@@ -527,9 +504,6 @@ public class FXMLDocumentController implements Initializable {
             String email = this.emailEntry.getText();
             String uname = this.usernameEntry.getText();
             String pass = this.passwordEntry.getText();
-            if(skip.isSelected()){
-                path = "";
-            }
             // If all good, submit info to DB
             conn.userDatabase(0, email, uname, pass, path);
             conn.close();
@@ -822,7 +796,26 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-
+    /**
+     * Displaying the profile picture
+     */
+    private void profilePicture(){
+        if(this.layout1 != null){
+            ConnectToDatabase conn = new ConnectToDatabase();
+            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
+            if("".equals(picturePath)){
+                Image image1 = new Image("/styles/bitCoin.jpg");
+                imageView = new ImageView(image1);
+            }else{
+                image = new Image("file:///" + picturePath);
+                imageView = new ImageView(image);
+            }
+            imageView.setFitWidth(50);
+            imageView.setFitHeight(30);
+            imageView.setPreserveRatio(true);
+            layout1.setCenter(imageView);
+        }
+    }
     /**
      * This is supposed to return the current stage so it can be closed. But I
      * don't think it works...
