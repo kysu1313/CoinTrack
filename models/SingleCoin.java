@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class SingleCoin implements SingleCoinInterface, GlobalClassInterface{
-    
+
     private JSONObject coinList;
     private int id;
     private String uuid;
@@ -81,6 +81,8 @@ public class SingleCoin implements SingleCoinInterface, GlobalClassInterface{
     public SingleCoin(String _price) {
         this.price = _price;
     }
+
+    public SingleCoin() {}
 
     /**
      * Constructor for JSONArray.
