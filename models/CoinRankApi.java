@@ -156,13 +156,13 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      */
     public LinkedList<SingleCoin> getSortedCoinList(LinkedList<SingleCoin> _list) {
         Collections.sort(_list, (SingleCoin o1, SingleCoin o2) -> {
-            double p1 = Double.parseDouble(o1.getPrice());
-            double p2 = Double.parseDouble(o2.getPrice());
+            double p1 = Double.parseDouble(o1.getTestPrice());
+            double p2 = Double.parseDouble(o2.getTestPrice());
             if (p1 < p2) {
-                return 1;
+                return -1;
             }
             if (p1 > p2) {
-                return -1;
+                return 1;
             }
             return 0;
         });
@@ -177,26 +177,37 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      * @param _list
      * @return
      */
-    public HashMap<String, Number> getStats(LinkedList<SingleCoin> _list) {
-        HashMap<String, Number> map = new HashMap<>();
-        LinkedList<SingleCoin> sorted = this.getSortedCoinList(_list);
-        double total = 0;
-        int medianLoc =(_list.size()+1)/2;
-        double median = Double.parseDouble(_list.get((_list.size()+1)/2).getPrice());
-        double range = Double.parseDouble(sorted.get(sorted.size()-1).getPrice()) - Double.parseDouble(sorted.get(0).getPrice());
-        double highestPrice = Double.parseDouble(sorted.get(sorted.size()-1).getPrice());
-        double lowestPrice = Double.parseDouble(sorted.get(0).getPrice());
-        for (int i = 0; i < sorted.size()-1; i++) {
-            total += Double.parseDouble(sorted.get(i).getPrice());
+    public HashMap<String, Double> getStats(LinkedList<SingleCoin> _list) {
+        HashMap<String, Double> map = new HashMap<>();
+        if (_list.size() == 0) {
+            map.put("Highest Price", 0.00);
+            map.put("Lowest Price", 0.00);
+            map.put("Range", 0.00);
+            map.put("Median", 0.00);
+            map.put("Mean", 0.00);
+            map.put("Total", 0.00);
+            return map;
+        } else {
+            LinkedList<SingleCoin> sorted = this.getSortedCoinList(_list);
+            double total = 0;
+            int end = _list.size()-1;
+            int medianLoc = (_list.size() + 1) / 2;
+            double median = Double.parseDouble(_list.get((end) / 2).getTestPrice());
+            double range = Double.parseDouble(sorted.get(end).getTestPrice()) - Double.parseDouble(sorted.get(0).getTestPrice());
+            double highestPrice = Double.parseDouble(sorted.get(end).getTestPrice());
+            double lowestPrice = Double.parseDouble(sorted.get(0).getTestPrice());
+            for (int i = 0; i < sorted.size(); i++) {
+                total += Double.parseDouble(sorted.get(i).getTestPrice());
+            }
+            double mean = total / _list.size();
+            map.put("Highest Price", highestPrice);
+            map.put("Lowest Price", lowestPrice);
+            map.put("Range", range);
+            map.put("Median", median);
+            map.put("Mean", mean);
+            map.put("Total", total);
+            return map;
         }
-        double mean = total / _list.size();
-        map.put("Highest Price", highestPrice);
-        map.put("Lowest Price", lowestPrice);
-        map.put("Range", range);
-        map.put("Median", median);
-        map.put("Mean", mean);
-        map.put("Total", total);
-        return map;
     }
 
     /**
