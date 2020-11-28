@@ -17,5 +17,5 @@ public interface SaveFileInterface {
     public void saveAsExcel(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException;
     public void saveAsJson(String _fileName, LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException;
     public void saveAsJson(LinkedList<SingleCoin> _data) throws FileNotFoundException, IOException;
-
+    public void createFile(String _fileName, String _fileType) throws IOException;
 }

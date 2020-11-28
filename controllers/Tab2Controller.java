@@ -152,27 +152,27 @@ public class Tab2Controller implements Initializable{
      */
     @FXML
     private void handleScanT2(ActionEvent _event) {
-        if (graphTabPane.getSelectionModel().getSelectedItem() == barChartTab) {
-            if (DEBUG){System.out.println("bar chart selected");}
-            barChart.getData().clear();
-            barChart.layout();
+        if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.barChartTab) {
+            if (this.DEBUG){System.out.println("bar chart selected");}
+            this.barChart.getData().clear();
+            this.barChart.layout();
             // Get the comboBox entry
-            boolean isComboBoxEmpty = comboBox.getSelectionModel().isEmpty();
+            boolean isComboBoxEmpty = this.comboBox.getSelectionModel().isEmpty();
             if (!isComboBoxEmpty) {
-                timeSelection = (String)comboBox.getValue();
+                this.timeSelection = (String)comboBox.getValue();
             } else {
-                timeSelection = "7d";
+                this.timeSelection = "7d";
             }
             // Make a CoinHistory api call
-            coinHistory = new CoinHistory();
+            this.coinHistory = new CoinHistory();
             displayMultiCoinGraph();
 
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             if (DEBUG){System.out.println("pie chart selected");}
             pieChart.getData().clear();
             pieChart.layout();
-            coinList = new CoinRankApi();
-            coinList.run();
+//            coinList = new CoinRankApi();
+//            coinList.run();
             displayPieChart();
         } else {
             if (DEBUG){System.out.println("bubble chart selected");}
@@ -253,6 +253,9 @@ public class Tab2Controller implements Initializable{
         this.series4.getData().clear();
         this.dataList.clear();
         this.sideVBox.getChildren().clear();
+        if (currTab == lineChartTab) {
+            this.lineChart.getData().clear();
+        }
     }
 
     /**
@@ -328,7 +331,10 @@ public class Tab2Controller implements Initializable{
     private void displayMultiCoinGraph() {
         if (DEBUG){System.out.println("displaying graph");}
 //        coinHistory.join();
-        this.historyMap = this.coinHistory.getPriceDate();
+//        this.historyMap = this.coinHistory.getPriceDate();
+
+        this.historyMap = this.USER.getCoinHistoryList();
+
         int count = 0;
         this.historyMap.entrySet().forEach((entry) -> {
             this.series1.getData().add(new XYChart.Data(
@@ -558,7 +564,6 @@ public class Tab2Controller implements Initializable{
         this.uname = coinTrack.FXMLDocumentController.uname;
         System.out.println(DEBUG);
         linesToGraph = new LinkedList<>();
-//        seriesList = new LinkedList<>();
         coordsLabel = new Label();
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
@@ -573,7 +578,6 @@ public class Tab2Controller implements Initializable{
         lineChartData = FXCollections.observableArrayList();
         pieChart.setTitle("Coin Prices");
         lineChart.setTitle("Compare Prices");
-//        seriesMap = new HashMap<>();
         series1 = new BarChart.Series<>();
         series4 = new BarChart.Series<>();
         series2 = new BarChart.Series<>();

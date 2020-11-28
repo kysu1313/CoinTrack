@@ -44,6 +44,7 @@ public class Tab3Controller implements Initializable{
     private final String TIMEFRAME = "24h";
     private TextArea textArea;
     private TabAssistantController tas;
+    private LinkedList<SingleCoin> coinList;
 
     @FXML private BarChart barChartDash;
     @FXML private PieChart pieChartDash;
@@ -60,11 +61,12 @@ public class Tab3Controller implements Initializable{
     }
 
     private void installTextFieldEvent() {
+        this.coinList = USER.getCoinList();
         this.searchField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 LinkedList<Label> temp = new LinkedList<>();
-                tas.coinList.forEach((item) -> {
+                coinList.forEach((item) -> {
                     if (item.getName().toLowerCase().contains(newValue.toLowerCase()) || item.getSymbol().toLowerCase().contains(newValue.toLowerCase())) {
                         Label txt = new Label(item.getSymbol() + ": " + item.getName());
                         temp.add(txt);
@@ -88,7 +90,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to format the table.
      */
     private void createTable() {
-        this.tas.coinTableDash(this.tableDash, this.tas.userSingleCoins);
+        this.tas.coinTableDash(this.tableDash, this.USER.getTList());
     }
 
     /**
@@ -96,7 +98,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to create graph.
      */
     private void createPieChart() {
-        this.tas.PieChartDash(this.tas.userSingleCoins, this.pieChartDash);
+        this.tas.PieChartDash(this.USER.getUserSingleCoins(), this.pieChartDash);
     }
 
     /**
@@ -104,7 +106,7 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to create graph.
      */
     private void createBarChart() {
-        this.tas.multiBarChart(this.barChartDash, this.tas.linkedUserHistoryMap, this.tas.userCoinList.size(), this.tas.userCoinList, this.textArea);
+        this.tas.multiBarChart(this.barChartDash, this.USER.getLinkedUserHistoryMap(this.TIMEFRAME), this.USER.getUserCoinList().size(), this.tas.getUserCoinList(), this.textArea);
         this.barChartDash.setLegendVisible(true);
     }
 
@@ -112,7 +114,7 @@ public class Tab3Controller implements Initializable{
      * Call database returning a list of all users who are online.
      */
     private void addOnlineUsersToList() {
-        this.tas.addOnlineUsers(this.tas.onlineUserList, this.onlineUsersListT3);
+        this.tas.addOnlineUsers(this.tas.getOnlineUsers(), this.onlineUsersListT3);
     }
 
     /**
@@ -135,7 +137,8 @@ public class Tab3Controller implements Initializable{
      * Add saved coins to the right side accordion.
      */
     private void populateSavedCoins() {
-        this.tas.populateSavedCoins(this.savedCoinsListT3, this.tas.savedCoins);
+
+        this.tas.populateSavedCoins(this.savedCoinsListT3, this.USER.getSavedCoins());
     }
 
     /**
@@ -181,9 +184,10 @@ public class Tab3Controller implements Initializable{
      * This is updated when the user types something in the search field.
      */
     private void populateSearch() {
-        System.out.println(this.tas.coinList.size());
-        for (int i = 0; i < this.tas.coinList.size(); i++) {
-            Label tmp = new Label(this.tas.coinList.get(i).getSymbol() + ": " + this.tas.coinList.get(i).getName());
+        this.coinList = this.tas.getCoinList();
+        System.out.println(this.tas.getCoinList().size());
+        for (int i = 0; i < this.tas.getCoinList().size(); i++) {
+            Label tmp = new Label(this.coinList.get(i).getSymbol() + ": " + this.coinList.get(i).getName());
             this.vbox.getChildren().add(tmp);
             addListListener(tmp);
             tmp.setMaxWidth(Double.MAX_VALUE);
@@ -202,18 +206,18 @@ public class Tab3Controller implements Initializable{
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.tas = new TabAssistantController();
-        this.tas.userCoinList = new LinkedList<>();
-        this.tas.coinList = new LinkedList<>();
-        this.tas.userSingleCoins = new LinkedList<>();
-        this.tas.singleHistoryMap = new LinkedHashMap<>();
-        this.tas.userHistoryMap = new LinkedHashMap<>();
-        this.tas.linkedUserHistoryMap = new LinkedList<>();
-        this.tas.friendList = new LinkedList<>();
-        this.tas.onlineUserList = new LinkedList<>();
-        this.tas.savedCoins = new LinkedList<>();
+        this.tas = USER.getTas();
+//        this.tas.userCoinList = new LinkedList<>();
+//        this.tas.coinList = new LinkedList<>();
+//        this.tas.userSingleCoins = new LinkedList<>();
+//        this.tas.singleHistoryMap = new LinkedHashMap<>();
+//        this.tas.userHistoryMap = new LinkedHashMap<>();
+//        this.tas.linkedUserHistoryMap = new LinkedList<>();
+//        this.tas.friendList = new LinkedList<>();
+//        this.tas.onlineUserList = new LinkedList<>();
+//        this.tas.savedCoins = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
-        this.tas.getCoinList(USERNAME,3);
+        this.tas.getCoinList();
         populateSearch();
         createTable();
         createPieChart();

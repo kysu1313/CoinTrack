@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import javax.swing.filechooser.FileSystemView;
 import controllers.AlertMessages;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,6 +32,8 @@ public class SaveToDisk implements SaveFileInterface{
 
     private static String OS = System.getProperty("os.name").toLowerCase();
     private String system;
+    private String fileName;
+    private String filePath;
     private final String DEFAULT_WINDOWS_LOCATION = FileSystemView.getFileSystemView().getDefaultDirectory().getPath();
     private final String DEFAULT_MAC_LOCATION = "/Users/$USER/Documents/CoinTrack";
     private File dir;
@@ -71,6 +75,45 @@ public class SaveToDisk implements SaveFileInterface{
             this.dir = _dir;
             this.path = Paths.get(DEFAULT_MAC_LOCATION);
             Files.createDirectories(this.path);
+        }
+    }
+
+    /**
+     * Create file with given file name and file type.
+     * @param _fileName
+     * @param _fileType
+     * @throws IOException
+     */
+    @Override
+    public void createFile(String _fileName, String _fileType) throws IOException {
+        CoinRankApi cri = new CoinRankApi();
+        cri.join();
+        LinkedList<SingleCoin> coinList = cri.getCoinList();
+        switch (_fileType) {
+            case ".txt":
+                saveTableAsText(_fileName, coinList);
+                break;
+            case ".xlsx":
+                saveAsExcel(_fileName, coinList);
+                break;
+            case ".json":
+                saveAsJson(_fileName, coinList);
+                break;
+            default:
+                AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
+        }
+        switch (_fileType) {
+            case ".txt":
+                    saveTableAsText(coinList);
+                break;
+            case ".xlsx":
+                    saveAsExcel(coinList);
+                break;
+            case ".json":
+                    saveAsJson(coinList);
+                break;
+            default:
+                AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
         }
     }
 

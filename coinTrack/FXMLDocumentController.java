@@ -155,7 +155,7 @@ public class FXMLDocumentController implements Initializable {
 
         uname = this.username.getText();
         String password = this.txtPassword.getText();
-        user = new User(uname, password);
+        FXMLDocumentController.user = new User(uname, password);
         if (user.validateLogin()) {
             this.lblStatus.setText("Login Success");
 
@@ -175,7 +175,6 @@ public class FXMLDocumentController implements Initializable {
                 this.scene = new Scene(root);
                 this.mainStage.setScene(scene);
                 this.mainStage.show();
-//                addThemeListener();
                 // Program will close and user will be logged out
                 mainStage.setOnCloseRequest(new EventHandler() {
                     @Override
@@ -296,36 +295,14 @@ public class FXMLDocumentController implements Initializable {
         CoinRankApi cri = new CoinRankApi();
         cri.join();
         LinkedList<SingleCoin> coinList = cri.getCoinList();
+        // If fields are empty reject save click.
         if (!this.saveLocation.getText().isEmpty() && !this.fileName.getText().isEmpty()) {
             SaveToDisk save = new SaveToDisk(new File(this.saveLocation.getText()));
-            switch (fileTypeMenu.getValue().toString()) {
-                case ".txt":
-                    save.saveTableAsText(this.fileName.getText(), coinList);
-                    break;
-                case ".xlsx":
-                    save.saveAsExcel(this.fileName.getText(), coinList);
-                    break;
-                case ".json":
-                    save.saveAsJson(this.fileName.getText(), coinList);
-                    break;
-                default:
-                    AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
-            }
+            save.createFile(this.fileName.getText(), fileTypeMenu.getValue().toString());
+        // If file name field is empty create default filename save.
         } else if (!this.saveLocation.getText().isEmpty() && this.fileName.getText().isEmpty()) {
             SaveToDisk save = new SaveToDisk(new File(saveLocation.getText()));
-            switch (fileTypeMenu.getValue().toString()) {
-                case ".txt":
-                        save.saveTableAsText(coinList);
-                    break;
-                case ".xlsx":
-                        save.saveAsExcel(coinList);
-                    break;
-                case ".json":
-                    save.saveAsJson(coinList);
-                    break;
-                default:
-                    AlertMessages.showErrorMessage("Missing info", "Please select a file format.");
-            }
+            save.createFile(this.fileName.getText(), this.fileTypeMenu.getValue().toString());
         } else {
             AlertMessages.showErrorMessage("Missing info", "Please fill out all fields.");
         }
@@ -808,6 +785,14 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * Return current user.
+     * @return
+     */
+    public static User getUser() {
+        return user;
     }
 
 }

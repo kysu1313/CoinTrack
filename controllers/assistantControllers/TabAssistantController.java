@@ -45,108 +45,24 @@ public class TabAssistantController<T> {
 
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private static final String UNAME = FXMLDocumentController.uname;
+    private static final User USER = FXMLDocumentController.getUser();
     private TableClass tbl;
     private TableClassFriendsCoins tblFriends;
     private static Theme theme;
     private static Scene scene = FXMLDocumentController.scene;
     private static User currentUser;
-    public LinkedList<UserCoin> userCoinList;
-    public static LinkedList<SingleCoin> coinList;
-    public LinkedList<SingleCoin> userSingleCoins;
-    public LinkedList<UserCoin> savedCoins;
-    public LinkedList<String> friendList;
-    public LinkedList<String> onlineUserList;
-    public final String TIMEFRAME = "24h";
-    public LinkedHashMap<Double, String> singleHistoryMap;
-    public LinkedHashMap<Double, String> userHistoryMap;
-    public LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
+    private LinkedList<UserCoin> userCoinList;
+    private static LinkedList<SingleCoin> coinList;
+    private LinkedList<SingleCoin> userSingleCoins;
+    private LinkedList<UserCoin> savedCoins;
+    private LinkedList<String> friendList;
+    private LinkedList<String> onlineUserList;
+    private final String TIMEFRAME = "24h";
+    private LinkedHashMap<Double, String> singleHistoryMap;
+    private LinkedHashMap<Double, String> userHistoryMap;
+    private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
     private LinkedList<Object> objectList;
 
- 
-
-    /**
-     * Set the current user
-     * @param _user
-     */
-    public void setCurrentUser(User _user){
-        currentUser = _user;
-    }
-
-    /**
-     * Get the current user
-     * @return User
-     */
-    public User getCurrentUser(){
-        return currentUser;
-    }
-
-    /**
-     * Set coin list;
-     * @param _list
-     */
-    public void setCoinList(LinkedList<SingleCoin> _list){
-        coinList = _list;
-    }
-
-    /**
-     * Get coin list
-     * @param _list
-     * @return
-     */
-    public LinkedList<SingleCoin> getCoinList(LinkedList<SingleCoin> _list){
-        return coinList;
-    }
-
-    /**
-     * Set object list for tabAssistantController.
-     * @param _objList
-     */
-    public void setObjectList(LinkedList<Object> _objList){
-        this.objectList = _objList;
-    }
-
-    /**
-     * Get object list for tabAssistantController.
-     * @return
-     */
-    public LinkedList<Object> setObjectList(){
-        return this.objectList;
-    }
-
-    /**
-     * Return generic User Coin linked list.
-     * @param _username
-     * @return temp
-     */
-    public LinkedList<T> getObjUserCoinList(String _username){
-        ConnectToDatabase conn = new ConnectToDatabase();
-        LinkedList<T> temp = new LinkedList<>();
-        conn.getSavedCoins(UNAME).forEach(item -> {
-            temp.add((T)item);
-        });
-        return temp;
-    }
-
-    /**
-     * Return generic User Coin linked list.
-     * @return temp
-     */
-    public LinkedList<T> getObjSavedCoinList(){
-        LinkedList<T> temp = new LinkedList<>();
-        this.userSingleCoins.forEach(item -> {
-            temp.add((T)item);
-        });
-        return temp;
-    }
-
-    /**
-     * Return the generic list of market objects;
-     * @return
-     */
-    public LinkedList<T> getObjMarketList() {
-        GetMarketsApi gma = new GetMarketsApi();
-        return gma.getGenericMarketList();
-    }
 
     /**
      * Add listener to theme menu item.
@@ -191,7 +107,7 @@ public class TabAssistantController<T> {
      * @param tableView
      * @param coinList
      */
-    public void coinTableDash(TableView tableView, LinkedList<SingleCoin> coinList) {
+    public void coinTableDash(TableView tableView, LinkedList<T> _list) {
         // Create columns
         SingleCoin sc = new SingleCoin();
         LinkedList<String> colNames = new LinkedList<>();
@@ -200,9 +116,10 @@ public class TabAssistantController<T> {
         colNames.add("Symbol");
         colNames.add("Price");
         colNames.add("Change");
-        TabAssistantController tas = new TabAssistantController();
-        LinkedList<T> objList = getObjSavedCoinList();
-        this.tbl = new TableClass("SingleCoin", tableView, objList, colNames);
+//        TabAssistantController tas = new TabAssistantController();
+//        LinkedList<T> objList = getObjSavedCoinList();
+//        LinkedList<T> objList = USER.getTList();
+        this.tbl = new TableClass("SingleCoin", tableView, _list, colNames);
         this.tbl.displayTable();
         this.tbl.colorChangeCol("#09de57", "#ff0000");
     }
@@ -284,8 +201,12 @@ public class TabAssistantController<T> {
      * @param pieChart
      */
     public void MakePieChart(CoinRankApi coinList, int pieChartCoins, ComboBox<String> comboBox, ObservableList<PieChart.Data> pieChartData, PieChart pieChart) {
-        PieChartClass pcc = new PieChartClass(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
-        pcc.displayGraph();
+        if (comboBox.getSelectionModel().isEmpty()) {
+            AlertMessages.showErrorMessage("Missing info", "Please select an amount of coins from the bottom left dropdown.");
+        } else {
+            PieChartClass pcc = new PieChartClass(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
+            pcc.displayGraph();
+        }
     }
 
     /**
@@ -301,8 +222,6 @@ public class TabAssistantController<T> {
 
     public void candleChart(Pane _pane) throws ParseException {
         CandleChartClass ccc = new CandleChartClass(_pane);
-//        CustomCandleChart newCcc = new CustomeCandleChart(_pane);
-
     }
 
     /**
@@ -314,7 +233,7 @@ public class TabAssistantController<T> {
     public void PieChart(CoinRankApi coinList, int pieChartCoins, ComboBox<String> comboBox, ObservableList<PieChart.Data> pieChartData, PieChart pieChart) {
         // Make sure the thread is finished
         coinList.join();
-        LinkedList<SingleCoin> temp = coinList.getSortedCoinList();
+        LinkedList<SingleCoin> temp = USER.getSortedCoinList();
         pieChartCoins = Integer.parseInt(comboBox.getValue());
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= pieChartCoins - 1; i++) {
@@ -370,7 +289,7 @@ public class TabAssistantController<T> {
 
     public void createTable(TableView _tableDash, LinkedList<SingleCoin> _userSingleCoins) {
         TabAssistantController tas = new TabAssistantController();
-        tas.coinTableDash(_tableDash, _userSingleCoins);
+        tas.coinTableDash(_tableDash, USER.getTList());
     }
 
     /**
@@ -390,36 +309,162 @@ public class TabAssistantController<T> {
             lc.populateFriends(friendsListT2, 1);
         }
     }
+
+    // ========== GETTERS ========== //
+
+
+    /**
+     * Get the current user
+     * @return User
+     */
+    public User getCurrentUser(){
+        return currentUser;
+    }
+
+    public LinkedList<String> getOnlineUsers() {
+        return this.onlineUserList;
+    }
+
+    public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap() {
+        return this.linkedUserHistoryMap;
+    }
+
+    public LinkedList<UserCoin> getUserCoinList() {
+        return this.userCoinList;
+    }
+
+    public LinkedList<SingleCoin> getUserSingleCoins() {
+        return this.userSingleCoins;
+    }
+
+    /**
+     * Get coin list
+     * @return
+     */
+    public LinkedList<SingleCoin> getCoinList(){
+        return coinList;
+    }
+
+    /**
+     * Return generic User Coin linked list.
+     * @param _username
+     * @return temp
+     */
+    public LinkedList<T> getObjUserCoinList(String _username){
+        ConnectToDatabase conn = new ConnectToDatabase();
+        LinkedList<T> temp = new LinkedList<>();
+        conn.getSavedCoins(UNAME).forEach(item -> {
+            temp.add((T)item);
+        });
+        return temp;
+    }
+
+    /**
+     * Return generic User Coin linked list.
+     * @return temp
+     */
+    public LinkedList<T> getObjSavedCoinList(){
+//        this.userSingleCoins = USER.getUserSingleCoins();
+        LinkedList<T> temp = new LinkedList<>();
+        this.userSingleCoins.forEach(item -> {
+            temp.add((T)item);
+        });
+        return temp;
+    }
+
+    /**
+     * Return the generic list of market objects;
+     * @return
+     */
+    public LinkedList<T> getObjMarketList() {
+        GetMarketsApi gma = new GetMarketsApi();
+        return gma.getGenericMarketList();
+    }
+
         /**
      * Get users saved coins from database then create SingleCoin objects
      * for each.
      * @param name
      * @param tabNumber
      */
-    public void getCoinList(String name, int tabNumber) {
+    public void createCoinLists() {
         ConnectToDatabase conn = new ConnectToDatabase();
-        this.userCoinList = conn.getSavedCoins(name);
-        if(tabNumber == 3){
-            this.friendList = conn.getFriendList(name);
+//        this.userCoinList = conn.getSavedCoins(name);
+        this.userCoinList = USER.getUserCoinList();
+//        if(tabNumber == 3){
+//            this.friendList = conn.getFriendList(name);
+        this.friendList = USER.getFriendList();
         this.onlineUserList = conn.getOnlineUsers();
-        }
+//        }
         conn.close();
-        CoinRankApi cri = new CoinRankApi();
-        cri.run();
-        cri.join();
-        coinList = cri.getCoinList();
+        coinList = USER.getCoinList();
         coinList.forEach((item) -> {
-            userCoinList.forEach((entry) -> {
+            this.userCoinList.forEach((entry) -> {
                 if (item.getName().equalsIgnoreCase(entry.getName())){
-                    userSingleCoins.add(item);
+                    this.userSingleCoins.add(item);
                 }
             });
         });
         this.singleHistoryMap = new CoinHistory().getSingleHistory();
         this.userCoinList.forEach((item) -> {
-            userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
-            linkedUserHistoryMap.add(userHistoryMap);
+            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.TIMEFRAME).getSingleHistory();
+            this.linkedUserHistoryMap.add(this.userHistoryMap);
         });
 
     }
+
+    // ========= SETTERS ==========
+    
+    /**
+     * Set object list for tabAssistantController.
+     * @param _objList
+     */
+    public void setObjectList(LinkedList<Object> _objList){
+        this.objectList = _objList;
+    }
+
+    /**
+     * Set coin list;
+     * @param _list
+     */
+    public void setCoinList(LinkedList<SingleCoin> _list){
+        coinList = _list;
+    }
+
+    /**
+     * Get object list for tabAssistantController.
+     * @return
+     */
+    public LinkedList<Object> setObjectList(){
+        return this.objectList;
+    }
+
+    /**
+     * Set the current user
+     * @param _user
+     */
+    public void setCurrentUser(User _user){
+        currentUser = _user;
+    }
+
+    public void setUserCoinList(LinkedList<UserCoin> _list) {
+        this.userCoinList = _list;
+    }
+
+    public void setUserSingleCoins(LinkedList<SingleCoin> _list) {
+        this.userSingleCoins = _list;
+    }
+
+    public void setSingleHistoryMap(LinkedHashMap<Double, String> _map) {
+        this.singleHistoryMap = _map;
+    }
+
+    public void setUserHistoryMap(LinkedHashMap<Double, String> _map) {
+        this.userHistoryMap = _map;
+    }
+
+    public void setLinkedUserHistoryMap(LinkedList<LinkedHashMap<Double, String>> _map) {
+        this.linkedUserHistoryMap = _map;
+    }
+
 }

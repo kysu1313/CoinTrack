@@ -42,27 +42,9 @@ public class TestClass {
     }
 
     /**
-     * Create custom lists.
+     * Create linked lists using the pre-set arrays of string doubles.
+     * Then test each for correct calculations using getStats().
      */
-    public void createCustomLists() {
-        for(String item : testPrices1) {
-            SingleCoin coin = new SingleCoin(item);
-            this.testList3.add(coin);
-        }
-        for(String item : testPrices2) {
-            SingleCoin coin = new SingleCoin(item);
-            this.testList4.add(coin);
-        }
-        for(String item : testPrices3) {
-            SingleCoin coin = new SingleCoin(item);
-            this.testList5.add(coin);
-        }
-        for(String item : testPrices4) {
-            SingleCoin coin = new SingleCoin(item);
-            this.testList6.add(coin);
-        }
-    }
-
     public void testCustomList1() {
         for(String item : testPrices1) {
             SingleCoin coin = new SingleCoin(item);

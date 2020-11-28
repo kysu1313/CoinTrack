@@ -6,19 +6,15 @@
 package controllers;
 
 import coinTrack.FXMLDocumentController;
-import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import java.net.URL;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import models.User;
 import models.UserCoin;
 
 /**
@@ -29,6 +25,7 @@ import models.UserCoin;
 public class Tab4Controller implements Initializable {
 
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
+    private static final User USER = FXMLDocumentController.user;
     public static TabAssistantController tas;
     private LinkedList<UserCoin> savedCoins;
     @FXML private ListView savedCoinsList;
@@ -51,9 +48,8 @@ public class Tab4Controller implements Initializable {
 
 
     private void createTable() {
-        Tab4Controller.tas.coinTableDash(this.tableViewT1, tas.userSingleCoins);
+        Tab4Controller.tas.coinTableDash(this.tableViewT1, USER.getTList());
     }
-
 
     /**
      * Initialize the tab
@@ -64,17 +60,17 @@ public class Tab4Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tas = new TabAssistantController();
-        tas.userCoinList = new LinkedList<>();
-        tas.userSingleCoins = new LinkedList<>();
-        tas.singleHistoryMap = new LinkedHashMap<>();
-        tas.userHistoryMap = new LinkedHashMap<>();
-        tas.linkedUserHistoryMap = new LinkedList<>();
-        tas.coinList = new LinkedList<>();
+//        tas.userCoinList = new LinkedList<>();
+//        tas.userSingleCoins = new LinkedList<>();
+//        tas.singleHistoryMap = new LinkedHashMap<>();
+//        tas.userHistoryMap = new LinkedHashMap<>();
+//        tas.linkedUserHistoryMap = new LinkedList<>();
+//        tas.coinList = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
         populateSavedCoins();
         addFriendsToList();
         tas.coinTableFriendsCoin(tableViewT11);
-        tas.getCoinList(USERNAME, 4);
+        tas.getCoinList();
         createTable();
     }
 }
