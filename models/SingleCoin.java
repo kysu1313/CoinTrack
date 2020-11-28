@@ -246,5 +246,7 @@ public class SingleCoin implements SingleCoinInterface, GlobalClassInterface{
         return "SingleCoin";
     }
 
-    
+    public String getTestPrice() {
+        return this.price;
+    }
 }
