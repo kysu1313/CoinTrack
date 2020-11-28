@@ -87,6 +87,9 @@ public class PieChartClass implements interfaces.GraphInterface{
         if (this.pieChartCoins == this.FULL_LIST) {
             this.offset = 2;
         }
+        if (this.comboBox.getValue().isEmpty()){
+
+        }
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= this.pieChartCoins - this.offset; i++) {
             SingleCoin coin = temp.get(i);

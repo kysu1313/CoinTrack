@@ -157,11 +157,11 @@ public class Tab1Controller implements Initializable{
         } else if (searchGlobalStats.isSelected()){
             txtAreaT1.setText("");
             displayGlobalStats();
-        } else if (searchCoins.isSelected() || allCoins || savedCoinsbtn || markets) {
-//            tableViewT1.getItems().clear();
-//            tableViewT1.getColumns().clear();
-//            if(DEBUG){System.out.println("search coins");}
-//            displayCoinText();
+        } else if (allCoins || savedCoinsbtn || markets) {
+            tableViewT1.getItems().clear();
+            tableViewT1.getColumns().clear();
+            if(DEBUG){System.out.println("search coins");}
+            displayCoinText();
         }
     }
 
@@ -238,32 +238,6 @@ public class Tab1Controller implements Initializable{
         tcc.testCustomList1();
     }
 
-    /**
-     * Creates the save view where users can save coin lists.
-     * @param _event
-     */
-    @FXML
-    private void handleSaveT1(ActionEvent _event) throws IOException {
-        this.cri = new CoinRankApi();
-        if(DEBUG){System.out.println("logging out");}
-        Parent root;
-        try {
-            Tab1Controller.mainPage1 = new Stage();
-            this.USER.onlineStatus(0);
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("coinTrack/FXMLLogin.fxml"));
-            this.scene = new Scene(root);
-            Tab1Controller.mainPage1.setScene(this.scene);
-            Tab1Controller.mainPage1.show();
-            closeOldStage();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.cri.join();
-        this.coinList = this.cri.getCoinList();
-        SaveToDisk save = new SaveToDisk();
-        save.saveTableAsText(coinList);
-    }
-
     // ========== HELPER METHODS ==========
 
 
@@ -288,7 +262,7 @@ public class Tab1Controller implements Initializable{
     private void displayCoinText() {
         this.cri = new CoinRankApi();
         this.cri.join();
-        this.coinList = this.cri.getCoinList();
+        this.coinList = this.USER.getCoinList();
         tas.setCoinList(this.coinList);
         /**
          * Update coins in database. probably not necessary to run here.
@@ -304,7 +278,7 @@ public class Tab1Controller implements Initializable{
 
         this.count = 50;
         if(DEBUG){System.out.println("number of coins: " + cri.getCoinList().size());}
-        this.coinList = this.cri.getCoinList();
+//        this.coinList = this.cri.getCoinList();
         this.coinNamePrice = this.cri.getNamePrice();
         if(DEBUG){System.out.println("current currency: " + this.selectedCurrency);}
         TabAssistantController ast = new TabAssistantController();
@@ -320,7 +294,7 @@ public class Tab1Controller implements Initializable{
             colNames.add("Rank");
             colNames.add("Change");
             colNames.add("Volume");
-            ast.coinGenericTable("SingleCoin", this.cri.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
+            ast.coinGenericTable("SingleCoin", this.USER.getTList(), colNames, this.tableViewT1, this.webViewT1, this.currencyRate);
             ast.createCells(this.USER.getUsername(), this.savedCoinsList, this.savedCoins);
         } else if (this.savedCoinsBtn.isSelected()) {
             LinkedList<String> colNamesSaved = new LinkedList<>();
@@ -353,7 +327,6 @@ public class Tab1Controller implements Initializable{
             this.cri.join();
             this.coinList = this.cri.getCoinList();
         }
-        
         CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
         coinConn.updateMultipleCoins(this.coinList);
     }

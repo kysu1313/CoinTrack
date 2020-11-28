@@ -8,6 +8,7 @@ package models;
  * - Kyle
  */
 
+import controllers.AlertMessages;
 import interfaces.CoinHistoryInterface;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,6 +25,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private static final int NUM_COINS = 70;
+    private boolean isBadTimeframe;
     private double change;
     private Thread t;
     private SingleCoin single;
@@ -58,11 +60,14 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
                 "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc");
         // Prevent coins with no data from being added to a graph and breaking things.
         if (response.getStatus() && response.getJsonObject().has("data")){
+            this.isBadTimeframe = false;
+            if (DEBUG){System.out.println(response.getJsonObject().toString());}
             JSONObject resp = response.getJsonObject();
             JSONObject data = new JSONObject();
             data = resp.getJSONObject("data");
-
-            if (data.has("change")) {
+            // If the coin does not have data for given timeframe, break.
+            if (data.has("change") && !data.isNull("change")) {
+                this.isBadTimeframe = false;
                 change = data.getDouble("change");
                 // JSONArray containing price history for the particular coin.
                 JSONArray histArr = data.getJSONArray("history");
@@ -78,9 +83,10 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
                 }
             } else {
                 change = 0.0;
+                this.isBadTimeframe = true;
+                AlertMessages.showErrorMessage("Large Timeframe", "Unfortunately this cryptocurrency does not have data going back " + time);
             }
         }
-        
     }
 
     @Override
@@ -141,14 +147,18 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
 
     /**
      * Check if the thread is alive
-     * @return 
+     * @return
      */
     public boolean isAlive() {
         return t.isAlive();
     }
-    
+
     public LinkedHashMap<Double, String> getSingleHistory() {
         return this.singleHistoryMap;
+    }
+
+    public boolean getIsBadTimeframe() {
+        return this.isBadTimeframe;
     }
 
     @Override

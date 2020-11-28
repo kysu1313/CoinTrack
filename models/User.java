@@ -2,10 +2,12 @@ package models;
 
 import static coinTrack.FXMLDocumentController.uname;
 import controllers.AlertMessages;
+import controllers.assistantControllers.TabAssistantController;
 import interfaces.GenericClassInterface;
 import interfaces.GlobalClassInterface;
 import interfaces.UserInterface;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -13,8 +15,9 @@ import javafx.scene.text.Text;
 /**
  * This class represents a user's account.
  * @author Kyle
+ * @param <T>
  */
-public class User implements GlobalClassInterface, GenericClassInterface, UserInterface{
+public class User<T> implements GlobalClassInterface, GenericClassInterface, UserInterface{
 
     private final String USERNAME;
     private final String PASSWORD;
@@ -23,6 +26,17 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
     private final LinkedList<UserCoin> USER_COINS;
     private final HashMap<String, String> USER_DATA;
     private LinkedList<Object> objList;
+    private CoinRankApi cri;
+    private CoinHistory coinHist;
+    private LinkedHashMap<Double, String> coinHistList;
+    private LinkedList<SingleCoin> coinList;
+    private LinkedList<SingleCoin> sortedList;
+    private LinkedList<String> friendList;
+    private LinkedList<T> tList;
+    private TabAssistantController tas;
+    private LinkedList<SingleCoin> userSingleCoins;
+    private LinkedHashMap<Double, String> userHistoryMap;
+    private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
 
     public User(String _username, String _password){
         this.USERNAME = _username;
@@ -31,7 +45,25 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
         this.USER_ID = this.CONN.getUserId(uname);
         this.USER_COINS = this.CONN.getSavedCoins(_username);
         this.USER_DATA = this.CONN.getUserInfo(_username);
+        this.cri = new CoinRankApi();
+        this.coinHist = new CoinHistory();
+        this.coinHist.start();
+        this.cri.start();
+        this.coinHist.join();
+        this.cri.join();
+        this.coinHistList = this.coinHist.getSingleHistory();
+        this.coinList = this.cri.getCoinList();
+        this.tList = this.cri.getTList();
+        this.sortedList = this.cri.getSortedCoinList();
+        this.friendList = this.CONN.getFriendList(this.USERNAME);
         this.CONN.close();
+        this.tas = new TabAssistantController();
+        this.tas.setCoinList(this.coinList);
+        this.tas.setCurrentUser(this);
+        this.tas.setSingleHistoryMap(this.coinHistList);
+        this.tas.setUserCoinList(this.USER_COINS);
+        this.tas.setUserSingleCoins(this.USER_COINS);
+        this.userSingleCoins = new LinkedList<>();
     }
 
     public void saveCoin(int _coinID) {
@@ -136,6 +168,21 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
             return false;
     }
 
+    /**
+     * Returns a linked list of SingleCoin objects created from
+     * the UserCoin list pulled from database.
+     * @return
+     */
+    public LinkedList<SingleCoin> getUserSingleCoins() {
+        this.coinList.forEach((item) -> {
+            this.USER_COINS.forEach((entry) -> {
+                if (item.getName().equalsIgnoreCase(entry.getName())){
+                    this.userSingleCoins.add(item);
+                }
+            });
+        });
+        return this.userSingleCoins;
+    }
 
     @Override
     public String getUsername(){
@@ -146,6 +193,15 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
         return this.USER_ID;
     }
 
+    public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
+        this.linkedUserHistoryMap = new LinkedList<>();
+        this.USER_COINS.forEach((item) -> {
+            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), _timeframe).getSingleHistory();
+            this.linkedUserHistoryMap.add(this.userHistoryMap);
+        });
+        return this.linkedUserHistoryMap;
+    }
+
     @Override
     public LinkedList<UserCoin> getSavedCoins(){
         return this.USER_COINS;
@@ -154,6 +210,34 @@ public class User implements GlobalClassInterface, GenericClassInterface, UserIn
     @Override
     public HashMap<String, String> getUserInfo(){
         return this.USER_DATA;
+    }
+
+    public LinkedHashMap<Double, String> getCoinHistoryList() {
+        return this.coinHistList;
+    }
+
+    public LinkedList<SingleCoin> getCoinList() {
+        return this.coinList;
+    }
+
+    public LinkedList<T> getTList() {
+        return this.tList;
+    }
+
+    public LinkedList<SingleCoin> getSortedCoinList() {
+        return this.sortedList;
+    }
+
+    public LinkedList<String> getFriendList() {
+        return this.friendList;
+    }
+
+    public LinkedList<UserCoin> getUserCoinList() {
+        return this.USER_COINS;
+    }
+
+    public TabAssistantController getTas() {
+        return this.tas;
     }
 
     @Override
