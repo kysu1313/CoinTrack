@@ -559,13 +559,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRecoveryEmail(ActionEvent event) {
         String toEmail = this.recoveryEmail.getText();
-        EmailValidation test = new EmailValidation(toEmail);
-        test.getTest();
-        if ("invalid".equals(test.getTest())) {
-            AlertMessages.showErrorMessage("Forgot Password", "Email is not valid.");
-            this.recoveryEmail.requestFocus();
-            return;
-        }
+        EmailValidation test = new EmailValidation();
         if (test.isEmailInDatabase(toEmail)) {
             tempUsernameStorage = test.getAssociatedUsername(toEmail);
             if (DEBUG) {
