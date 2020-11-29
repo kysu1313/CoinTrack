@@ -11,7 +11,7 @@ import models.AlphaVantage;
 import models.User;
 import models.CoinHistory;
 import models.CoinRankApi;
-import models.ConnectToDatabase;
+import models.ConnectToDatabase; 
 import models.FixerApi;
 import models.GlobalCoinStats;
 import models.SaveToDisk;
