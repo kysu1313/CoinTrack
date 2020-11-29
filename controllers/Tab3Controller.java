@@ -35,9 +35,10 @@ import models.User;
 /**
  * Tab controller for the dashboard, "tab 3".
  * @author Kyle
+ * @param <T>
  */
 
-public class Tab3Controller implements Initializable{
+public class Tab3Controller<T> implements Initializable{
 
     private final User USER = FXMLDocumentController.user;
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
@@ -90,7 +91,8 @@ public class Tab3Controller implements Initializable{
      * Uses tabAssistantController to format the table.
      */
     private void createTable() {
-        this.tas.coinTableDash(this.tableDash, this.USER.getTList());
+        LinkedList<T> tlist = this.USER.createTList(this.USER.getUserSingleCoins());
+        this.tas.coinTableDash(this.tableDash, tlist);
     }
 
     /**

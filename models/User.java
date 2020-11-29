@@ -174,23 +174,16 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @return
      */
     public LinkedList<SingleCoin> getUserSingleCoins() {
-        this.coinList.forEach((item) -> {
-            this.USER_COINS.forEach((entry) -> {
-                if (item.getName().equalsIgnoreCase(entry.getName())){
-                    this.userSingleCoins.add(item);
-                }
+        if (this.userSingleCoins.isEmpty()) {
+            this.coinList.forEach((item) -> {
+                this.USER_COINS.forEach((entry) -> {
+                    if (item.getName().equalsIgnoreCase(entry.getName())) {
+                        this.userSingleCoins.add(item);
+                    }
+                });
             });
-        });
+        }
         return this.userSingleCoins;
-    }
-
-    @Override
-    public String getUsername(){
-        return this.USERNAME;
-    }
-
-    public int getUserID() {
-        return this.USER_ID;
     }
 
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
@@ -200,6 +193,44 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
             this.linkedUserHistoryMap.add(this.userHistoryMap);
         });
         return this.linkedUserHistoryMap;
+    }
+
+    /**
+     * Create list of singleCoins from the list of userCoins.
+     * @return
+     */
+    public LinkedList<SingleCoin> getSavedSingleCoins() {
+        LinkedList<SingleCoin> savedSingleCoins = new LinkedList<>();
+        this.coinList.forEach(item -> {
+            this.USER_COINS.forEach(coin -> {
+                if (item.getSymbol().equals(coin.getName())) {
+                    savedSingleCoins.add(item);
+                }
+            });
+        });
+        return savedSingleCoins;
+    }
+
+    /**
+     * Create list of T from SingleCoin list.
+     * @param _list
+     * @return
+     */
+    public LinkedList<T> createTList(LinkedList<SingleCoin> _list) {
+        LinkedList<T> tlist = new LinkedList<>();
+        _list.forEach(item -> {
+            tlist.add((T)item);
+        });
+        return tlist;
+    }
+
+    @Override
+    public String getUsername(){
+        return this.USERNAME;
+    }
+
+    public int getUserID() {
+        return this.USER_ID;
     }
 
     @Override

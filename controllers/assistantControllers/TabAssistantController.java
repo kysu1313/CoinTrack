@@ -200,7 +200,7 @@ public class TabAssistantController<T> {
      * @param pieChartData
      * @param pieChart
      */
-    public void MakePieChart(CoinRankApi coinList, int pieChartCoins, ComboBox<String> comboBox, ObservableList<PieChart.Data> pieChartData, PieChart pieChart) {
+    public void MakePieChart(LinkedList<SingleCoin> coinList, int pieChartCoins, ComboBox<String> comboBox, ObservableList<PieChart.Data> pieChartData, PieChart pieChart) {
         if (comboBox.getSelectionModel().isEmpty()) {
             AlertMessages.showErrorMessage("Missing info", "Please select an amount of coins from the bottom left dropdown.");
         } else {
