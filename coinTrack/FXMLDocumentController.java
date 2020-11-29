@@ -350,23 +350,23 @@ public class FXMLDocumentController implements Initializable {
         /**
      * Displaying the profile picture
      */
-    private void profilePicture(){
-        if(this.layout1 != null){
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-            if("".equals(picturePath)){
-                Image image1 = new Image("/styles/bitCoin.jpg");
-                imageView = new ImageView(image1);
-            }else{
-                image = new Image("file:///" + picturePath);
-                imageView = new ImageView(image);
-            }
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(30);
-            imageView.setPreserveRatio(true);
-            layout1.setCenter(imageView);
-        }
-    }
+//    private void profilePicture(){
+//        if(this.layout1 != null){
+//            ConnectToDatabase conn = new ConnectToDatabase();
+//            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
+//            if("".equals(picturePath)){
+//                Image image1 = new Image("/styles/bitCoin.jpg");
+//                imageView = new ImageView(image1);
+//            }else{
+//                image = new Image("file:///" + picturePath);
+//                imageView = new ImageView(image);
+//            }
+//            imageView.setFitWidth(50);
+//            imageView.setFitHeight(30);
+//            imageView.setPreserveRatio(true);
+//            layout1.setCenter(imageView);
+//        }
+//    }
 
     /**
      * Verifies the path entered to save file.
