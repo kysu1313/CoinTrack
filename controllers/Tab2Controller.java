@@ -77,6 +77,7 @@ public class Tab2Controller implements Initializable{
             observableArrayList("3", "5", "7", "15", "25", "35", "50");
     private final ObservableList<String> ADDREMOVE = FXCollections.
             observableArrayList("add", "remove");
+    private final String DEFAULT_TIME_SELECTION = "7d";
     private final int COIN_ID_LOCATION = 0;
     private final int TAB1 = 1;
     private final int TAB2 = 2;
@@ -132,13 +133,12 @@ public class Tab2Controller implements Initializable{
     private XYChart.Series series2;
     private ObservableList<XYChart.Series<String, Number>> barChartData;
     private ObservableList<XYChart.Series<String, Number>> barChartData2;
-    
+
     // Line Chart
     @FXML private LineChart lineChart;
     private CategoryAxis xAxis;
     private NumberAxis yAxis;
     private ObservableList<XYChart.Series<Number, String>> lineChartData;
-    
 
     // Pie Chart
     @FXML
@@ -164,16 +164,14 @@ public class Tab2Controller implements Initializable{
             } else {
                 this.timeSelection = "7d";
             }
-            // Make a CoinHistory api call
-//            this.coinHistory = new CoinHistory();
+            // Display the graph
             displayMultiCoinGraph();
 
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
             if (DEBUG){System.out.println("pie chart selected");}
             pieChart.getData().clear();
             pieChart.layout();
-//            coinList = new CoinRankApi();
-//            coinList.run();
+            // Display the pie chart
             displayPieChart();
         } else {
             if (DEBUG){System.out.println("bubble chart selected");}
@@ -199,7 +197,7 @@ public class Tab2Controller implements Initializable{
             // timeSelection
             if (this.comboBox.getSelectionModel().isEmpty()) {
                 // Default timeframe will be 7 days.
-                this.timeSelection = "7d";
+                this.timeSelection = this.DEFAULT_TIME_SELECTION;
             } else {
                 this.timeSelection = (String)this.comboBox.getValue();
             }
@@ -308,13 +306,20 @@ public class Tab2Controller implements Initializable{
                             + "of the coin you would like to view.");
         } else {
             char ch = this.searchFieldT2.getText().charAt(0);
+            // Verify data is valid
             if (Character.isAlphabetic(ch)){
                 CoinHistory coinHist = new CoinHistory(this.COIN_ID_LOCATION, this.searchFieldT2.getText(), this.timeSelection);
-                this.singleHistoryMap = coinHist.getSingleHistory();
+                if (coinHist.checkValidData()){
+                    coinHist.getData();
+                    this.singleHistoryMap = coinHist.getSingleHistory();
+                }
             } else {
                 int temp = Integer.parseInt(this.searchFieldT2.getText());
                 CoinHistory coinHist = new CoinHistory(temp, "", this.timeSelection);
-                this.singleHistoryMap = coinHist.getSingleHistory();
+                if (coinHist.checkValidData()){
+                    coinHist.getData();
+                    this.singleHistoryMap = coinHist.getSingleHistory();
+                }
             }
         }
         this.sideVBox.getChildren().clear();
@@ -504,11 +509,18 @@ public class Tab2Controller implements Initializable{
             this.series2 = new BarChart.Series<>();
             if (this.timeSelection == null){this.timeSelection = "24h";}
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
-            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection).getSingleHistory();
-            // Create new bar chart object
-            BarChartClass bcc = new BarChartClass(this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
-            bcc.displaySingleGraph();
-            bcc.alternateColors("green", "red");
+            CoinHistory ch = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection);
+            // Verify the coin actually has data to display for given timeframe
+            if (ch.checkValidData()) {
+                ch.getData();
+                this.userHistoryMap = ch.getSingleHistory();
+                // Create new bar chart object
+                BarChartClass bcc = new BarChartClass(this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
+                bcc.displaySingleGraph();
+                bcc.alternateColors("green", "red");
+            } else {
+                this.userHistoryMap = new LinkedHashMap<>();
+            }
         } else if (this.graphTabPane.getSelectionModel().getSelectedItem() == this.lineChartTab) {
             if (DEBUG){System.out.println("bar chart selected");}
             this.lineChart.getData().clear();
@@ -532,7 +544,7 @@ public class Tab2Controller implements Initializable{
             lcc.displayGraph();
         }
     }
-    
+
     /**
      * Adds mouse handler for search VBox labels.
      *

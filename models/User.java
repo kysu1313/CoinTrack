@@ -1,5 +1,6 @@
 package models;
 
+import coinTrack.FXMLDocumentController;
 import static coinTrack.FXMLDocumentController.uname;
 import controllers.AlertMessages;
 import controllers.assistantControllers.TabAssistantController;
@@ -19,8 +20,9 @@ import javafx.scene.text.Text;
  */
 public class User<T> implements GlobalClassInterface, GenericClassInterface, UserInterface{
 
-    private final String USERNAME;
+    private String username;
     private String password;
+    private String email;
     private final int USER_ID;
     private final ConnectToDatabase CONN;
     private final LinkedList<UserCoin> USER_COINS;
@@ -38,6 +40,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     private LinkedList<SingleCoin> userSingleCoins;
     private LinkedHashMap<Double, String> userHistoryMap;
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
+    private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
 
     /**
      * Create a new user and build the basic coin lists.
@@ -45,7 +48,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _password
      */
     public User(String _username, String _password){
-        this.USERNAME = _username;
+        this.username = _username;
         this.password = _password;
         this.CONN = new ConnectToDatabase();
         this.USER_ID = this.CONN.getUserId(uname);
@@ -55,10 +58,10 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     }
 
     /**
-     * This is mainly user for resetting a forgotten password.
+     * This is mainly user for resetting a forgotten password / email / username.
      */
     public User() {
-        this.USERNAME = "";
+        this.username = "";
         this.password = "";
         this.CONN = null;
         this.USER_ID = -1;
@@ -81,7 +84,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         this.coinList = this.cri.getCoinList();
         this.tList = this.cri.getTList();
         this.sortedList = this.cri.getSortedCoinList();
-        this.friendList = this.CONN.getFriendList(this.USERNAME);
+        this.friendList = this.CONN.getFriendList(this.username);
         this.CONN.close();
         this.tas = new TabAssistantController();
         this.tas.setCoinList(this.coinList);
@@ -99,7 +102,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     public void saveCoin(int _coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
-        if (dbConn.insertSavedCoin(this.USERNAME, _coinID)) {
+        if (dbConn.insertSavedCoin(this.username, _coinID)) {
             AlertMessages.showInformationMessage("Save Coin", "Coin saved successfully.");
         }
         dbConn.close();
@@ -111,7 +114,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     public boolean validateLogin() {
         ConnectToDatabase conn = new ConnectToDatabase();
-        boolean accepted = conn.validateLogin(this.USERNAME, this.password);
+        boolean accepted = conn.validateLogin(this.username, this.password);
         conn.close();
         return accepted;
     }
@@ -122,7 +125,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     public void onlineStatus(int _value) {
         ConnectToDatabase conn = new ConnectToDatabase();
-        conn.setUserOnlineStatus(this.USERNAME, 1);
+        conn.setUserOnlineStatus(this.username, 1);
         conn.close();
     }
 
@@ -166,6 +169,28 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         conn.close();
     }
 
+    /**
+     * Send an email to the users email address containing their username.
+     * @param _email
+     * @param _username
+     * @return
+     */
+    public boolean forgotUsernameEmail(String _email) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        if (conn.emailExists(_email)) {
+            String tmpUname = conn.getUsernameFromEmail(_email);
+            if (DEBUG) {
+                System.out.println(tmpUname);
+            }
+            conn.close();
+            int code = 0;
+            Email sendMail = new Email(_email, tmpUname, code);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
         // ============= GETTERS ============= //
 
@@ -205,7 +230,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     @Override
     public LinkedList<Object> getGenericCoinList() {
-        this.CONN.getSavedCoins(this.USERNAME).forEach((item) -> {
+        this.CONN.getSavedCoins(this.username).forEach((item) -> {
             Object obj = item;
             this.objList.add(obj);
         });
@@ -238,8 +263,12 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
         this.linkedUserHistoryMap = new LinkedList<>();
         this.USER_COINS.forEach((item) -> {
-            this.userHistoryMap = new CoinHistory(item.getCoinID(), item.getName(), _timeframe).getSingleHistory();
-            this.linkedUserHistoryMap.add(this.userHistoryMap);
+            CoinHistory coinHistory = new CoinHistory(item.getCoinID(), item.getName(), _timeframe);
+            if (coinHistory.checkValidData()) {
+                coinHistory.getData();
+                this.userHistoryMap = coinHistory.getSingleHistory();
+                this.linkedUserHistoryMap.add(this.userHistoryMap);
+            }
         });
         return this.linkedUserHistoryMap;
     }
@@ -275,7 +304,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
 
     @Override
     public String getUsername(){
-        return this.USERNAME;
+        return this.username;
     }
 
     public int getUserID() {

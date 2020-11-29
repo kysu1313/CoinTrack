@@ -125,26 +125,27 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         // For every coin entered, create a new CoinHistory object.
         for (String line : this.LINES) {
             CoinHistory coinHist = new CoinHistory(0, line, this.TIME_SELECTION);
-            this.singleHistoryMap = coinHist.getSingleHistory();
-            XYChart.Series<Number, String> newSeries = new XYChart.Series();
-            double previousPrice = 0;
-            // Create the datapoints for the line chart.
-            this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
-                long tempLong = Long.parseLong(entry.getValue());
-                Date d = new Date(timestamp - tempLong);
-                String date = "" + d;
-                System.out.println(tempLong);
-                System.out.println(date);
-
-                double price = entry.getKey();
-                XYChart.Data item = new XYChart.Data(date, price);
-                item.setExtraValue(line + ": " + price);
-                newSeries.getData().add(item);
-                Node node = newSeries.getNode();
-                this.dataList.add(new XYChart.Data(date, price));
-            });
-            this.seriesList.add(newSeries);
-            this.lineChartData.add(newSeries);
+            if (coinHist.checkValidData()) {
+                this.singleHistoryMap = coinHist.getSingleHistory();
+                XYChart.Series<Number, String> newSeries = new XYChart.Series();
+                double previousPrice = 0;
+                // Create the datapoints for the line chart.
+                this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
+                    long tempLong = Long.parseLong(entry.getValue());
+                    Date d = new Date(timestamp - tempLong);
+                    String date = "" + d;
+                    System.out.println(tempLong);
+                    System.out.println(date);
+                    double price = entry.getKey();
+                    XYChart.Data item = new XYChart.Data(date, price);
+                    item.setExtraValue(line + ": " + price);
+                    newSeries.getData().add(item);
+                    Node node = newSeries.getNode();
+                    this.dataList.add(new XYChart.Data(date, price));
+                });
+                this.seriesList.add(newSeries);
+                this.lineChartData.add(newSeries);
+            }
         }
     }
 

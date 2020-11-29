@@ -347,27 +347,6 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-        /**
-     * Displaying the profile picture
-     */
-//    private void profilePicture(){
-//        if(this.layout1 != null){
-//            ConnectToDatabase conn = new ConnectToDatabase();
-//            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-//            if("".equals(picturePath)){
-//                Image image1 = new Image("/styles/bitCoin.jpg");
-//                imageView = new ImageView(image1);
-//            }else{
-//                image = new Image("file:///" + picturePath);
-//                imageView = new ImageView(image);
-//            }
-//            imageView.setFitWidth(50);
-//            imageView.setFitHeight(30);
-//            imageView.setPreserveRatio(true);
-//            layout1.setCenter(imageView);
-//        }
-//    }
-
     /**
      * Verifies the path entered to save file.
      * @param path
@@ -581,7 +560,6 @@ public class FXMLDocumentController implements Initializable {
         String toEmail = this.recoveryEmail.getText();
         EmailValidation test = new EmailValidation(toEmail);
         test.getTest();
-//        ConnectToDatabase conn = new ConnectToDatabase();
         if (test.getTest() == "invalid") {
             AlertMessages.showErrorMessage("Forgot Password", "Email is not valid.");
             this.recoveryEmail.requestFocus();
@@ -592,7 +570,6 @@ public class FXMLDocumentController implements Initializable {
             if (DEBUG) {
                 System.out.println(tempUsernameStorage);
             }
-//            conn.close();
             this.code = generateRecoveryCode();
             Email sendMail = new Email(toEmail, this.tempUsernameStorage, this.code);
         } else {
@@ -610,15 +587,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleForgotUsernameEmail(ActionEvent event){
         String toEmail2 = this.recoveryEmail.getText();
-        ConnectToDatabase conn = new ConnectToDatabase();
-        if (conn.emailExists(toEmail2)) {
-            tempUsernameStorage = conn.getUsernameFromEmail(toEmail2);
+        User tempUsr = new User();
+        if (tempUsr.forgotUsernameEmail(toEmail2)) {
             if (DEBUG) {
-                System.out.println(tempUsernameStorage);
+                System.out.println("Email sent: " + tempUsernameStorage);
             }
-            conn.close();
-            _code = 0;
-            Email sendMail = new Email(toEmail2, FXMLDocumentController.tempUsernameStorage, _code);
         } else {
             this.forgotWarning.setText("hmm, can't find that email");
             this.forgotWarning.setFill(Color.RED);

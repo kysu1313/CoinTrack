@@ -24,6 +24,7 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
     private LinkedList<SingleCoin> history;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;
+    private ConnectToApi response;
     private static final int NUM_COINS = 70;
     private boolean isBadTimeframe;
     private double change;
@@ -55,34 +56,70 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
         }
         String url = "https://coinranking1.p.rapidapi.com/coin/" + coinId + "/history/" + time + "";
         // Call API connector class
-        ConnectToApi response = new ConnectToApi(url,
+        this.response = new ConnectToApi(url,
                 "coinranking1.p.rapidapi.com",
                 "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc");
         // Prevent coins with no data from being added to a graph and breaking things.
-        if (response.getStatus() && response.getJsonObject().has("data")){
+
+
+//        if (this.response.getStatus() && this.response.getJsonObject().has("data")){
+//            this.isBadTimeframe = false;
+//            if (DEBUG){System.out.println(this.response.getJsonObject().toString());}
+//            JSONObject resp = response.getJsonObject();
+//            JSONObject data = new JSONObject();
+//
+//
+//
+//
+//            data = resp.getJSONObject("data");
+//            // If the coin does not have data for given timeframe, break.
+//            if (data.has("change") && !data.isNull("change")) {
+//                this.isBadTimeframe = false;
+//                this.change = data.getDouble("change");
+//                // JSONArray containing price history for the particular coin.
+//                JSONArray histArr = data.getJSONArray("history");
+//                // Create the individual SingleCoinHistory object
+//                // Pass the JSONArray and the id of the coin.
+//                this.single = new SingleCoin(histArr, _id);
+//                // Loop through the response adding data to a hashMap
+//                for (int i = 0; i < histArr.length(); i++) {
+//                    JSONObject temp = histArr.getJSONObject(i);
+//                    Double price = temp.getDouble("price");
+//                    String date = "" + temp.getInt("timestamp");
+//                    this.singleHistoryMap.put(price, date);
+//                }
+//            } else {
+//                this.change = 0.0;
+//                this.isBadTimeframe = true;
+//                AlertMessages.showErrorMessage("Large Timeframe", "Unfortunately this cryptocurrency does not have data going back " + time);
+//            }
+//        }
+    }
+
+    public void getData() {
+        if (this.response.getStatus() && this.response.getJsonObject().has("data")){
             this.isBadTimeframe = false;
-            if (DEBUG){System.out.println(response.getJsonObject().toString());}
+            if (DEBUG){System.out.println(this.response.getJsonObject().toString());}
             JSONObject resp = response.getJsonObject();
-            JSONObject data = new JSONObject();
-            data = resp.getJSONObject("data");
+            JSONObject data = resp.getJSONObject("data");
             // If the coin does not have data for given timeframe, break.
             if (data.has("change") && !data.isNull("change")) {
                 this.isBadTimeframe = false;
-                change = data.getDouble("change");
+                this.change = data.getDouble("change");
                 // JSONArray containing price history for the particular coin.
                 JSONArray histArr = data.getJSONArray("history");
                 // Create the individual SingleCoinHistory object
                 // Pass the JSONArray and the id of the coin.
-                single = new SingleCoin(histArr, _id);
+                this.single = new SingleCoin(histArr, this.coinId);
                 // Loop through the response adding data to a hashMap
                 for (int i = 0; i < histArr.length(); i++) {
                     JSONObject temp = histArr.getJSONObject(i);
                     Double price = temp.getDouble("price");
                     String date = "" + temp.getInt("timestamp");
-                    singleHistoryMap.put(price, date);
+                    this.singleHistoryMap.put(price, date);
                 }
             } else {
-                change = 0.0;
+                this.change = 0.0;
                 this.isBadTimeframe = true;
                 AlertMessages.showErrorMessage("Large Timeframe", "Unfortunately this cryptocurrency does not have data going back " + time);
             }
@@ -91,8 +128,8 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
 
     @Override
     public void run() {
-        history = new LinkedList<>();
-        if (DEBUG){System.out.println("Calling coinRank history api");}
+        this.history = new LinkedList<>();
+        if (this.DEBUG){System.out.println("Calling coinRank history api");}
         // Increment the coin "id" for each call. Not sure how many coins there are though.
         for (int i = 1; i < NUM_COINS; i++) {
             String url = "https://coinranking1.p.rapidapi.com/coin/" + i + "/history/7d";
@@ -101,14 +138,14 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
                     "coinranking1.p.rapidapi.com",
                     "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc").getJsonObject();
             JSONObject data = resp.getJSONObject("data");
-            change = data.getDouble("change");
+            this.change = data.getDouble("change");
             // JSONArray containing price history for the particular coin.
             JSONArray histArr = data.getJSONArray("history");
             // This creates the individual SingleCoinHistory objects
             // Pass the JSONArray and the id of the coin.
             SingleCoin single = new SingleCoin(histArr, i);
             // Pause api calls to prevent timeouts.
-            history.add(single);
+            this.history.add(single);
             try {
                 TimeUnit.SECONDS.sleep((long) 0.03);
             } catch (InterruptedException ex) {
@@ -131,8 +168,8 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
     }
 
     /**
-     * Wait for the thread to complete before 
-     * calling the methods for data. 
+     * Wait for the thread to complete before
+     * calling the methods for data.
      */
     public void join() {
         try {
@@ -143,6 +180,26 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
         }
     }
 
+    /**
+     * Check for valid price data from api response.
+     * @param response
+     * @return
+     */
+    public boolean checkValidData() {
+        if (this.response.getStatus() && this.response.getJsonObject().has("data")){
+            this.isBadTimeframe = false;
+            if (DEBUG){System.out.println(this.response.getJsonObject().toString());}
+            JSONObject resp = response.getJsonObject();
+            JSONObject data = new JSONObject();
+            data = resp.getJSONObject("data");
+            // If the coin does not have data for given timeframe, break.
+            if (data.has("change") && !data.isNull("change")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // ========== GETTERS ==========
 
     /**
@@ -151,6 +208,10 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
      */
     public boolean isAlive() {
         return t.isAlive();
+    }
+
+    public int getID() {
+        return this.coinId;
     }
 
     public LinkedHashMap<Double, String> getSingleHistory() {
