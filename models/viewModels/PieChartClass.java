@@ -19,7 +19,7 @@ import javafx.scene.control.ComboBox;
  */
 public class PieChartClass implements interfaces.GraphInterface{
 
-    private CoinRankApi coinList;
+    private LinkedList<SingleCoin> coinList;
     private LinkedList<SingleCoin> singleCoinList;
     private int pieChartCoins;
     private ComboBox<String> comboBox;
@@ -39,9 +39,9 @@ public class PieChartClass implements interfaces.GraphInterface{
      * @param _pieChartData
      * @param _pieChart
      */
-    public PieChartClass(CoinRankApi _coinList, int _pieChartCoins, ComboBox<String> _comboBox, ObservableList<PieChart.Data> _pieChartData, PieChart _pieChart) {
+    public PieChartClass(LinkedList<SingleCoin> _coinList, int _pieChartCoins, ComboBox<String> _comboBox, ObservableList<PieChart.Data> _pieChartData, PieChart _pieChart) {
         this.coinList = _coinList;
-        this.singleCoinList = _coinList.getCoinList();
+//        this.singleCoinList = _coinList.getCoinList();
         this.pieChartCoins = _pieChartCoins;
         this.comboBox = _comboBox;
         this.pieChartData = _pieChartData;
@@ -81,18 +81,18 @@ public class PieChartClass implements interfaces.GraphInterface{
      * Create graph for Tab 2. Full graph.
      */
     private void createFullGraph() {
-        LinkedList<SingleCoin> temp = this.coinList.getSortedCoinList();
+//        LinkedList<SingleCoin> temp = this.coinList.getSortedCoinList();
         this.pieChartCoins = Integer.parseInt(this.comboBox.getValue());
         // Prevent out of bounds error. List only goes up to 49 from api now for some reason.
         if (this.pieChartCoins == this.FULL_LIST) {
             this.offset = 2;
         }
-        if (this.comboBox.getValue().isEmpty()){
-
-        }
+//        if (this.comboBox.getValue().isEmpty()){
+//
+//        }
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= this.pieChartCoins - this.offset; i++) {
-            SingleCoin coin = temp.get(i);
+            SingleCoin coin = this.coinList.get(i);
             double price = Double.parseDouble(coin.getPrice());
             // Allow 5 decimal places
             double rounded = (double) Math.round(price * this.ROUND) / this.ROUND;

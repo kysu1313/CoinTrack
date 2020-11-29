@@ -164,7 +164,7 @@ public class Tab2Controller implements Initializable{
                 this.timeSelection = "7d";
             }
             // Make a CoinHistory api call
-            this.coinHistory = new CoinHistory();
+//            this.coinHistory = new CoinHistory();
             displayMultiCoinGraph();
 
         } else if (graphTabPane.getSelectionModel().getSelectedItem() == pieChartTab) {
@@ -317,11 +317,17 @@ public class Tab2Controller implements Initializable{
             }
         }
         this.sideVBox.getChildren().clear();
+        if (this.timeSelection == null){
+            this.timeSelection = "24h";
+        }
         // Create line chart object to display graphs.
         this.lcc = new LineChartClass(this.lineChart, this.linesToGraph, this.timeSelection);
         this.lcc.displayGraph();
         this.lcc.getElements().forEach((item) -> {
-            this.sideVBox.getChildren().add(new Label(item));
+            Label lbl = new Label(item);
+            this.sideVBox.getChildren().add(lbl);
+            lbl.setMaxWidth(Double.MAX_VALUE);
+            addListListener(lbl);
         });
     }
 
@@ -330,8 +336,6 @@ public class Tab2Controller implements Initializable{
      */
     private void displayMultiCoinGraph() {
         if (DEBUG){System.out.println("displaying graph");}
-//        coinHistory.join();
-//        this.historyMap = this.coinHistory.getPriceDate();
 
         this.historyMap = this.USER.getCoinHistoryList();
 
@@ -354,10 +358,6 @@ public class Tab2Controller implements Initializable{
         this.USER.saveCoin(_coinID);
     }
 
-
-//        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
-//        coinConn.saveCoin(_userName, _coinID);
-
     /**
      * Populate saved coin side area.
      */
@@ -372,8 +372,8 @@ public class Tab2Controller implements Initializable{
      * in an effort to keep this controller as clean as possible.
      */
     private void displayPieChart() {
-        this.coinList.join();
-        this.tas.MakePieChart(coinList, pieChartCoins, comboBox, pieChartData, pieChart);
+//        this.coinList.join();
+        this.tas.MakePieChart(this.USER.getSortedCoinList(), pieChartCoins, comboBox, pieChartData, pieChart);
     }
 
     /**
@@ -514,7 +514,9 @@ public class Tab2Controller implements Initializable{
             if (DEBUG){System.out.println("bar chart selected");}
             this.lineChart.getData().clear();
             this.series2 = new BarChart.Series<>();
-            if (this.timeSelection == null){this.timeSelection = "24h";}
+            if (this.timeSelection == null){
+                this.timeSelection = "24h";
+            }
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
             // Create new bar chart object
             this.sideVBox.getChildren().clear();
@@ -542,7 +544,7 @@ public class Tab2Controller implements Initializable{
             _lbl.setStyle("-fx-background-color: #bababa;");
         });
         _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
-            _lbl.setStyle("-fx-background-color: white;");
+            _lbl.setStyle("-fx-background-color: #131313;");
         });
         ContextMenu cm = new ContextMenu();
         MenuItem m1 = new MenuItem("Remove");
