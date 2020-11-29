@@ -21,8 +21,9 @@ import models.UserCoin;
  * FXML Controller class
  *
  * @author HBadr
+ * @param <T>
  */
-public class Tab4Controller implements Initializable {
+public class Tab4Controller<T> implements Initializable {
 
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private static final User USER = FXMLDocumentController.user;
@@ -51,7 +52,8 @@ public class Tab4Controller implements Initializable {
      * Create table, fill with saved coins.
      */
     private void createTable() {
-        Tab4Controller.tas.coinTableDash(this.tableViewT1, Tab4Controller.USER.createTListFronSingleCoins(Tab4Controller.USER.getCoinList()));
+        LinkedList<T> tlist = this.USER.createTListFronSingleCoins(this.USER.getUserSingleCoins());
+        Tab4Controller.tas.coinTableDash(this.tableViewT1, tlist);
     }
 
     /**
