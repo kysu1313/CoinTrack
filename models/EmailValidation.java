@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package models;
 
 import interfaces.EmailValidationInterface;
@@ -23,15 +18,43 @@ public class EmailValidation implements EmailValidationInterface {
      *
      * @param email
      */
-    public EmailValidation(String email) {
-        String url = "https://email-checker.p.rapidapi.com/verify/v1?email=" + email;
+    public EmailValidation(String _email) {
+        String url = "https://email-checker.p.rapidapi.com/verify/v1?email=" + _email;
         ConnectToApi api = new ConnectToApi(url, this.web, this.key);
         JSONObject results = api.getJsonObject();
-        test = results.getString("status");
+        this.test = results.getString("status");
+    }
+
+    public EmailValidation() {
+        this.test = "";
+    }
+
+    /**
+     * Check if an email already exists in the database.
+     * @param _email
+     * @return
+     */
+    public boolean isEmailInDatabase(String _email) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        boolean isGood = conn.emailExists(_email);
+        conn.close();
+        return isGood;
+    }
+
+    /**
+     * Return username from associated email address.
+     * @param _email
+     * @return
+     */
+    public String getAssociatedUsername(String _email) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        String assocEmail = conn.getUsernameFromEmail(_email);
+        conn.close();
+        return assocEmail;
     }
 
     @Override
     public String getTest() {
-        return test;
+        return this.test;
     }
 }

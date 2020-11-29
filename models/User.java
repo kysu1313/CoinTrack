@@ -20,11 +20,12 @@ import javafx.scene.text.Text;
 public class User<T> implements GlobalClassInterface, GenericClassInterface, UserInterface{
 
     private final String USERNAME;
-    private final String PASSWORD;
+    private String password;
     private final int USER_ID;
     private final ConnectToDatabase CONN;
     private final LinkedList<UserCoin> USER_COINS;
     private final HashMap<String, String> USER_DATA;
+    private boolean isDataSet;
     private LinkedList<Object> objList;
     private CoinRankApi cri;
     private CoinHistory coinHist;
@@ -38,13 +39,38 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     private LinkedHashMap<Double, String> userHistoryMap;
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
 
+    /**
+     * Create a new user and build the basic coin lists.
+     * @param _username
+     * @param _password
+     */
     public User(String _username, String _password){
         this.USERNAME = _username;
-        this.PASSWORD = _password;
+        this.password = _password;
         this.CONN = new ConnectToDatabase();
         this.USER_ID = this.CONN.getUserId(uname);
         this.USER_COINS = this.CONN.getSavedCoins(_username);
         this.USER_DATA = this.CONN.getUserInfo(_username);
+        this.isDataSet = false;
+    }
+
+    /**
+     * This is mainly user for resetting a forgotten password.
+     */
+    public User() {
+        this.USERNAME = "";
+        this.password = "";
+        this.CONN = null;
+        this.USER_ID = -1;
+        this.USER_COINS = null;
+        this.USER_DATA = null;
+    }
+
+    /**
+     * Initialize all of the users data fields so they can be accessed quickly.
+     * This also helps prevent over-usage of our api calls.
+     */
+    public void createData() {
         this.cri = new CoinRankApi();
         this.coinHist = new CoinHistory();
         this.coinHist.start();
@@ -64,8 +90,13 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         this.tas.setUserCoinList(this.USER_COINS);
         this.tas.setUserSingleCoins(this.USER_COINS);
         this.userSingleCoins = new LinkedList<>();
+        this.isDataSet = true;
     }
 
+    /**
+     * Save a coin with current username.
+     * @param _coinID
+     */
     public void saveCoin(int _coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(this.USERNAME, _coinID)) {
@@ -75,25 +106,12 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     }
 
     /**
-     * Return a generic list of userCoin objects.
-     * @return
-     */
-    @Override
-    public LinkedList<Object> getGenericCoinList() {
-        this.CONN.getSavedCoins(this.USERNAME).forEach((item) -> {
-            Object obj = item;
-            this.objList.add(obj);
-        });
-        return this.objList;
-    }
-
-    /**
      * Validates login parameters.
      * @return
      */
     public boolean validateLogin() {
         ConnectToDatabase conn = new ConnectToDatabase();
-        boolean accepted = conn.validateLogin(this.USERNAME, this.PASSWORD);
+        boolean accepted = conn.validateLogin(this.USERNAME, this.password);
         conn.close();
         return accepted;
     }
@@ -135,6 +153,19 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
        return !isCapital && !isNumber;
     }
 
+    /**
+     * Reset password for given username.
+     * @param _username
+     * @param _newPass
+     */
+    public void resetPassword(String _username, String _newPass) {
+        ConnectToDatabase conn = new ConnectToDatabase();
+        // Submit changed passwords to the database
+        conn.changePassword(_username, _newPass);
+        // Close the connection
+        conn.close();
+    }
+
 
         // ============= GETTERS ============= //
 
@@ -169,6 +200,19 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     }
 
     /**
+     * Return a generic list of userCoin objects.
+     * @return
+     */
+    @Override
+    public LinkedList<Object> getGenericCoinList() {
+        this.CONN.getSavedCoins(this.USERNAME).forEach((item) -> {
+            Object obj = item;
+            this.objList.add(obj);
+        });
+        return this.objList;
+    }
+
+    /**
      * Returns a linked list of SingleCoin objects created from
      * the UserCoin list pulled from database.
      * @return
@@ -186,6 +230,11 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.userSingleCoins;
     }
 
+    /**
+     * Returns the linked list of coin historical data for the given timeframe.
+     * @param _timeframe
+     * @return
+     */
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
         this.linkedUserHistoryMap = new LinkedList<>();
         this.USER_COINS.forEach((item) -> {
@@ -216,7 +265,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _list
      * @return
      */
-    public LinkedList<T> createTList(LinkedList<SingleCoin> _list) {
+    public LinkedList<T> createTListFronSingleCoins(LinkedList<Object> _list) {
         LinkedList<T> tlist = new LinkedList<>();
         _list.forEach(item -> {
             tlist.add((T)item);
@@ -269,6 +318,10 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
 
     public TabAssistantController getTas() {
         return this.tas;
+    }
+
+    public boolean getIsDataSet() {
+        return this.isDataSet;
     }
 
     @Override

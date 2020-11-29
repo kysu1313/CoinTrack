@@ -95,6 +95,7 @@ public class Tab2Controller implements Initializable{
     private TabAssistantController tas;
     ContextMenu cm3;
     protected Scene scene;
+    private LinkedHashMap<Double, String> userHistoryMap;
 
     // General FXML properties
     @FXML protected TextField usernamePhone;
@@ -362,7 +363,7 @@ public class Tab2Controller implements Initializable{
      * Populate saved coin side area.
      */
     private void populateSavedCoins() {
-        this.tas.populateSavedCoins(savedCoinsListT2, savedCoins);
+        this.tas.populateSavedCoins(this.savedCoinsListT2, this.savedCoins);
     }
 
     /**
@@ -373,7 +374,7 @@ public class Tab2Controller implements Initializable{
      */
     private void displayPieChart() {
 //        this.coinList.join();
-        this.tas.MakePieChart(this.USER.getSortedCoinList(), pieChartCoins, comboBox, pieChartData, pieChart);
+        this.tas.MakePieChart(this.USER.getSortedCoinList(), this.pieChartCoins, this.comboBox, this.pieChartData, this.pieChart);
     }
 
     /**
@@ -482,8 +483,6 @@ public class Tab2Controller implements Initializable{
 
     /** Save coin graph in graph tab**/
 
-    private LinkedHashMap<Double, String> userHistoryMap;
-
     /**
      * Add right click menu to saved coins list on left side of window.
      */
@@ -544,7 +543,7 @@ public class Tab2Controller implements Initializable{
             _lbl.setStyle("-fx-background-color: #bababa;");
         });
         _lbl.setOnMouseExited((MouseEvent mouseEvent) -> {
-            _lbl.setStyle("-fx-background-color: #131313;");
+            _lbl.setStyle("-fx-background-color: #323232;");
         });
         ContextMenu cm = new ContextMenu();
         MenuItem m1 = new MenuItem("Remove");

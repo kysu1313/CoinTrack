@@ -61,6 +61,11 @@ public class Tab3Controller<T> implements Initializable{
         System.out.println("nothing here yet");
     }
 
+    /**
+     * Add a listener to the search bar on the dashboard.
+     * When you type in the bar, it updates with coins containing
+     * the typed words / letters.
+     */
     private void installTextFieldEvent() {
         this.coinList = USER.getCoinList();
         this.searchField.textProperty().addListener(new ChangeListener<String>() {
@@ -91,7 +96,7 @@ public class Tab3Controller<T> implements Initializable{
      * Uses tabAssistantController to format the table.
      */
     private void createTable() {
-        LinkedList<T> tlist = this.USER.createTList(this.USER.getUserSingleCoins());
+        LinkedList<T> tlist = this.USER.createTListFronSingleCoins(this.USER.getUserSingleCoins());
         this.tas.coinTableDash(this.tableDash, tlist);
     }
 
@@ -152,8 +157,6 @@ public class Tab3Controller<T> implements Initializable{
      */
     private void saveCoin(String _userName, int _coinID) {
         this.USER.saveCoin(_coinID);
-//        CoinDatabaseConnection coinConn = new CoinDatabaseConnection();
-//        coinConn.saveCoin(_userName, _coinID);
     }
 
     /**
@@ -209,15 +212,6 @@ public class Tab3Controller<T> implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.tas = USER.getTas();
-//        this.tas.userCoinList = new LinkedList<>();
-//        this.tas.coinList = new LinkedList<>();
-//        this.tas.userSingleCoins = new LinkedList<>();
-//        this.tas.singleHistoryMap = new LinkedHashMap<>();
-//        this.tas.userHistoryMap = new LinkedHashMap<>();
-//        this.tas.linkedUserHistoryMap = new LinkedList<>();
-//        this.tas.friendList = new LinkedList<>();
-//        this.tas.onlineUserList = new LinkedList<>();
-//        this.tas.savedCoins = new LinkedList<>();
         USERNAME = FXMLDocumentController.uname;
         this.tas.getCoinList();
         populateSearch();
@@ -229,6 +223,5 @@ public class Tab3Controller<T> implements Initializable{
         populateSavedCoins();
         addFriendsToList();
         installTextFieldEvent();
-//        setTheme();
     }
 }

@@ -89,6 +89,14 @@ public class FXMLDocumentController implements Initializable {
             observableArrayList(new Theme("Dark"), new Theme("Light"));
     private final ObservableList<String> FILE_TYPES = FXCollections.
             observableArrayList(".txt", ".xlsx", ".json");
+    private final int PIC_WIDTH = 50;
+    private final int PIC_HEIGHT = 30;
+    private final int RAND_RANGE = 1000;
+    private final String LOGIN_VIEW_LOCATION = "/views/FXMLLogin.fxml";
+    private final String RESET_PASSWORD_VIEW_LOCATION = "/views/PasswordResetFXML.fxml";
+    private final String REGISTER_VIEW_LOCATION = "/views/RegisterUserFXML.fxml";
+    private final String FORGOT_PASSWORD_VIEW = "/views/ForgotPasswordFXML.fxml";
+    private final String SAVE_VEW = "/views/SaveFXML.fxml";
     @FXML protected TextField username;
     @FXML protected PasswordField txtPassword;
     @FXML protected Label lblStatus;
@@ -158,7 +166,11 @@ public class FXMLDocumentController implements Initializable {
         FXMLDocumentController.user = new User(uname, password);
         if (user.validateLogin()) {
             this.lblStatus.setText("Login Success");
-
+            // Create coin list data for user
+            if (!FXMLDocumentController.user.getIsDataSet()) {
+                FXMLDocumentController.user.createData();
+            }
+            // Set user as "online" in database
             user.onlineStatus(1);
             this.tas = new TabAssistantController();
             this.tas.setCurrentUser(user);
@@ -180,7 +192,6 @@ public class FXMLDocumentController implements Initializable {
                     @Override
                     public void handle(Event event) {
                             System.out.println("Closing");
-//                            controllers.Tab1Controller.tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
                             getCurrentStage().close();
                     }
                 });
@@ -192,7 +203,6 @@ public class FXMLDocumentController implements Initializable {
         } else {
             this.lblStatus.setText("Login Failed");
         }
-//        conn.close();
     }
 
     /**
@@ -202,8 +212,6 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     public void handleRegister(ActionEvent event) {
-        //This shows "Register User on the main login screen.
-        //this.lblStatus.setText("Register User");
         // After login is successful, you are taken to the main page
         Parent root;
         try {
@@ -211,7 +219,7 @@ public class FXMLDocumentController implements Initializable {
             getCurrentStage().close();
             this.registerStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.registerStage;
-            root = FXMLLoader.load(getClass().getResource("/views/RegisterUserFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource(this.REGISTER_VIEW_LOCATION));
             this.scene = new Scene(root);
             this.registerStage.setScene(scene);
             this.registerStage.show();
@@ -234,27 +242,27 @@ public class FXMLDocumentController implements Initializable {
         // Check good input and if username exists in DB
         if (checkGoodInput() && usernameAcceptable()) {
             String toEmail3 = this.emailEntry.getText();
-            ConnectToDatabase conn = new ConnectToDatabase();
-            if (conn.emailExists(toEmail3)) {
-            tempUsernameStorage = conn.getUsernameFromEmail(toEmail3);
-            if (DEBUG) {
-                System.out.println(tempUsernameStorage);
+            EmailValidation testEmail = new EmailValidation();
+            if (testEmail.isEmailInDatabase(toEmail3)) {
+                FXMLDocumentController.tempUsernameStorage = testEmail.getAssociatedUsername(toEmail3);
+                if (this.DEBUG) {
+                    System.out.println(FXMLDocumentController.tempUsernameStorage);
+                }
+                this._code = 1;
+                Email sendMail = new Email(toEmail3, FXMLDocumentController.tempUsernameStorage, _code);
+                Parent root;
+                try {
+                    getCurrentStage().close();
+                    Stage stage = new Stage();
+                    FXMLDocumentController.currentStage = stage;
+                    root = FXMLLoader.load(getClass().getResource(this.LOGIN_VIEW_LOCATION));
+                    FXMLDocumentController.scene = new Scene(root);
+                    stage.setScene(FXMLDocumentController.scene);
+                    stage.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            conn.close();
-            _code = 1;
-            Email sendMail = new Email(toEmail3, this.tempUsernameStorage, _code);
-            Parent root;
-            try {
-                getCurrentStage().close();
-                Stage stage = new Stage();
-                FXMLDocumentController.currentStage = stage;
-                root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
-                this.scene = new Scene(root);
-                stage.setScene(this.scene);
-                stage.show();
-            } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-            }}
         } else {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Please follow on screen instructions");
@@ -274,7 +282,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
-            root = FXMLLoader.load(getClass().getResource("/views/SaveFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource(this.SAVE_VEW));
             Scene saveScene = new Scene(root);
             saveStage = new Stage();
             saveStage.setScene(saveScene);
@@ -383,32 +391,26 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a username");
             this.usernameEntry.requestFocus();
-
         } else if (this.passwordEntry.getText().isEmpty()) {
             AlertMessages.showErrorMessage("Register User", "Enter a password.");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Enter a password");
             this.passwordEntry.requestFocus();
-
         } else if (User.isPasswordValid(this.passwordEntry.getText())) {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText(" Password must be 8 characters long and should contain a digit and an uppercase letter.");
             this.passwordEntry.requestFocus();
-
         } else if (this.passwordRepeatEntry.getText().isEmpty()) {
             AlertMessages.showErrorMessage("Register User", "Repeat your password.");
-
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Repeat your password");
             this.passwordRepeatEntry.requestFocus();
-
         } else if (!this.passwordEntry.getText().equals(this.passwordRepeatEntry.getText())) {
             AlertMessages.showErrorMessage("Register User", "Passwords must match.");
             this.passwordRepeatEntry.setPromptText("Passwords must match");
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
-
         } else if (image == null){
             AlertMessages.showErrorMessage("Register User", "Please choose a picture");
         }else {
@@ -452,6 +454,9 @@ public class FXMLDocumentController implements Initializable {
         if (User.usernameAcceptable(uname, password, email, imgPath, this.registerInfo)){
             User user = new User(uname, password);
             FXMLDocumentController.user = user;
+            if (!FXMLDocumentController.user.getIsDataSet()) {
+                FXMLDocumentController.user.createData();
+            }
             return true;
         } else {
             return false;
@@ -476,7 +481,7 @@ public class FXMLDocumentController implements Initializable {
             getCurrentStage().close();
             this.forgotPassStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.forgotPassStage;
-            root = FXMLLoader.load(getClass().getResource("/views/ForgotPasswordFXML.fxml"));
+            root = FXMLLoader.load(getClass().getResource(this.FORGOT_PASSWORD_VIEW));
             this.scene = new Scene(root);
             this.forgotPassStage.setScene(this.scene);
             this.forgotPassStage.show();
@@ -521,7 +526,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleBackToMain(ActionEvent event) {
         if (DEBUG) {
-            System.out.println("Misclicking already..");  // lol Haj
+            System.out.println("Misclicking already..");
         }
         Parent root;
         try {
@@ -529,7 +534,7 @@ public class FXMLDocumentController implements Initializable {
         //    System.out.println(getCurrentStage());
             this.mainStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
-            root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
+            root = FXMLLoader.load(getClass().getResource(this.LOGIN_VIEW_LOCATION));
             this.scene = new Scene(root);
             this.mainStage.setScene(this.scene);
             this.mainStage.show();
@@ -548,20 +553,20 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRecoveryEmail(ActionEvent event) {
         String toEmail = this.recoveryEmail.getText();
-            EmailValidation test = new EmailValidation(toEmail);
-            test.getTest();
-        ConnectToDatabase conn = new ConnectToDatabase();
+        EmailValidation test = new EmailValidation(toEmail);
+        test.getTest();
+//        ConnectToDatabase conn = new ConnectToDatabase();
         if (test.getTest() == "invalid") {
             AlertMessages.showErrorMessage("Forgot Password", "Email is not valid.");
             this.recoveryEmail.requestFocus();
             return;
         }
-        if (conn.emailExists(toEmail) ) {
-            tempUsernameStorage = conn.getUsernameFromEmail(toEmail);
+        if (test.isEmailInDatabase(toEmail)) {
+            tempUsernameStorage = test.getAssociatedUsername(toEmail);
             if (DEBUG) {
                 System.out.println(tempUsernameStorage);
             }
-            conn.close();
+//            conn.close();
             this.code = generateRecoveryCode();
             Email sendMail = new Email(toEmail, this.tempUsernameStorage, this.code);
         } else {
@@ -587,7 +592,7 @@ public class FXMLDocumentController implements Initializable {
             }
             conn.close();
             _code = 0;
-            Email sendMail = new Email(toEmail2, this.tempUsernameStorage, _code);
+            Email sendMail = new Email(toEmail2, FXMLDocumentController.tempUsernameStorage, _code);
         } else {
             this.forgotWarning.setText("hmm, can't find that email");
             this.forgotWarning.setFill(Color.RED);
@@ -604,18 +609,16 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRecoveryCode(ActionEvent event) {
         if (this.recoveryCode.getText().equals(this.code)) {
-//            this.forgotPassStage.close();
             Parent root;
             try {
                 getCurrentStage().close();
-                this.resetPassStage = new Stage();
+                FXMLDocumentController.resetPassStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.resetPassStage;
-                root = FXMLLoader.load(getClass().getResource("/views/PasswordResetFXML.fxml"));
-                this.scene = new Scene(root);
-                this.resetPassStage.setScene(this.scene);
-                this.resetPassStage.show();
-                this.currentStage = this.resetPassStage;
-//                this.forgotPassStage.close();
+                root = FXMLLoader.load(getClass().getResource(this.RESET_PASSWORD_VIEW_LOCATION));
+                FXMLDocumentController.scene = new Scene(root);
+                FXMLDocumentController.resetPassStage.setScene(FXMLDocumentController.scene);
+                FXMLDocumentController.resetPassStage.show();
+                FXMLDocumentController.currentStage = FXMLDocumentController.resetPassStage;
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -646,12 +649,17 @@ public class FXMLDocumentController implements Initializable {
             this.passwordResetWarning.setText("Password field can't be empty");
             // Make sure the two passwords match
         } else if (this.resetPassword.getText().equals(this.resetPasswordRepeat.getText())) {
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String newPass = this.resetPassword.getText();
+//            ConnectToDatabase conn = new ConnectToDatabase();
+            if (user != null) {
+                user.resetPassword(tempUsernameStorage, this.resetPassword.getText());
+            } else {
+                User tmpUser = new User();
+                tmpUser.resetPassword(tempUsernameStorage, this.resetPassword.getText());
+            }
             // Submit changed passwords to the database
-            conn.changePassword(tempUsernameStorage, newPass);
+//            conn.changePassword(tempUsernameStorage, newPass);
             // Close the connection
-            conn.close();
+//            conn.close();
             this.passwordResetWarning.setText("Success");
             this.passwordResetWarning.setFill(Color.GREEN);
             // Then change the stage back to the login screen
@@ -660,7 +668,7 @@ public class FXMLDocumentController implements Initializable {
                 getCurrentStage().close();
                 this.mainStage = new Stage();
                 FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
-                root = FXMLLoader.load(getClass().getResource("/views/FXMLLogin.fxml"));
+                root = FXMLLoader.load(getClass().getResource(this.LOGIN_VIEW_LOCATION));
                 this.scene = new Scene(root);
                 this.mainStage.setScene(this.scene);
                 this.mainStage.show();
@@ -682,7 +690,7 @@ public class FXMLDocumentController implements Initializable {
     private String generateRecoveryCode() {
         String newCode = "";
         Random rand = new Random();
-        int digits = rand.nextInt(1000);
+        int digits = rand.nextInt(this.RAND_RANGE);
         newCode += digits;
         return newCode;
     }
@@ -738,15 +746,15 @@ public class FXMLDocumentController implements Initializable {
             String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
             if("".equals(picturePath)){
                 Image image1 = new Image("/styles/bitCoin.jpg");
-                imageView = new ImageView(image1);
+                this.imageView = new ImageView(image1);
             }else{
-                image = new Image("file:///" + picturePath);
-                imageView = new ImageView(image);
+                this.image = new Image("file:///" + picturePath);
+                this.imageView = new ImageView(this.image);
             }
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(30);
-            imageView.setPreserveRatio(true);
-            layout1.setCenter(imageView);
+            this.imageView.setFitWidth(this.PIC_WIDTH);
+            this.imageView.setFitHeight(this.PIC_HEIGHT);
+            this.imageView.setPreserveRatio(true);
+            this.layout1.setCenter(this.imageView);
         }
     }
     /**
@@ -759,15 +767,6 @@ public class FXMLDocumentController implements Initializable {
         return FXMLDocumentController.currentStage;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
-        profilePicture();
-        if (this.lblWelcomeMessage != null) {
-            this.lblWelcomeMessage.setText("Hello " + uname);
-        }
-    }
-
     @FXML
     public void logout() {
         System.out.println("Logourt");
@@ -775,7 +774,6 @@ public class FXMLDocumentController implements Initializable {
         try {
             coinTrack.FXMLDocumentController.mainStage.close();
             FXMLDocumentController.mainStage = new Stage();
-//            tas.setOnlineStatus(coinTrack.FXMLDocumentController.uname, 0);
             root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FXMLLogin.fxml"));
             this.scene = new Scene(root);
             mainStage.setScene(this.scene);
@@ -793,6 +791,15 @@ public class FXMLDocumentController implements Initializable {
      */
     public static User getUser() {
         return user;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+        profilePicture();
+        if (this.lblWelcomeMessage != null) {
+            this.lblWelcomeMessage.setText("Hello " + uname);
+        }
     }
 
 }

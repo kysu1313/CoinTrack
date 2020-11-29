@@ -1,19 +1,28 @@
 package models.viewModels;
 
+import com.sun.javafx.charts.Legend;
+import com.sun.javafx.charts.Legend.LegendItem;
 import models.CoinHistory;
 import java.awt.Color;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
@@ -111,6 +120,8 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
      * Clean data and add it to the lineChart series.
      */
     private void createData() {
+        Instant instant = Instant.now();
+        long timestamp = instant.toEpochMilli();
         // For every coin entered, create a new CoinHistory object.
         for (String line : this.LINES) {
             CoinHistory coinHist = new CoinHistory(0, line, this.TIME_SELECTION);
@@ -120,13 +131,16 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
             // Create the datapoints for the line chart.
             this.singleHistoryMap.entrySet().forEach((Map.Entry<Double, String> entry) -> {
                 long tempLong = Long.parseLong(entry.getValue());
-                Date d = new Date(tempLong);
+                Date d = new Date(timestamp - tempLong);
                 String date = "" + d;
+                System.out.println(tempLong);
+                System.out.println(date);
+
                 double price = entry.getKey();
                 XYChart.Data item = new XYChart.Data(date, price);
                 item.setExtraValue(line + ": " + price);
                 newSeries.getData().add(item);
-                newSeries.getNode();
+                Node node = newSeries.getNode();
                 this.dataList.add(new XYChart.Data(date, price));
             });
             this.seriesList.add(newSeries);
