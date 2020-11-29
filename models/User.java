@@ -23,6 +23,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     private String username;
     private String password;
     private String email;
+    private String path;
     private final int USER_ID;
     private final ConnectToDatabase CONN;
     private final LinkedList<UserCoin> USER_COINS;
@@ -125,8 +126,31 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     public void onlineStatus(int _value) {
         ConnectToDatabase conn = new ConnectToDatabase();
+        if(_value == 1){
         conn.setUserOnlineStatus(this.username, 1);
+        }
+        else{
+        conn.setUserOnlineStatus(this.username, 0);
+        }
         conn.close();
+    }
+
+    /**
+     * Gets the profile picture from the database
+     * @param _name
+     * @return
+     */
+    public String getPicturePath(String _name){
+        ConnectToDatabase conn = new ConnectToDatabase();
+        path = conn.getPicturePath(_name);
+        conn.close();
+        return path;
+    }
+
+    public boolean isEmailExists(String _email){
+        ConnectToDatabase conn = new ConnectToDatabase();
+        boolean check = conn.emailExists(_email);
+        return check;
     }
 
     /**
@@ -172,7 +196,6 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     /**
      * Send an email to the users email address containing their username.
      * @param _email
-     * @param _username
      * @return
      */
     public boolean forgotUsernameEmail(String _email) {

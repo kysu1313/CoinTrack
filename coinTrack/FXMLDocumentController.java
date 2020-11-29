@@ -190,6 +190,7 @@ public class FXMLDocumentController implements Initializable {
                     @Override
                     public void handle(Event event) {
                             System.out.println("Closing");
+                            user.onlineStatus(0);
                             getCurrentStage().close();
                     }
                 });
@@ -558,13 +559,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleRecoveryEmail(ActionEvent event) {
         String toEmail = this.recoveryEmail.getText();
-        EmailValidation test = new EmailValidation(toEmail);
-        test.getTest();
-        if (test.getTest() == "invalid") {
-            AlertMessages.showErrorMessage("Forgot Password", "Email is not valid.");
-            this.recoveryEmail.requestFocus();
-            return;
-        }
+        EmailValidation test = new EmailValidation();
         if (test.isEmailInDatabase(toEmail)) {
             tempUsernameStorage = test.getAssociatedUsername(toEmail);
             if (DEBUG) {
@@ -736,19 +731,19 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-  
+
     /**
      * Displaying the profile picture
      */
     private void profilePicture(){
         if(this.layout1 != null){
-            ConnectToDatabase conn = new ConnectToDatabase();
-            String picturePath = conn.getPicturePath(FXMLDocumentController.uname);
-            if("".equals(picturePath)){
+            User tempUser = new User();
+            String pathFromUser = tempUser.getPicturePath(uname);
+            if("".equals(pathFromUser)){
                 Image image1 = new Image("/styles/bitCoin.jpg");
                 this.imageView = new ImageView(image1);
             }else{
-                this.image = new Image("file:///" + picturePath);
+                this.image = new Image("file:///" + pathFromUser);
                 this.imageView = new ImageView(this.image);
             }
             this.imageView.setFitWidth(this.PIC_WIDTH);
@@ -757,7 +752,7 @@ public class FXMLDocumentController implements Initializable {
             this.layout1.setCenter(this.imageView);
         }
     }
-  
+
     /**
      * This is supposed to return the current stage so it can be closed. But I
      * don't think it works...
