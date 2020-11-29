@@ -74,6 +74,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * Initialize all of the users data fields so they can be accessed quickly.
      * This also helps prevent over-usage of our api calls.
      */
+    @Override
     public void createData() {
         this.cri = new CoinRankApi();
         this.coinHist = new CoinHistory();
@@ -101,6 +102,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * Save a coin with current username.
      * @param _coinID
      */
+    @Override
     public void saveCoin(int _coinID) {
         ConnectToDatabase dbConn = new ConnectToDatabase();
         if (dbConn.insertSavedCoin(this.username, _coinID)) {
@@ -113,6 +115,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * Validates login parameters.
      * @return
      */
+    @Override
     public boolean validateLogin() {
         ConnectToDatabase conn = new ConnectToDatabase();
         boolean accepted = conn.validateLogin(this.username, this.password);
@@ -124,6 +127,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * Sets the user to online or offline in the database.
      * @param _value
      */
+    @Override
     public void onlineStatus(int _value) {
         ConnectToDatabase conn = new ConnectToDatabase();
         if(_value == 1){
@@ -140,17 +144,12 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _name
      * @return
      */
-    public String getPicturePath(String _name){
+    @Override
+    public String getPicturePath(String _name) {
         ConnectToDatabase conn = new ConnectToDatabase();
         path = conn.getPicturePath(_name);
         conn.close();
         return path;
-    }
-
-    public boolean isEmailExists(String _email){
-        ConnectToDatabase conn = new ConnectToDatabase();
-        boolean check = conn.emailExists(_email);
-        return check;
     }
 
     /**
@@ -185,6 +184,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _username
      * @param _newPass
      */
+    @Override
     public void resetPassword(String _username, String _newPass) {
         ConnectToDatabase conn = new ConnectToDatabase();
         // Submit changed passwords to the database
@@ -198,6 +198,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _email
      * @return
      */
+    @Override
     public boolean forgotUsernameEmail(String _email) {
         ConnectToDatabase conn = new ConnectToDatabase();
         if (conn.emailExists(_email)) {
@@ -265,6 +266,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * the UserCoin list pulled from database.
      * @return
      */
+    @Override
     public LinkedList<SingleCoin> getUserSingleCoins() {
         if (this.userSingleCoins.isEmpty()) {
             this.coinList.forEach((item) -> {
@@ -283,6 +285,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * @param _timeframe
      * @return
      */
+    @Override
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
         this.linkedUserHistoryMap = new LinkedList<>();
         this.USER_COINS.forEach((item) -> {
@@ -300,6 +303,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      * Create list of singleCoins from the list of userCoins.
      * @return
      */
+    @Override
     public LinkedList<SingleCoin> getSavedSingleCoins() {
         LinkedList<SingleCoin> savedSingleCoins = new LinkedList<>();
         this.coinList.forEach(item -> {
@@ -330,6 +334,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.username;
     }
 
+    @Override
     public int getUserID() {
         return this.USER_ID;
     }
@@ -344,10 +349,12 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.USER_DATA;
     }
 
+    @Override
     public LinkedHashMap<Double, String> getCoinHistoryList() {
         return this.coinHistList;
     }
 
+    @Override
     public LinkedList<SingleCoin> getCoinList() {
         return this.coinList;
     }
@@ -356,22 +363,27 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.tList;
     }
 
+    @Override
     public LinkedList<SingleCoin> getSortedCoinList() {
         return this.sortedList;
     }
 
+    @Override
     public LinkedList<String> getFriendList() {
         return this.friendList;
     }
 
+    @Override
     public LinkedList<UserCoin> getUserCoinList() {
         return this.USER_COINS;
     }
 
+    @Override
     public TabAssistantController getTas() {
         return this.tas;
     }
 
+    @Override
     public boolean getIsDataSet() {
         return this.isDataSet;
     }
