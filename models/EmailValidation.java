@@ -16,7 +16,7 @@ public class EmailValidation implements EmailValidationInterface {
     /**
      * Validates an email
      *
-     * @param email
+     * @param _email
      */
     public EmailValidation(String _email) {
         String url = "https://email-checker.p.rapidapi.com/verify/v1?email=" + _email;
