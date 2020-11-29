@@ -11,7 +11,5 @@ package interfaces;
  */
 public interface EmailValidationInterface {
 
-    public boolean isEmailInDatabase(String _email);
-    public String getAssociatedUsername(String _email);
     public String getTest();
 }

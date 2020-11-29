@@ -34,7 +34,6 @@ public class EmailValidation implements EmailValidationInterface {
      * @param _email
      * @return
      */
-    @Override
     public boolean isEmailInDatabase(String _email) {
         ConnectToDatabase conn = new ConnectToDatabase();
         boolean isGood = conn.emailExists(_email);
@@ -47,7 +46,6 @@ public class EmailValidation implements EmailValidationInterface {
      * @param _email
      * @return
      */
-    @Override
     public String getAssociatedUsername(String _email) {
         ConnectToDatabase conn = new ConnectToDatabase();
         String assocEmail = conn.getUsernameFromEmail(_email);
