@@ -21,6 +21,7 @@ import models.UserCoin;
 public class TableClassFriendsCoins {
 
     private final TableView TABLE_VIEW;
+    private final int COL_WIDTH = 100;
     private ObservableList<UserCoin> obvList;
 
 //    Instantiating the table view object
@@ -37,16 +38,14 @@ public class TableClassFriendsCoins {
         TableColumn<UserCoin, String> colSymbol = new TableColumn<>("Symbol");
         TableColumn<UserCoin, String> colPrice = new TableColumn<>("Price");
         TableColumn<UserCoin, String> colID = new TableColumn<>("Coin Id");
-//        TableColumn<UserCoin, String> colUserID = new TableColumn<>("User Id");
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colSymbol.setCellValueFactory(new PropertyValueFactory<>("symbol"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         colID.setCellValueFactory(new PropertyValueFactory<>("coinID"));
-//        colUserID .setCellValueFactory(new PropertyValueFactory<>("userID"));
-        colID.setPrefWidth(100);
-        colSymbol.setPrefWidth(100);
-        colName.setPrefWidth(100);
-        colPrice.setPrefWidth(100);
+        colID.setPrefWidth(this.COL_WIDTH);
+        colSymbol.setPrefWidth(this.COL_WIDTH);
+        colName.setPrefWidth(this.COL_WIDTH);
+        colPrice.setPrefWidth(this.COL_WIDTH);
         this.TABLE_VIEW.getColumns().addAll(colName, colSymbol, colPrice, colID);
     }
 

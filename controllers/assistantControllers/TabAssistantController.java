@@ -267,11 +267,26 @@ public class TabAssistantController<T> {
         }
     }
 
+    /**
+     * Create bar chart using current prices of all saved coins.
+     * @param _barChart
+     * @param _linkedMap
+     * @param _numCoins
+     * @param _userCoinList
+     * @param _textArea
+     */
     public void multiBarChart(BarChart _barChart, LinkedList<LinkedHashMap<Double, String>> _linkedMap, int _numCoins, LinkedList<UserCoin> _userCoinList, TextArea _textArea) {
         BarChartClass bcc = new BarChartClass(_barChart, _linkedMap, _numCoins, _userCoinList, _textArea);
         bcc.displayGraph();
     }
 
+    /**
+     * Create bar chart of the price history for a single coin.
+     * @param _singleHistoryMap
+     * @param _timeSelection
+     * @param _bc
+     * @param _textArea
+     */
     public void singleBarChart(LinkedHashMap<Double, String> _singleHistoryMap,
             String _timeSelection, BarChart _bc, TextArea _textArea) {
         BarChartClass bcc = new BarChartClass(_singleHistoryMap, _timeSelection, _bc, _textArea);
@@ -287,6 +302,12 @@ public class TabAssistantController<T> {
         lcc.populateFriends(onlineUsersListT2, 0);
     }
 
+    /**
+     * Creates the table used on the dashboard.
+     * Slightly slimmed down from the table on tab1.
+     * @param _tableDash
+     * @param _userSingleCoins
+     */
     public void createTable(TableView _tableDash, LinkedList<SingleCoin> _userSingleCoins) {
         TabAssistantController tas = new TabAssistantController();
         tas.coinTableDash(_tableDash, USER.getTList());
@@ -384,18 +405,12 @@ public class TabAssistantController<T> {
         /**
      * Get users saved coins from database then create SingleCoin objects
      * for each.
-     * @param name
-     * @param tabNumber
      */
     public void createCoinLists() {
         ConnectToDatabase conn = new ConnectToDatabase();
-//        this.userCoinList = conn.getSavedCoins(name);
         this.userCoinList = USER.getUserCoinList();
-//        if(tabNumber == 3){
-//            this.friendList = conn.getFriendList(name);
         this.friendList = USER.getFriendList();
         this.onlineUserList = conn.getOnlineUsers();
-//        }
         conn.close();
         coinList = USER.getCoinList();
         coinList.forEach((item) -> {
@@ -414,7 +429,7 @@ public class TabAssistantController<T> {
     }
 
     // ========= SETTERS ==========
-    
+
     /**
      * Set object list for tabAssistantController.
      * @param _objList

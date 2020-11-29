@@ -36,19 +36,22 @@ public class Tab4Controller implements Initializable {
      * Call database returning a list of friends.
      */
     private void addFriendsToList() {
-        tas.createFriendList(this.friendsList, 1);
+        Tab4Controller.tas.createFriendList(this.friendsList, 1);
     }
 
     /**
      * Pull saved coin data from database and add it to the accordion.
      */
     public void populateSavedCoins() {
-        tas.populateSavedCoins(savedCoinsList, savedCoins);
+        Tab4Controller.tas.populateSavedCoins(this.savedCoinsList, this.savedCoins);
     }
 
 
+    /**
+     * Create table, fill with saved coins.
+     */
     private void createTable() {
-        Tab4Controller.tas.coinTableDash(this.tableViewT1, USER.getTList());
+        Tab4Controller.tas.coinTableDash(this.tableViewT1, Tab4Controller.USER.createTListFronSingleCoins(Tab4Controller.USER.getCoinList()));
     }
 
     /**
@@ -59,18 +62,12 @@ public class Tab4Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        tas = new TabAssistantController();
-//        tas.userCoinList = new LinkedList<>();
-//        tas.userSingleCoins = new LinkedList<>();
-//        tas.singleHistoryMap = new LinkedHashMap<>();
-//        tas.userHistoryMap = new LinkedHashMap<>();
-//        tas.linkedUserHistoryMap = new LinkedList<>();
-//        tas.coinList = new LinkedList<>();
-        USERNAME = FXMLDocumentController.uname;
+        Tab4Controller.tas = new TabAssistantController();
+        Tab4Controller.USERNAME = FXMLDocumentController.uname;
         populateSavedCoins();
         addFriendsToList();
-        tas.coinTableFriendsCoin(tableViewT11);
-        tas.getCoinList();
+        Tab4Controller.tas.coinTableFriendsCoin(this.tableViewT11);
+        Tab4Controller.tas.getCoinList();
         createTable();
     }
 }
