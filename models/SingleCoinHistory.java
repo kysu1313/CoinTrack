@@ -1,7 +1,7 @@
 package models;
 /**
  * This class implements the historical data
- * of a single crypto currency.
+ * of a single cryptocurrency.
  *
  * - Kyle
  */

@@ -10,11 +10,9 @@ import coinTrack.FXMLDocumentController;
 import controllers.assistantControllers.TabAssistantController;
 import models.CoinHistory;
 import models.CoinRankApi;
-import models.ConnectToDatabase;
 import models.UserCoin;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -41,8 +39,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -50,8 +46,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import models.CoinDatabaseConnection;
 import models.User;
 import models.viewModels.BarChartClass;
 import models.viewModels.LineChartClass;
@@ -378,7 +372,6 @@ public class Tab2Controller implements Initializable{
      * in an effort to keep this controller as clean as possible.
      */
     private void displayPieChart() {
-//        this.coinList.join();
         this.tas.MakePieChart(this.USER.getSortedCoinList(), this.pieChartCoins, this.comboBox, this.pieChartData, this.pieChart);
     }
 
@@ -390,7 +383,7 @@ public class Tab2Controller implements Initializable{
     }
 
     /**
-     * This creates the right click menu on the onlineUsers list. 
+     * This creates the right click menu on the onlineUsers list.
      * It also maps each button to an action.
      */
     private void createListCells() {

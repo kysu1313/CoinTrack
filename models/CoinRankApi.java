@@ -31,7 +31,7 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
     private LinkedHashMap<String, String> namePrice;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private static LinkedList<SingleCoin> staticCoinList;
-    private GenericLinkedList genericList;
+//    private GenericLinkedList genericList;
 
     /**
      * Constructor, Automatically makes a call to the "coins" url and parses the
@@ -154,6 +154,7 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      * @param _list
      * @return
      */
+    @Override
     public LinkedList<SingleCoin> getSortedCoinList(LinkedList<SingleCoin> _list) {
         Collections.sort(_list, (SingleCoin o1, SingleCoin o2) -> {
             double p1 = Double.parseDouble(o1.getTestPrice());
@@ -177,6 +178,7 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      * @param _list
      * @return
      */
+    @Override
     public HashMap<String, Double> getStats(LinkedList<SingleCoin> _list) {
         HashMap<String, Double> map = new HashMap<>();
         if (_list.size() == 0) {

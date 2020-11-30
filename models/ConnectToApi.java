@@ -15,12 +15,12 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 
 public class ConnectToApi implements ApiInterface{
-    
+
     private JSONObject job;
     private String response;
     private boolean status;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
-    
+
     // Constructor for all rapid apis
     public ConnectToApi(String _url, String _endpoint, String _key) {
         HttpResponse<JsonNode> resp;
@@ -53,6 +53,7 @@ public class ConnectToApi implements ApiInterface{
         return this.response;
     }
 
+    @Override
     public boolean getStatus() {
         return this.status;
     }

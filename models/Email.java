@@ -39,7 +39,7 @@ public class Email {
         connecting();
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {  //eppfiabpywnqnvwp
+            protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
@@ -74,7 +74,7 @@ public class Email {
         connecting();
         Session session = Session.getInstance(prop,
                 new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {  //eppfiabpywnqnvwp
+            protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
