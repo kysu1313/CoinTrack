@@ -406,7 +406,9 @@ public class ConnectToDatabase implements DatabaseInterface{
             // Insert statement, using prepared statements
             String query = "SELECT * from users where username = '" + _username + "'";
             // create the mysql insert preparedstatement
-            System.out.println(_username + " user");
+            if (DEBUG){
+                System.out.println(_username + " user");
+            }
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()) {
@@ -775,7 +777,9 @@ public class ConnectToDatabase implements DatabaseInterface{
             ResultSet result = preparedStmt.executeQuery(query);
             while(result.next()) {
                 id = result.getInt("userID");
-                System.out.println(_uname + ": " + id);
+                if (DEBUG){
+                    System.out.println(_uname + ": " + id);
+                }
             }
             return id;
         } catch (SQLException ex) {
