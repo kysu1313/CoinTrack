@@ -10,6 +10,7 @@ import models.SingleCoin;
 import java.util.LinkedList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.ComboBox;
 
@@ -72,11 +73,6 @@ public class PieChartClass implements interfaces.GraphInterface{
         // Not implemented yet
     }
 
-    @Override
-    public void alternateColors(String color1, String color2) {
-        // Not implemented yet
-    }
-
     /**
      * Create graph for Tab 2. Full graph.
      */
@@ -96,7 +92,6 @@ public class PieChartClass implements interfaces.GraphInterface{
                 this.pieChartData.add(new PieChart.Data(coin.getName(), rounded));
             }
         }
-        
     }
 
     /**
@@ -104,7 +99,6 @@ public class PieChartClass implements interfaces.GraphInterface{
      */
     private void createPartialGraph() {
         this.pieChartData = FXCollections.observableArrayList();
-        
         // Loops over SingleCoin list and adds data to pieChart
         for (int i = 0; i <= this.singleCoinList.size() - 1; i++) {
             SingleCoin coin = this.singleCoinList.get(i);
@@ -116,17 +110,22 @@ public class PieChartClass implements interfaces.GraphInterface{
     }
 
     @Override
-    public void scaleGraph() {
-        // TODO: implement
-    }
-
-    @Override
     public LinkedList<String> getElements() {
         LinkedList<String> temp = new LinkedList<>();
         this.singleCoinList.forEach(item -> {
             temp.add(item.getName());
         });
         return temp;
+    }
+
+    @Override
+    public void scaleGraph() {
+        // Not implemented yet
+    }
+
+    @Override
+    public void alternateColors(BarChart _barChart, String _upColor, String _downColor) {
+        // Not implemented yet
     }
 
 }
