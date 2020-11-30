@@ -9,6 +9,7 @@ import models.UserCoin;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import models.User;
 
 /**
  *
@@ -46,7 +47,7 @@ public interface DatabaseInterface {
     public LinkedList<UserCoin> getSavedCoins(String username);
     public LinkedList<String> getAllCoins();
     public boolean deleteSavedCoin(UserCoin userCoin);
-
-
+    public int getUserId(String _uname);
+    public boolean deleteSavedCoin(User _user, int _coinID);
 
 }
