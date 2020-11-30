@@ -125,13 +125,16 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
                     long tempLong = Long.parseLong(entry.getValue());
                     Date d = new Date(timestamp - tempLong);
                     String date = "" + d;
-                    System.out.println(tempLong);
-                    System.out.println(date);
+                    if (DEBUG){
+                        System.out.println(tempLong);
+                        System.out.println(date);
+                    }
                     double price = entry.getKey();
                     XYChart.Data item = new XYChart.Data(date, price);
                     item.setExtraValue(line + ": " + price);
                     newSeries.getData().add(item);
                     Node node = newSeries.getNode();
+                    // Add XYChart node to list. Used to add tooltips
                     this.dataList.add(new XYChart.Data(date, price));
                 });
                 this.seriesList.add(newSeries);
