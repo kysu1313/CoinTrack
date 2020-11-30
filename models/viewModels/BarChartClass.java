@@ -28,6 +28,7 @@ import javafx.scene.input.ScrollEvent;
  */
 public class BarChartClass implements interfaces.GraphInterface, interfaces.BarChartInterface{
 
+    private static boolean debug = controllers.Tab1Controller.DEBUG;
     private static Tab CURR_TAB = FXMLDocumentController.currTab;
     private BarChart barChart;
     private LinkedList<LinkedHashMap<Double, String>> linkedMap;
@@ -195,7 +196,9 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
         for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
             double price = entry.getKey();
             if (count < this.singleHistoryMap.size()){
-                System.out.println(lastPrice + " -> " + price);
+                if (debug){
+                    System.out.println(lastPrice + " -> " + price);
+                }
                 if (price > lastPrice) {
                     Node n = _barChart.lookup(".data" + count + ".chart-bar");
                     n.setStyle(this.STYLE_LOC + "green");
