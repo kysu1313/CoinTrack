@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import controllers.AlertMessages;
 import static controllers.Tab1Controller.DEBUG;
 import controllers.Tab4Controller;
+import models.User;
 
 /**
  *
@@ -31,6 +32,7 @@ public class ListClass implements ListClassInterface {
 
     private final static Tab CURR_TAB = FXMLDocumentController.currTab;
     private static final String UNAME = FXMLDocumentController.uname;
+    private User USER = FXMLDocumentController.getUser();
     public static String friendName;
     private ListView list;
     private LinkedList<UserCoin> savedCoins;
@@ -76,7 +78,8 @@ public class ListClass implements ListClassInterface {
         this.list = _savedCoinList;
         ConnectToDatabase conn = new ConnectToDatabase();
         _savedCoinList.getItems().clear();
-        this.savedCoins = conn.getSavedCoins(UNAME);
+//        this.savedCoins = conn.getSavedCoins(UNAME);
+        this.savedCoins = USER.getSavedCoins();
         conn.close();
         if (DEBUG) {
             System.out.println("Populating saved coin list");

@@ -66,7 +66,7 @@ import models.viewModels.ListClass;
  */
 public class Tab1Controller implements Initializable{
 
-    private final User USER = FXMLDocumentController.user;
+    private User USER = FXMLDocumentController.getUser();
     private LinkedHashMap<String, String> coinNamePrice; //
     private LinkedList<SingleCoin> coinList; //
     private int count;
