@@ -33,6 +33,7 @@ public class Tab4Controller<T> implements Initializable {
     @FXML private ListView friendsList;
     @FXML private TableView tableViewT1;
     @FXML private TableView tableViewT11;
+
     /**
      * Call database returning a list of friends.
      */

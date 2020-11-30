@@ -194,6 +194,7 @@ public class ConnectToDatabase implements DatabaseInterface{
      *
      * @param userName
      * @param _coin_id
+     * @return
      */
     @Override
     public boolean insertSavedCoin(String userName, int _coin_id) {
@@ -592,7 +593,6 @@ public class ConnectToDatabase implements DatabaseInterface{
     /**
      * Use this to get user info inside the app.
      * @param _userName
-     * @param _userPass
      * @return
      */
     @Override
@@ -748,6 +748,11 @@ public class ConnectToDatabase implements DatabaseInterface{
         }
     }
 
+    /**
+     * this method deletes the saved coin from the user's list
+     * @param userCoin
+     * @return
+     */
     @Override
     public boolean deleteSavedCoin(UserCoin userCoin) {
         try {
@@ -766,6 +771,7 @@ public class ConnectToDatabase implements DatabaseInterface{
      * @param _uname
      * @return
      */
+    @Override
     public int getUserId(String _uname) {
         // Default id negative
         int id = -1;
@@ -794,6 +800,7 @@ public class ConnectToDatabase implements DatabaseInterface{
      * @param _coinID
      * @return
      */
+    @Override
     public boolean deleteSavedCoin(User _user, int _coinID) {
         try {
             String query = "DELETE FROM `user_coins` WHERE `user_coins`.`user_id` = " + _user.getUserID() + " AND `user_coins`.`coin_id` = " + _coinID;

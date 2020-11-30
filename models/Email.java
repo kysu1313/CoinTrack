@@ -18,7 +18,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import controllers.AlertMessages;
 
-public class Email {
+public class Email{
 
     //eppfiabpywnqnvwp is a single app password
     private final String username = "cointrack13@gmail.com";
@@ -69,6 +69,7 @@ public class Email {
      *
      * @param _toEmail
      * @param _uname
+     * @param _code
      */
     public Email(String _toEmail, String _uname, int _code) {
         connecting();
@@ -84,6 +85,7 @@ public class Email {
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(_toEmail));
+            //when code is 0, the program sends the username to the registered email
             if(_code == 0){
             message.setSubject("Coin Track Recovery Username");
             message.setText("Dear " + _uname + ", \n\n"
@@ -92,12 +94,13 @@ public class Email {
                     + "====>   " + _uname);
             Transport.send(message);
             System.out.println("Recovery email sent");}
+            //when code is 1 (FXMLDocumentController), the program sends the username to the registered email
             else {
                message.setSubject("Welcome to Coin Track");
             message.setText("Dear " + _uname + ", \n\n"
                     + "Thank you for registering \n\n");
             Transport.send(message);
-            System.out.println("Welcome email sent"); 
+            System.out.println("Welcome email sent");
             }
         } catch (MessagingException e) {
             System.out.println(e);
