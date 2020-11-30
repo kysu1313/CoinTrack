@@ -8,3 +8,6 @@ To run this project:
 4) Add the .jar files in the "lib" folder into the projects library
 5) ???
 6) Profit
+
+
+To run the test cases, go to Tab2 and click the button "Test" at the bottom of the screen.
