@@ -29,6 +29,7 @@ public interface UserInterface {
     public LinkedList<SingleCoin> getUserSingleCoins();
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe);
     public LinkedList<SingleCoin> getSavedSingleCoins();
+    public LinkedList<UserCoin> getSavedCoins(String id);
     public String getUsername();
     public int getUserID();
     public LinkedList<UserCoin> getSavedCoins();

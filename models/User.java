@@ -216,12 +216,13 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         }
     }
 
-
-        // ============= GETTERS ============= //
-
     /**
      * Checks if a username already exists in database.
-
+     * @param _uname
+     * @param _password
+     * @param _email
+     * @param _imgPath
+     * @param _registerText
      * @return
      */
     public static boolean usernameAcceptable(String _uname, String _password, String _email, String _imgPath, Text _registerText) {
@@ -248,6 +249,8 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
             _registerText.setFill(Color.RED);
             return false;
     }
+
+    // ============= GETTERS ============= //
 
     /**
      * Return a generic list of userCoin objects.
@@ -329,7 +332,12 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         });
         return tlist;
     }
-
+    /**
+     * Connects to the database and gets the saved coins.
+     * @param id
+     * @return
+     */
+    @Override
     public LinkedList<UserCoin> getSavedCoins(String id){
         ConnectToDatabase database = new ConnectToDatabase();
         return database.getSavedCoins(username);
@@ -344,7 +352,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.userID;
     }
 
-    
+
     @Override
     public LinkedList<UserCoin> getSavedCoins(){
         return this.userCoins;
