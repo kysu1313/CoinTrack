@@ -19,6 +19,7 @@ public class TestClass {
     private double RANGE_MIN_POS = 1.00;
     private double RANGE_MIN_NEG = -100.00;
     private double RANGE_MAX_POS = 100.00;
+    private boolean allPass;
 
     // Edge case: even length list
     private final String[] testPrices1 = {"0.0001", "0.10", "5.002", "100.0", "17.9", "11.11"};
@@ -35,6 +36,7 @@ public class TestClass {
 
 
     public TestClass() {
+        this.allPass = true;
         this.cri = new CoinRankApi();
         this.cri.start();
         this.cri.join();
@@ -67,17 +69,22 @@ public class TestClass {
             this.testList6.add(coin);
         }
 
-
         HashMap<String, Double> map1 = this.cri.getStats(this.testList3);
 
         // Test List 1
-        System.out.println("\nTest list 1, Odd length\n");
+        System.out.println("<=========================================>");
+        System.out.println("\nTest list 1 \n Edge Case: Even length\n");
+        for (String str : this.testPrices1){
+            System.out.print(str + ", ");
+        }
+        System.out.println();
 
         System.out.println("Highest Price: ");
         if (map1.get("Highest Price") == 100){
             System.out.println("Pass (T): " + map1.get("Highest Price") + " = " + 100);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Lowest Price: ");
@@ -85,6 +92,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map1.get("Lowest Price") + " = " + 0.0001);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Range: ");
@@ -92,6 +100,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map1.get("Range") + " = " + 99.9999);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Mean: ");
@@ -99,6 +108,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map1.get("Mean") + " = " + 22.352016666666668);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Total: ");
@@ -106,6 +116,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map1.get("Total") + " = " + 134.1121);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Median: ");
@@ -114,17 +125,25 @@ public class TestClass {
             System.out.println("Pass (T)");
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         HashMap<String, Double> map2 = this.cri.getStats(this.testList4);
         // Test List 2
-        System.out.println("\nTest list 2, Empty list\n");
+        System.out.println("<=========================================>");
+        System.out.println("\nTest list 2 \n Edge Case: Empty list\n");
+        for (String str : this.testPrices2){
+            System.out.print(str + ", ");
+            this.allPass = false;
+        }
+        System.out.println();
 
         System.out.println("Highest Price: ");
         if (map2.get("Highest Price") == 0.00){
             System.out.println("Pass (T): " + map2.get("Highest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Lowest Price: ");
@@ -132,6 +151,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map2.get("Lowest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Range: ");
@@ -139,6 +159,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map2.get("Range") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Mean: ");
@@ -146,6 +167,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map2.get("Mean") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Total: ");
@@ -153,6 +175,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map2.get("Total") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Median: ");
@@ -160,19 +183,26 @@ public class TestClass {
             System.out.println("Pass (T): " + map2.get("Median") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("");
 
         HashMap<String, Double> map3 = this.cri.getStats(this.testList5);
         // Test List 3
-        System.out.println("\nTest list 3, Normal list\n");
+        System.out.println("<=========================================>");
+        System.out.println("\nTest list 3 \n Normal Case: Normal list\n");
+        for (String str : this.testPrices3){
+            System.out.print(str + ", ");
+        }
+        System.out.println();
 
         System.out.println("Highest Price: ");
         if (map3.get("Highest Price") == 1900.32245){
             System.out.println("Pass (T): " + map3.get("Highest Price") + " = " + 1900.32245);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Lowest Price: ");
@@ -180,6 +210,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map3.get("Lowest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Range: ");
@@ -187,6 +218,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map3.get("Range") + " = " + 1900.32245);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Mean: ");
@@ -194,6 +226,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map3.get("Mean") + " = " + 289.0739231428571);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Total: ");
@@ -201,6 +234,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map3.get("Total") + " = " + 2023.5174619999998);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Median: ");
@@ -208,18 +242,25 @@ public class TestClass {
             System.out.println("Pass (T): " + map3.get("Median") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("");
         HashMap<String, Double> map4 = this.cri.getStats(this.testList6);
         // Test List 4
-        System.out.println("\nTest list 4, Single element list\n");
+        System.out.println("<=========================================>");
+        System.out.println("\nTest list 4 \n Edge Case: Single element list\n");
+        for (String str : this.testPrices4){
+            System.out.print(str + ", ");
+        }
+        System.out.println();
 
         System.out.println("Highest Price: ");
         if (map4.get("Highest Price") == 9.53){
             System.out.println("Pass (T): " + map4.get("Highest Price") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Lowest Price: ");
@@ -227,6 +268,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map4.get("Lowest Price") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Range: ");
@@ -234,6 +276,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map4.get("Range") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Mean: ");
@@ -241,6 +284,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map4.get("Mean") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Total: ");
@@ -248,6 +292,7 @@ public class TestClass {
             System.out.println("Pass (T): " + map4.get("Total") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
         System.out.println("Median: ");
@@ -255,9 +300,14 @@ public class TestClass {
             System.out.println("Pass (T): " + map4.get("Median") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
+            this.allPass = false;
         }
 
-        System.out.println("");
+        if (this.allPass) {
+            System.out.println("All Tests Passed!");
+        } else {
+            System.out.println("Not All Tests Have Passed!");
+        }
     }
 
 }

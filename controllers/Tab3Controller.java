@@ -40,7 +40,7 @@ import models.User;
 
 public class Tab3Controller<T> implements Initializable{
 
-    private final User USER = FXMLDocumentController.user;
+    private User USER = FXMLDocumentController.getUser();
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
     private final String TIMEFRAME = "24h";
     private TextArea textArea;

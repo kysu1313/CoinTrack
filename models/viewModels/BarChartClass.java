@@ -28,7 +28,7 @@ import javafx.scene.input.ScrollEvent;
  */
 public class BarChartClass implements interfaces.GraphInterface, interfaces.BarChartInterface{
 
-    private final static Tab CURR_TAB = FXMLDocumentController.currTab;
+    private static Tab CURR_TAB = FXMLDocumentController.currTab;
     private BarChart barChart;
     private LinkedList<LinkedHashMap<Double, String>> linkedMap;
     private int numCoins;

@@ -26,7 +26,7 @@ import models.UserCoin;
 public class Tab4Controller<T> implements Initializable {
 
     private static String USERNAME = coinTrack.FXMLDocumentController.uname;
-    private static final User USER = FXMLDocumentController.user;
+    private User USER = FXMLDocumentController.getUser();
     public static TabAssistantController tas;
     private LinkedList<UserCoin> savedCoins;
     @FXML private ListView savedCoinsList;

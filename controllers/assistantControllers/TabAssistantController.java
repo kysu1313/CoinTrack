@@ -5,6 +5,7 @@ import models.ConnectToDatabase;
 import models.SingleCoin;
 import models.UserCoin;
 import coinTrack.FXMLDocumentController;
+import static coinTrack.FXMLDocumentController.user;
 import controllers.AlertMessages;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
@@ -44,8 +45,8 @@ import models.viewModels.TableClassFriendsCoins;
 public class TabAssistantController<T> {
 
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
-    private static final String UNAME = FXMLDocumentController.uname;
-    private static final User USER = FXMLDocumentController.getUser();
+    private static String UNAME = FXMLDocumentController.uname;
+    private static User USER = FXMLDocumentController.getUser();
     private TableClass tbl;
     private TableClassFriendsCoins tblFriends;
     private static Theme theme;
@@ -63,6 +64,13 @@ public class TabAssistantController<T> {
     private LinkedList<LinkedHashMap<Double, String>> linkedUserHistoryMap;
     private LinkedList<Object> objectList;
 
+    /**
+     * Set current user.
+     * @param _user
+     */
+    public void setUser(User _user) {
+        TabAssistantController.USER = _user;
+    }
 
     /**
      * Add listener to theme menu item.

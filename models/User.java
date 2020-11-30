@@ -24,10 +24,10 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     private String password;
     private String email;
     private String path;
-    private final int USER_ID;
+    private int userID;
     private final ConnectToDatabase CONN;
-    private final LinkedList<UserCoin> USER_COINS;
-    private final HashMap<String, String> USER_DATA;
+    private LinkedList<UserCoin> userCoins;
+    private HashMap<String, String> userData;
     private boolean isDataSet;
     private LinkedList<Object> objList;
     private CoinRankApi cri;
@@ -52,9 +52,6 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         this.username = _username;
         this.password = _password;
         this.CONN = new ConnectToDatabase();
-        this.USER_ID = this.CONN.getUserId(uname);
-        this.USER_COINS = this.CONN.getSavedCoins(_username);
-        this.USER_DATA = this.CONN.getUserInfo(_username);
         this.isDataSet = false;
     }
 
@@ -65,9 +62,9 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         this.username = "";
         this.password = "";
         this.CONN = null;
-        this.USER_ID = -1;
-        this.USER_COINS = null;
-        this.USER_DATA = null;
+        this.userID = -1;
+        this.userCoins = null;
+        this.userData = null;
     }
 
     /**
@@ -76,6 +73,9 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
      */
     @Override
     public void createData() {
+        this.userID = this.CONN.getUserId(uname);
+        this.userCoins = this.CONN.getSavedCoins(uname);
+        this.userData = this.CONN.getUserInfo(uname);
         this.cri = new CoinRankApi();
         this.coinHist = new CoinHistory();
         this.coinHist.start();
@@ -92,8 +92,8 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         this.tas.setCoinList(this.coinList);
         this.tas.setCurrentUser(this);
         this.tas.setSingleHistoryMap(this.coinHistList);
-        this.tas.setUserCoinList(this.USER_COINS);
-        this.tas.setUserSingleCoins(this.USER_COINS);
+        this.tas.setUserCoinList(this.userCoins);
+        this.tas.setUserSingleCoins(this.userCoins);
         this.userSingleCoins = new LinkedList<>();
         this.isDataSet = true;
     }
@@ -119,6 +119,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     public boolean validateLogin() {
         ConnectToDatabase conn = new ConnectToDatabase();
         boolean accepted = conn.validateLogin(this.username, this.password);
+        this.password = conn.getSHA256(this.password);
         conn.close();
         return accepted;
     }
@@ -270,7 +271,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     public LinkedList<SingleCoin> getUserSingleCoins() {
         if (this.userSingleCoins.isEmpty()) {
             this.coinList.forEach((item) -> {
-                this.USER_COINS.forEach((entry) -> {
+                this.userCoins.forEach((entry) -> {
                     if (item.getName().equalsIgnoreCase(entry.getName())) {
                         this.userSingleCoins.add(item);
                     }
@@ -288,7 +289,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     @Override
     public LinkedList<LinkedHashMap<Double, String>> getLinkedUserHistoryMap(String _timeframe) {
         this.linkedUserHistoryMap = new LinkedList<>();
-        this.USER_COINS.forEach((item) -> {
+        this.userCoins.forEach((item) -> {
             CoinHistory coinHistory = new CoinHistory(item.getCoinID(), item.getName(), _timeframe);
             if (coinHistory.checkValidData()) {
                 coinHistory.getData();
@@ -307,7 +308,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
     public LinkedList<SingleCoin> getSavedSingleCoins() {
         LinkedList<SingleCoin> savedSingleCoins = new LinkedList<>();
         this.coinList.forEach(item -> {
-            this.USER_COINS.forEach(coin -> {
+            this.userCoins.forEach(coin -> {
                 if (item.getSymbol().equals(coin.getName())) {
                     savedSingleCoins.add(item);
                 }
@@ -336,17 +337,17 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
 
     @Override
     public int getUserID() {
-        return this.USER_ID;
+        return this.userID;
     }
 
     @Override
     public LinkedList<UserCoin> getSavedCoins(){
-        return this.USER_COINS;
+        return this.userCoins;
     }
 
     @Override
     public HashMap<String, String> getUserInfo(){
-        return this.USER_DATA;
+        return this.userData;
     }
 
     @Override
@@ -375,7 +376,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
 
     @Override
     public LinkedList<UserCoin> getUserCoinList() {
-        return this.USER_COINS;
+        return this.userCoins;
     }
 
     @Override

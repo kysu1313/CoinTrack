@@ -46,11 +46,9 @@ public class TableClass<T> implements TableInterface{
     // List of columns to be added
     private LinkedList<TableColumn> cols;
     private ObservableList<Object> obvObjList;
-
     private LinkedList<T> listT;
     private LinkedList<?> openList;
     private ObservableList<SingleCoin> obvList;
-
     private ObservableList<SingleCoin> obvSingleCoinList;
     private ObservableList<UserCoin> obvUserCoinList;
     private ObservableList<SingleMarket> obvsingleMarketList;

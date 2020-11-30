@@ -56,7 +56,7 @@ import models.viewModels.LineChartClass;
  */
 public class Tab2Controller implements Initializable{
 
-    private final User USER = FXMLDocumentController.user;
+    private User USER = FXMLDocumentController.getUser();
     private CoinHistory coinHistory;
     private LinkedHashMap<String, Integer> historyMap;
     private LinkedHashMap<Double, String> singleHistoryMap;

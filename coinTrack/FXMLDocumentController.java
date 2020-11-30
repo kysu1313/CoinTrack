@@ -90,6 +90,7 @@ public class FXMLDocumentController implements Initializable {
     private final int PIC_WIDTH = 50;
     private final int PIC_HEIGHT = 30;
     private final int RAND_RANGE = 1000;
+    private final int EMAIL_CODE = 1;
     private final String LOGIN_VIEW_LOCATION = "/views/FXMLLogin.fxml";
     private final String RESET_PASSWORD_VIEW_LOCATION = "/views/PasswordResetFXML.fxml";
     private final String REGISTER_VIEW_LOCATION = "/views/RegisterUserFXML.fxml";
@@ -161,12 +162,12 @@ public class FXMLDocumentController implements Initializable {
 
         uname = this.username.getText();
         String password = this.txtPassword.getText();
-        FXMLDocumentController.user = new User(uname, password);
+        user = new User(uname, password);
         if (user.validateLogin()) {
             this.lblStatus.setText("Login Success");
             // Create coin list data for user
-            if (!FXMLDocumentController.user.getIsDataSet()) {
-                FXMLDocumentController.user.createData();
+            if (!user.getIsDataSet()) {
+                user.createData();
             }
             // Set user as "online" in database
             user.onlineStatus(1);
@@ -247,7 +248,7 @@ public class FXMLDocumentController implements Initializable {
                 if (this.DEBUG) {
                     System.out.println(FXMLDocumentController.tempUsernameStorage);
                 }
-                this._code = 1;
+                this._code = this.EMAIL_CODE;
                 Email sendMail = new Email(toEmail3, FXMLDocumentController.tempUsernameStorage, _code);
                 Parent root;
                 try {
@@ -277,7 +278,9 @@ public class FXMLDocumentController implements Initializable {
      */
     @FXML
     private void handleSave(ActionEvent event) throws IOException {
-        if(DEBUG){System.out.println("Saving data");}
+        if(DEBUG){
+            System.out.println("Saving data");
+        }
         Parent root;
         try {
             Tab1Controller.mainPage1 = new Stage();
@@ -326,7 +329,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleBrowse(ActionEvent event) throws IOException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        System.out.println("get dir");
         this.saveLoc = directoryChooser.showDialog(saveStage);
         this.saveLocation.setText(this.saveLoc.toString());
     }
@@ -453,8 +455,8 @@ public class FXMLDocumentController implements Initializable {
         String uname = this.usernameEntry.getText();
         String password = this.passwordEntry.getText();
         String email = this.emailEntry.getText();
-        if(skip.isSelected()){
-            path = "";
+        if(this.skip.isSelected()){
+            this.path = "";
         }
         String imgPath = this.path;
         if (User.usernameAcceptable(uname, password, email, imgPath, this.registerInfo)){
@@ -485,13 +487,13 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             getCurrentStage().close();
-            this.forgotPassStage = new Stage();
+            FXMLDocumentController.forgotPassStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.forgotPassStage;
             root = FXMLLoader.load(getClass().getResource(this.FORGOT_PASSWORD_VIEW));
-            this.scene = new Scene(root);
-            this.forgotPassStage.setScene(this.scene);
-            this.forgotPassStage.show();
-            this.currentStage = this.forgotPassStage;
+            FXMLDocumentController.scene = new Scene(root);
+            FXMLDocumentController.forgotPassStage.setScene(FXMLDocumentController.scene);
+            FXMLDocumentController.forgotPassStage.show();
+            FXMLDocumentController.currentStage = FXMLDocumentController.forgotPassStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -511,13 +513,13 @@ public class FXMLDocumentController implements Initializable {
         Parent root;
         try {
             getCurrentStage().close();
-            this.forgotUserStage = new Stage();
+            FXMLDocumentController.forgotUserStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.forgotUserStage;
             root = FXMLLoader.load(getClass().getResource("/views/ForgotUsernameFXML.fxml"));
-            this.scene = new Scene(root);
-            this.forgotUserStage.setScene(this.scene);
-            this.forgotUserStage.show();
-            this.currentStage = this.forgotUserStage;
+            FXMLDocumentController.scene = new Scene(root);
+            FXMLDocumentController.forgotUserStage.setScene(FXMLDocumentController.scene);
+            FXMLDocumentController.forgotUserStage.show();
+            FXMLDocumentController.currentStage = FXMLDocumentController.forgotUserStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -532,19 +534,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleBackToMain(ActionEvent event) {
         if (DEBUG) {
-            System.out.println("Misclicking already..");
+            System.out.println("Back to main");
         }
         Parent root;
         try {
             getCurrentStage().close();
-        //    System.out.println(getCurrentStage());
             this.mainStage = new Stage();
             FXMLDocumentController.currentStage = FXMLDocumentController.mainStage;
             root = FXMLLoader.load(getClass().getResource(this.LOGIN_VIEW_LOCATION));
             this.scene = new Scene(root);
             this.mainStage.setScene(this.scene);
             this.mainStage.show();
-            System.out.println("back to main worked!");
             this.currentStage = this.mainStage;
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -643,17 +643,12 @@ public class FXMLDocumentController implements Initializable {
             this.passwordResetWarning.setText("Password field can't be empty");
             // Make sure the two passwords match
         } else if (this.resetPassword.getText().equals(this.resetPasswordRepeat.getText())) {
-//            ConnectToDatabase conn = new ConnectToDatabase();
             if (user != null) {
                 user.resetPassword(tempUsernameStorage, this.resetPassword.getText());
             } else {
                 User tmpUser = new User();
                 tmpUser.resetPassword(tempUsernameStorage, this.resetPassword.getText());
             }
-            // Submit changed passwords to the database
-//            conn.changePassword(tempUsernameStorage, newPass);
-            // Close the connection
-//            conn.close();
             this.passwordResetWarning.setText("Success");
             this.passwordResetWarning.setFill(Color.GREEN);
             // Then change the stage back to the login screen
@@ -689,6 +684,9 @@ public class FXMLDocumentController implements Initializable {
         return newCode;
     }
 
+    /**
+     * Close old stages.
+     */
     public void closeStage() {
         // Hacky way to find last stage and close it, doesn't really work
         if (getCurrentStage() != null) {
@@ -763,9 +761,12 @@ public class FXMLDocumentController implements Initializable {
         return FXMLDocumentController.currentStage;
     }
 
+    /**
+     * Return user to login page after clicking 'logout' button.
+     */
     @FXML
     public void logout() {
-        System.out.println("Logourt");
+        System.out.println("Logout");
          Parent root;
         try {
             coinTrack.FXMLDocumentController.mainStage.close();
