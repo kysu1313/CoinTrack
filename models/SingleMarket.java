@@ -33,6 +33,9 @@ public class SingleMarket implements GlobalClassInterface, SingleMarketInterface
         fillValues();
     }
 
+    /**
+     * Gather values from json.
+     */
     private void fillValues() {
         this.uuid = this.arr.getString("uuid");
         this.rank = this.arr.getInt("rank");

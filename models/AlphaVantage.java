@@ -8,16 +8,11 @@ package models;
 
 import com.BarData;
 import interfaces.DailyWeeklyInterface;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -40,7 +35,6 @@ public class AlphaVantage implements DailyWeeklyInterface{
     private String symbol;
     private LinkedList<LinkedHashMap<String, String>> dailySeries;
     private LinkedList<LinkedHashMap<String, String>> weeklySeries;
-//    private List<OHLCDataItem> ohlc;
     private List<BarData> barData;
 
     /**
@@ -102,11 +96,12 @@ public class AlphaVantage implements DailyWeeklyInterface{
         return this.weeklySeries;
     }
 
+    /**
+     * Create json file for testing.
+     * @param _innerObj
+     */
     private void makeJSONFile(JSONObject _innerObj) {
         try {
-//            FileWriter myWriter = new FileWriter("alpha-coin.txt");
-//            myWriter.write(_innerObj.toString());
-//            myWriter.close();
             PrintWriter writer = new PrintWriter("alpha-coin.txt");
             writer.write(_innerObj.toString());
             writer.close();
@@ -115,7 +110,16 @@ public class AlphaVantage implements DailyWeeklyInterface{
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * This method IS NOT COMPLETE.
+     *
+     * This was for the candle chart but that had some major issues.
+     * The package was originally for java swing and was difficult
+     * to attempting to port to javafx. So don't look too closely at this... pls..
+     * @return
+     * @throws ParseException
+     */
     public List<BarData> getBarData() throws ParseException {
         String url = "https://alpha-vantage.p.rapidapi.com/query?market=CNY&symbol=" + this.symbol + "&function=DIGITAL_CURRENCY_DAILY";
         ConnectToApi api = new ConnectToApi(url, this.ENDPOINT, this.KEY);
@@ -137,55 +141,34 @@ public class AlphaVantage implements DailyWeeklyInterface{
             }
         });
         System.out.println(dates);
-        
         int count = 0;
         keys = innerJob.keys();
         LinkedList<HashMap<String, String>> dataMap = new LinkedList<>();
         while (keys.hasNext()) {
-            
             HashMap<String, String> item = new HashMap<>();
-            
             LinkedHashMap<String, String> temp = new LinkedHashMap<>();
             JSONObject ob = innerJob.getJSONObject(keys.next());
-            
             System.out.println(dates.get(count));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            
             GregorianCalendar gc = new GregorianCalendar();
             GregorianCalendar now = new GregorianCalendar();
-            
             item.put("date", keys.next());
             item.put("open", ob.getString("1b. open (USD)"));
             item.put("high", ob.getString("2b. high (USD)"));
             item.put("low", ob.getString("3b. low (USD)"));
             item.put("close", ob.getString("4b. close (USD)"));
             item.put("volume", ob.getString("5. volume"));
-            
             dataMap.add(item);
-            
-//            double open = Double.parseDouble(ob.getString("1b. open (USD)"));
-//            double high = Double.parseDouble(ob.getString("2b. high (USD)"));
-//            double low = Double.parseDouble(ob.getString("3b. low (USD)"));
-//            double close = Double.parseDouble(ob.getString("4b. close (USD)"));
-//            double dubVolume = Double.parseDouble(ob.getString("5. volume"));
-//            long volume = (new Double(dubVolume)).longValue();
-//            GregorianCalendar gc = new GregorianCalendar();
-//            GregorianCalendar now = new GregorianCalendar();
             gc.setTime(dates.get(count));
             count++;
-//            BarData bd = new BarData(gc, open, high, low, close, volume);
-//            this.barData.add(bd);
         }
-        
         System.out.println("===================================");
-//        
+
         for (int i = 0; i < dataMap.size()-1; i++) { // Loop over dates list   
             for (int j = 0; j < dataMap.size()-1; j++) { // loop over dataMap list
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 Date tempDate = formatter.parse(dataMap.get(j).get("date"));
-                
-//                System.out.println("index dataMap: " + j + ", index dates: " + i);
-                
+
                 if (tempDate.equals(dates.get(j))) {
                     System.out.println(tempDate + " == " + dates.get(j));
                     GregorianCalendar gc = new GregorianCalendar();
@@ -202,9 +185,7 @@ public class AlphaVantage implements DailyWeeklyInterface{
                     BarData bd = new BarData(gc, open, high, low, close, volume);
                     this.barData.add(bd);
                 }
-
             }
-//            count++;
         }
         return this.barData;
     }

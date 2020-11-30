@@ -5,10 +5,11 @@ package models;
  *  Gets data for a single market, or all coins.
  * @author Kyle
  */
+import interfaces.GlobalStatsInterface;
 import org.json.JSONObject;
 
-public class GlobalCoinStats {
-    
+public class GlobalCoinStats implements GlobalStatsInterface{
+
     private final JSONObject resp;
     private final JSONObject data;
     private final int totalCoins;
@@ -17,9 +18,9 @@ public class GlobalCoinStats {
     private final int totalMarketCap;
     private final int total24hVolume;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
-    
+
     public GlobalCoinStats() {
-        
+
         // Call API connector class
         this.resp = new ConnectToApi("https://coinranking1.p.rapidapi.com/stats",
             "coinranking1.p.rapidapi.com",
@@ -31,28 +32,31 @@ public class GlobalCoinStats {
         this.totalMarketCap = data.getInt("totalMarketCap");
         this.total24hVolume = data.getInt("total24hVolume");
     }
-    
-    
+
     // ========== GETTERS ==========
-    
+
+    @Override
     public int getTotalCoins() {
         return this.totalCoins;
     }
-    
+
+    @Override
     public int getTotalMarkets() {
         return this.totalMarkets;
     }
-    
+
+    @Override
     public int getTotalExchanges() {
         return this.totalExchanges;
     }
-    
+
+    @Override
     public int getTotalMarketCap() {
         return this.totalMarketCap;
     }
-    
+
+    @Override
     public int getTotal24hVolume() {
         return this.total24hVolume;
     }
-    
 }

@@ -19,12 +19,16 @@ public class TestClass {
     private double RANGE_MIN_POS = 1.00;
     private double RANGE_MIN_NEG = -100.00;
     private double RANGE_MAX_POS = 100.00;
+
     // Edge case: even length list
     private final String[] testPrices1 = {"0.0001", "0.10", "5.002", "100.0", "17.9", "11.11"};
+
     // Edge case: empty list
     private final String[] testPrices2 = {};
-    // Edge Case: two lowest values
+
+    // Normal Case: two lowest values
     private final String[] testPrices3 = {"9.53", "0.00", "1900.32245", "100.0", "0.000012", "13.665", "0.00"};
+
     // Edge Case: single element
     private final String[] testPrices4 = {"9.53"};
     private CoinRankApi cri;
@@ -71,41 +75,42 @@ public class TestClass {
 
         System.out.println("Highest Price: ");
         if (map1.get("Highest Price") == 100){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map1.get("Highest Price") + " = " + 100);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Lowest Price: ");
         if (map1.get("Lowest Price") == 0.0001){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map1.get("Lowest Price") + " = " + 0.0001);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Range: ");
         if (map1.get("Range") == 99.9999){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map1.get("Range") + " = " + 99.9999);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Mean: ");
         if (map1.get("Mean") == 22.352016666666668){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map1.get("Mean") + " = " + 22.352016666666668);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Total: ");
         if (map1.get("Total") == 134.1121){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map1.get("Total") + " = " + 134.1121);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Median: ");
         if (map1.get("Median") == 5.002){
+            System.out.println(map1.get("Median") + " = " + 5.002);
             System.out.println("Pass (T)");
         } else {
             System.out.println("Fail (F)");
@@ -117,42 +122,42 @@ public class TestClass {
 
         System.out.println("Highest Price: ");
         if (map2.get("Highest Price") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Highest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Lowest Price: ");
         if (map2.get("Lowest Price") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Lowest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Range: ");
         if (map2.get("Range") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Range") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Mean: ");
         if (map2.get("Mean") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Mean") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Total: ");
         if (map2.get("Total") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Total") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Median: ");
         if (map2.get("Median") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map2.get("Median") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
@@ -165,42 +170,42 @@ public class TestClass {
 
         System.out.println("Highest Price: ");
         if (map3.get("Highest Price") == 1900.32245){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Highest Price") + " = " + 1900.32245);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Lowest Price: ");
         if (map3.get("Lowest Price") == 0.00){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Lowest Price") + " = " + 0.00);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Range: ");
         if (map3.get("Range") == 1900.32245){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Range") + " = " + 1900.32245);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Mean: ");
         if (map3.get("Mean") == 289.0739231428571){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Mean") + " = " + 289.0739231428571);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Total: ");
         if (map3.get("Total") == 2023.5174619999998){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Total") + " = " + 2023.5174619999998);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Median: ");
         if (map3.get("Median") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map3.get("Median") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
@@ -212,42 +217,42 @@ public class TestClass {
 
         System.out.println("Highest Price: ");
         if (map4.get("Highest Price") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Highest Price") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Lowest Price: ");
         if (map4.get("Lowest Price") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Lowest Price") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Range: ");
         if (map4.get("Range") == 0){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Range") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Mean: ");
         if (map4.get("Mean") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Mean") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Total: ");
         if (map4.get("Total") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Total") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }
 
         System.out.println("Median: ");
         if (map4.get("Median") == 9.53){
-            System.out.println("Pass (T)");
+            System.out.println("Pass (T): " + map4.get("Median") + " = " + 9.53);
         } else {
             System.out.println("Fail (F)");
         }

@@ -2,10 +2,10 @@ package models;
 /**
  * This class reads from a file named "coinNamesIds.txt"
  * to convert strings to coin Id's and vice-versa.
- * 
+ *
  * The ID of a coin is used to make api calls for
  * more information regarding the coin.
- * 
+ *
  * - Kyle
  */
 
@@ -16,15 +16,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ParseCoinName {
-    
+
     private int coinId;
     private String coinName;
     private File coinFile;
     private static String OS = System.getProperty("os.name").toLowerCase();
 
-    
+
     // ========== CONSTRUCTORS ==========
-    
+
     public ParseCoinName(String _str) {
         // Used to determine if user is on Mac or Windows
         if (isWindows()) {
@@ -50,7 +50,7 @@ public class ParseCoinName {
             Logger.getLogger(ParseCoinName.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public ParseCoinName(int _id) {
         // Used to determine if user is on Mac or Windows
         if (isWindows()) {
@@ -78,7 +78,7 @@ public class ParseCoinName {
 
     /**
      * Check if OS is Windows.
-     * @return 
+     * @return
      */
     private static boolean isWindows() {
         return (OS.indexOf("win") >= 0);
@@ -86,7 +86,7 @@ public class ParseCoinName {
 
     /**
      * Check if OS is Mac.
-     * @return 
+     * @return
      */
     private static boolean isMac() {
         return (OS.indexOf("mac") >= 0);
@@ -96,18 +96,18 @@ public class ParseCoinName {
 
     /**
      * Return the coin id
-     * @return 
+     * @return
      */
     public int getId() {
         return this.coinId;
     }
-    
+
     /**
      * Return the coin name
-     * @return 
+     * @return
      */
     public String getName() {
         return this.coinName;
     }
-    
+
 }

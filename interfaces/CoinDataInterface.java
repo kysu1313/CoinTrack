@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.util.HashMap;
 import models.SingleCoin;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -30,4 +31,6 @@ public interface CoinDataInterface {
     public int getTotalMarketCap();
     public int getTotal24hVolume();
     public LinkedList getTList();
+    public LinkedList<SingleCoin> getSortedCoinList(LinkedList<SingleCoin> _list);
+    public HashMap<String, Double> getStats(LinkedList<SingleCoin> _list);
 }

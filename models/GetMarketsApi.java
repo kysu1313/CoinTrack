@@ -1,25 +1,26 @@
+package models;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  * @author Kyle
  */
-package models;
 
 import interfaces.GlobalClassInterface;
 import java.util.LinkedList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class GetMarketsApi<T> implements GlobalClassInterface{
-    
+public class GetMarketsApi<T> implements interfaces.MarketsInterface, GlobalClassInterface{
+
     private JSONArray markets;
     private JSONObject resp;
     private JSONObject data;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private LinkedList<SingleMarket> marketList;
     private LinkedList<T> genericList;
-    
+
     public GetMarketsApi() {
 
         // Call API connector class
@@ -37,10 +38,12 @@ public class GetMarketsApi<T> implements GlobalClassInterface{
         }
     }
 
+    @Override
     public LinkedList<SingleMarket> getMarketList() {
         return this.marketList;
     }
 
+    @Override
     public LinkedList<T> getGenericMarketList() {
         return this.genericList;
     }
