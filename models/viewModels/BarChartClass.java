@@ -94,8 +94,9 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      */
     public void displaySingleGraph() {
         this.barChart.getData().add(this.series);
-        alternateColors("green", "red");
+//        alternateColors(this.barChart, "green", "red");
         scaleGraph();
+        alternateColors(this.barChart, "green", "red");
     }
 
     /**
@@ -187,21 +188,23 @@ public class BarChartClass implements interfaces.GraphInterface, interfaces.BarC
      * @param _downColor
      */
     @Override
-    public void alternateColors(String _upColor, String _downColor) {
+    public void alternateColors(BarChart _barChart, String _upColor, String _downColor) {
         double lastPrice = 0;
         int count = 0;
         // A way to color the bars in the bargraph green or red.
         for (Map.Entry<Double, String> entry : this.singleHistoryMap.entrySet()) {
             double price = entry.getKey();
             if (count < this.singleHistoryMap.size()){
+                System.out.println(lastPrice + " -> " + price);
                 if (price > lastPrice) {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle(this.STYLE_LOC + _upColor);
+                    Node n = _barChart.lookup(".data" + count + ".chart-bar");
+                    n.setStyle(this.STYLE_LOC + "green");
                 } else {
-                    Node n = this.barChart.lookup(".data" + count + ".chart-bar");
-                    n.setStyle(this.STYLE_LOC + _downColor);
+                    Node n = _barChart.lookup(".data" + count + ".chart-bar");
+                    n.setStyle(this.STYLE_LOC + "red");
                 }
             }
+            lastPrice = price;
         }
     }
 

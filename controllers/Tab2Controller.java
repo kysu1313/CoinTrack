@@ -276,16 +276,25 @@ public class Tab2Controller implements Initializable{
             char ch = currCoin.charAt(0);
             // Create CoinHistory object from given input.
             if (Character.isAlphabetic(ch)){
-                this.singleHistoryMap = new CoinHistory(0, currCoin, this.timeSelection).getSingleHistory();
+                CoinHistory chist = new CoinHistory(0, currCoin, this.timeSelection);
+                if (chist.checkValidData()){
+                    chist.getData();
+                    this.singleHistoryMap = chist.getSingleHistory();
+                }
             } else {
                 int temp = Integer.parseInt(currCoin);
-                this.singleHistoryMap = new CoinHistory(temp, "", this.timeSelection).getSingleHistory();
+                CoinHistory chist = new CoinHistory(temp, "", this.timeSelection);
+                if (chist.checkValidData()){
+                    chist.getData();
+                    this.singleHistoryMap = chist.getSingleHistory();
+                }
             }
         }
         // Create a new BarChart object passing appropriate values.
         BarChartClass bcc = new BarChartClass(this.singleHistoryMap,
                                               this.timeSelection, this.barChart, this.txtAreaT2);
         bcc.displaySingleGraph();
+        bcc.alternateColors(this.barChart, "green", "red");
     }
 
     /**
@@ -500,7 +509,9 @@ public class Tab2Controller implements Initializable{
             if (DEBUG){System.out.println("bar chart selected");}
             this.barChart.getData().clear();
             this.series2 = new BarChart.Series<>();
-            if (this.timeSelection == null){this.timeSelection = "24h";}
+            if (this.timeSelection == null){
+                this.timeSelection = "24h";
+            }
             UserCoin item = (UserCoin)savedCoinsListT2.getSelectionModel().getSelectedItem();
             CoinHistory ch = new CoinHistory(item.getCoinID(), item.getName(), this.timeSelection);
             // Verify the coin actually has data to display for given timeframe
@@ -510,7 +521,7 @@ public class Tab2Controller implements Initializable{
                 // Create new bar chart object
                 BarChartClass bcc = new BarChartClass(this.userHistoryMap, this.timeSelection, this.barChart, this.txtAreaT2);
                 bcc.displaySingleGraph();
-                bcc.alternateColors("green", "red");
+                bcc.alternateColors(this.barChart, "green", "red");
             } else {
                 this.userHistoryMap = new LinkedHashMap<>();
             }

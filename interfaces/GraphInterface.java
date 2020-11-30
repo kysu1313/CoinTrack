@@ -1,6 +1,7 @@
 package interfaces;
 
 import java.util.LinkedList;
+import javafx.scene.chart.BarChart;
 
 /**
  * Interface for all graph types.
@@ -10,7 +11,7 @@ public interface GraphInterface {
 
     public void displayGraph();
     public void colorGraph();
-    public void alternateColors(String color1, String color2);
+    public void alternateColors(BarChart _barChart, String _upColor, String _downColor);
     public void scaleGraph();
     public LinkedList<String> getElements();
 

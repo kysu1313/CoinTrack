@@ -27,7 +27,7 @@ public class UserCoin implements GlobalClassInterface {
     // ========== GETTERS ==========
 
     /** return symbol of coin
-     * 
+     *
      * @return symbol
      */
     public String getSymbol() {
@@ -35,7 +35,7 @@ public class UserCoin implements GlobalClassInterface {
     }
 
     /**Return name of coin
-     * 
+     *
      * @return name
      */
     public String getName() {
@@ -43,7 +43,7 @@ public class UserCoin implements GlobalClassInterface {
     }
 
      /**Return username of coin
-     * 
+     *
      * @return username
      */
     public String getUsername() {
@@ -51,7 +51,7 @@ public class UserCoin implements GlobalClassInterface {
     }
 
      /**Return price of coin
-     * 
+     *
      * @return price
      */
     public double getPrice() {
@@ -59,7 +59,7 @@ public class UserCoin implements GlobalClassInterface {
     }
 
      /**Return coinID of coin
-     * 
+     *
      * @return coinID
      */
     public int getCoinID() {
@@ -67,15 +67,15 @@ public class UserCoin implements GlobalClassInterface {
     }
 
      /**Return userID of coin
-     * 
+     *
      * @return userID
      */
     public int getUserID() {
         return userID;
     }
-    
+
     /**
-     * 
+     *
      * @return class name
      */
     @Override
@@ -84,54 +84,30 @@ public class UserCoin implements GlobalClassInterface {
     }
     // ========== SETTERS ==========
 
-    /**
-     * 
-     * @param symbol 
-     */
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
-    /**
-     * 
-     * @param name 
-     */
     public void setName(String name) {
         this.name = name;
     }
-    
-    /**
-     * 
-     * @param username 
-     */
+
     public void setUsername(String username) {
         this.username = username;
     }
 
-    /**
-     * 
-     * @param price 
-     */
     public void setPrice(double price) {
         this.price = price;
     }
 
-    /**
-     * 
-     * @param coinID 
-     */
     public void setCoinID(int coinID) {
         this.coinID = coinID;
     }
 
-    /**
-     * 
-     * @param userID 
-     */
     public void setUserID(int userID) {
         this.userID = userID;
     }
-    
+
     @Override
     public String toString() {
         return  symbol + "  " + name;

@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
+import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
@@ -75,10 +76,10 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         // Not implemented yet
     }
 
-    @Override
-    public void alternateColors(String color1, String color2) {
-        // Not implemented yet
-    }
+    
+//    public void alternateColors(String color1, String color2) {
+//        // Not implemented yet
+//    }
 
     /**
      * Add specified coin data to the graph.
@@ -126,6 +127,8 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         for (String line : this.LINES) {
             CoinHistory coinHist = new CoinHistory(0, line, this.TIME_SELECTION);
             if (coinHist.checkValidData()) {
+                // If response is valid, get all data
+                coinHist.getData();
                 this.singleHistoryMap = coinHist.getSingleHistory();
                 XYChart.Series<Number, String> newSeries = new XYChart.Series();
                 double previousPrice = 0;
@@ -237,5 +240,10 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
         });
 
         return cursorCoords;
+    }
+
+    @Override
+    public void alternateColors(BarChart _barChart, String _upColor, String _downColor) {
+        // Not implemented yet
     }
 }
