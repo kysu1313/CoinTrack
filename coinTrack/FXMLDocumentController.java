@@ -351,6 +351,29 @@ public class FXMLDocumentController implements Initializable {
     }
 
     /**
+     * Displaying the profile picture
+     */
+    private void profilePicture(){
+        if(this.layout1 != null){
+            User tempUser = new User();
+            String pathFromUser = tempUser.getPicturePath(uname);
+            File temp = new File(pathFromUser);
+            boolean exists = temp.exists();
+            if("".equals(pathFromUser) || !exists){
+                Image image1 = new Image("/styles/bitCoin.jpg");
+                this.imageView = new ImageView(image1);
+            }else{
+                this.image = new Image("file:///" + pathFromUser);
+                this.imageView = new ImageView(this.image);
+            }
+            this.imageView.setFitWidth(this.PIC_WIDTH);
+            this.imageView.setFitHeight(this.PIC_HEIGHT);
+            this.imageView.setPreserveRatio(true);
+            this.layout1.setCenter(this.imageView);
+        }
+    }
+
+    /**
      * Verifies the path entered to save file.
      * @param path
      * @return
@@ -728,27 +751,6 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-    }
-
-    /**
-     * Displaying the profile picture
-     */
-    private void profilePicture(){
-        if(this.layout1 != null){
-            User tempUser = new User();
-            String pathFromUser = tempUser.getPicturePath(uname);
-            if("".equals(pathFromUser)){
-                Image image1 = new Image("/styles/bitCoin.jpg");
-                this.imageView = new ImageView(image1);
-            }else{
-                this.image = new Image("file:///" + pathFromUser);
-                this.imageView = new ImageView(this.image);
-            }
-            this.imageView.setFitWidth(this.PIC_WIDTH);
-            this.imageView.setFitHeight(this.PIC_HEIGHT);
-            this.imageView.setPreserveRatio(true);
-            this.layout1.setCenter(this.imageView);
-        }
     }
 
     /**
