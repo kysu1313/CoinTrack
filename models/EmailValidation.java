@@ -14,7 +14,7 @@ public class EmailValidation implements EmailValidationInterface {
     private final String test;
 
     /**
-     * Validates an email
+     * Connects to the API and validates the email address.
      *
      * @param _email
      */
@@ -54,6 +54,8 @@ public class EmailValidation implements EmailValidationInterface {
         conn.close();
         return assocEmail;
     }
+
+    //=================  GETTERS ===============//
 
     @Override
     public String getTest() {

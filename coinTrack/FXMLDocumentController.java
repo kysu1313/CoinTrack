@@ -358,10 +358,13 @@ public class FXMLDocumentController implements Initializable {
             User tempUser = new User();
             String pathFromUser = tempUser.getPicturePath(uname);
             File temp = new File(pathFromUser);
+            //checks if the path exists or not
             boolean exists = temp.exists();
+            //checks if path exists or is secleted was chosen while registering
             if("".equals(pathFromUser) || !exists){
                 Image image1 = new Image("/styles/bitCoin.jpg");
                 this.imageView = new ImageView(image1);
+            //if path exists it'll display the picture chosen while registering
             }else{
                 this.image = new Image("file:///" + pathFromUser);
                 this.imageView = new ImageView(this.image);
@@ -434,13 +437,10 @@ public class FXMLDocumentController implements Initializable {
             this.registerInfo.setFill(Color.RED);
             this.registerInfo.setText("Passwords must match");
             this.passwordRepeatEntry.requestFocus();
-
         } else if (skip.isSelected() && this.path != null){
             AlertMessages.showErrorMessage("Register User", "Please uncheck the box as you've already chosen a picture");
-
         }else if (this.path == null && !skip.isSelected()){
             AlertMessages.showErrorMessage("Register User", "Please choose a picture or check the box");
-
         }else {
             isGood = true;
         }
