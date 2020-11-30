@@ -1,5 +1,6 @@
 package models.viewModels;
 
+import coinTrack.FXMLDocumentController;
 import models.SingleCoin;
 import models.UserCoin;
 import interfaces.TableInterface;
@@ -293,7 +294,8 @@ public class TableClass<T> implements TableInterface{
                 if (DEBUG) {
                     System.out.println("Added " + item.getName() + " to saved coin list");
                 }
-                tas.populateSavedCoins(_savedCoinsList, _savedCoins);
+               LinkedList<UserCoin> savedCoins =  FXMLDocumentController.getUser().getSavedCoins("");
+                tas.populateSavedCoins(_savedCoinsList, savedCoins);
             });
             ContextMenu menu = new ContextMenu();
             menu.getItems().add(mi1);
