@@ -330,6 +330,10 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return tlist;
     }
 
+    public LinkedList<UserCoin> getSavedCoins(String id){
+        ConnectToDatabase database = new ConnectToDatabase();
+        return database.getSavedCoins(username);
+    }
     @Override
     public String getUsername(){
         return this.username;
@@ -340,6 +344,7 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         return this.userID;
     }
 
+    
     @Override
     public LinkedList<UserCoin> getSavedCoins(){
         return this.userCoins;

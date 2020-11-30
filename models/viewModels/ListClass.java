@@ -79,7 +79,7 @@ public class ListClass implements ListClassInterface {
         ConnectToDatabase conn = new ConnectToDatabase();
         _savedCoinList.getItems().clear();
 //        this.savedCoins = conn.getSavedCoins(UNAME);
-        this.savedCoins = USER.getSavedCoins();
+        this.savedCoins = USER.getSavedCoins("");
         conn.close();
         if (DEBUG) {
             System.out.println("Populating saved coin list");
