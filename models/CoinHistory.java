@@ -59,41 +59,6 @@ public final class CoinHistory implements Runnable, CoinHistoryInterface{
         this.response = new ConnectToApi(url,
                 "coinranking1.p.rapidapi.com",
                 "310c3610fcmsheb7636d5c15a024p1a11dajsnf459d4f82cfc");
-        // Prevent coins with no data from being added to a graph and breaking things.
-
-
-//        if (this.response.getStatus() && this.response.getJsonObject().has("data")){
-//            this.isBadTimeframe = false;
-//            if (DEBUG){System.out.println(this.response.getJsonObject().toString());}
-//            JSONObject resp = response.getJsonObject();
-//            JSONObject data = new JSONObject();
-//
-//
-//
-//
-//            data = resp.getJSONObject("data");
-//            // If the coin does not have data for given timeframe, break.
-//            if (data.has("change") && !data.isNull("change")) {
-//                this.isBadTimeframe = false;
-//                this.change = data.getDouble("change");
-//                // JSONArray containing price history for the particular coin.
-//                JSONArray histArr = data.getJSONArray("history");
-//                // Create the individual SingleCoinHistory object
-//                // Pass the JSONArray and the id of the coin.
-//                this.single = new SingleCoin(histArr, _id);
-//                // Loop through the response adding data to a hashMap
-//                for (int i = 0; i < histArr.length(); i++) {
-//                    JSONObject temp = histArr.getJSONObject(i);
-//                    Double price = temp.getDouble("price");
-//                    String date = "" + temp.getInt("timestamp");
-//                    this.singleHistoryMap.put(price, date);
-//                }
-//            } else {
-//                this.change = 0.0;
-//                this.isBadTimeframe = true;
-//                AlertMessages.showErrorMessage("Large Timeframe", "Unfortunately this cryptocurrency does not have data going back " + time);
-//            }
-//        }
     }
 
     public void getData() {
