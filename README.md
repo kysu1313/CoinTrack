@@ -10,4 +10,4 @@ To run this project:
 6) Profit
 
 
-To run the test cases, go to Tab2 and click the button "Test" at the bottom of the screen.
+To run the test cases, go to "Tables" tab and click the button "Test" at the bottom of the screen.
