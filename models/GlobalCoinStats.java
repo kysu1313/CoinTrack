@@ -19,6 +19,9 @@ public class GlobalCoinStats implements GlobalStatsInterface{
     private final int total24hVolume;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
 
+    /**
+     * Call api and save json data in variables.
+     */
     public GlobalCoinStats() {
 
         // Call API connector class

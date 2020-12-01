@@ -1,16 +1,14 @@
 package models;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- * @author Kyle
- */
-
 import interfaces.GlobalClassInterface;
 import java.util.LinkedList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+/*
+ * Connect to CoinRank api using the markets endpoint.
+ * Collect data on different markets.
+ * @author Kyle
+ */
 
 public class GetMarketsApi<T> implements interfaces.MarketsInterface, GlobalClassInterface{
 
@@ -21,6 +19,9 @@ public class GetMarketsApi<T> implements interfaces.MarketsInterface, GlobalClas
     private LinkedList<SingleMarket> marketList;
     private LinkedList<T> genericList;
 
+    /**
+     * Constructor to call api and build data.
+     */
     public GetMarketsApi() {
 
         // Call API connector class
@@ -38,6 +39,10 @@ public class GetMarketsApi<T> implements interfaces.MarketsInterface, GlobalClas
         }
     }
 
+    /**
+     * Return list of SingleMarkets.
+     * @return
+     */
     @Override
     public LinkedList<SingleMarket> getMarketList() {
         return this.marketList;
