@@ -25,7 +25,7 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
 
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
     private final LineChart LINE_CHART;
-    private final LinkedList<String> LINES;
+    private LinkedList<String> LINES;
     private final String TIME_SELECTION;
     private LinkedHashMap<Double, String> singleHistoryMap;
     private LinkedList<XYChart.Data<String, Number>> dataList;
@@ -63,11 +63,6 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
     public void colorGraph() {
         // Not implemented yet
     }
-
-    
-//    public void alternateColors(String color1, String color2) {
-//        // Not implemented yet
-//    }
 
     /**
      * Add specified coin data to the graph.
@@ -154,6 +149,18 @@ public class LineChartClass implements interfaces.GraphInterface, interfaces.Lin
                 Tooltip.install(entry.getNode(), t);
             }
         }
+    }
+
+    // ========== SETTERS ========== //
+
+    public void setLines(LinkedList<String> _lines) {
+        this.LINES = _lines;
+    }
+
+    // ========== GETTERS ========== //
+
+    public LinkedList<String> getLines() {
+        return this.LINES;
     }
 
     @Override

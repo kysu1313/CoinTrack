@@ -134,7 +134,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML private String path;
     @FXML private CheckBox skip;
     @FXML private final Desktop desktop = Desktop.getDesktop();
-//    @FXML private ComboBox<Theme> themeComboBox;
     @FXML public static MenuItem darkMenuItem;
     @FXML public static MenuItem lightMenuItem;
     @FXML private static MenuItem saveBtn;
