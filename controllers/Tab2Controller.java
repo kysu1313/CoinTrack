@@ -572,6 +572,14 @@ public class Tab2Controller implements Initializable{
         _lbl.setContextMenu(cm);
     }
 
+    /**
+     * Return this tab.
+     * @return
+     */
+    public Tab2Controller getTab2() {
+        return this;
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle _resources) {

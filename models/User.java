@@ -111,6 +111,16 @@ public class User<T> implements GlobalClassInterface, GenericClassInterface, Use
         dbConn.close();
     }
 
+    public int getCoinID(String _name) {
+        int id = -1;
+        for (int i = 0; i < this.coinList.size(); i++) {
+            if (this.coinList.get(i).getSymbol().equals(_name)){
+                id = this.coinList.get(i).getId();
+            }
+        }
+        return id;
+    }
+
     /**
      * Validates login parameters.
      * @return

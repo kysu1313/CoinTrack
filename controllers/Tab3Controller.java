@@ -30,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import static controllers.Tab1Controller.DEBUG;
 import models.CoinDatabaseConnection;
+import models.ParseCoinName;
 import models.User;
 
 /**
@@ -175,6 +176,10 @@ public class Tab3Controller<T> implements Initializable{
         MenuItem m1 = new MenuItem("Save Coin");
         m1.setOnAction((event) -> {
             if (DEBUG) {System.out.println("Choice 1 clicked!");}
+            int id = this.USER.getCoinID(_lbl.getText().split(":")[0]);
+            if (id != -1) {
+                this.USER.saveCoin(id);
+            }
         });
         cm.getItems().addAll(m1);
         _lbl.setContextMenu(cm);
