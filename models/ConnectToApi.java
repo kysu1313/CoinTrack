@@ -21,7 +21,12 @@ public class ConnectToApi implements ApiInterface{
     private boolean status;
     private final boolean DEBUG = controllers.Tab1Controller.DEBUG;
 
-    // Constructor for all rapid apis
+    /**
+     * Create a generic connection to a given api.
+     * @param _url
+     * @param _endpoint
+     * @param _key
+     */
     public ConnectToApi(String _url, String _endpoint, String _key) {
         HttpResponse<JsonNode> resp;
         try {
@@ -57,5 +62,4 @@ public class ConnectToApi implements ApiInterface{
     public boolean getStatus() {
         return this.status;
     }
-    
 }

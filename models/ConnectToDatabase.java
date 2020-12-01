@@ -470,8 +470,6 @@ public class ConnectToDatabase implements DatabaseInterface{
             String query = "SELECT * from users where username = '" + _userName + "'";
             // create the mysql insert preparedstatement
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
-//            preparedStmt.setString(1, _userName);
-//            preparedStmt.execute();
             ResultSet result = preparedStmt.executeQuery(query);
             return result.next();
         } catch (Exception ex) {
@@ -713,7 +711,6 @@ public class ConnectToDatabase implements DatabaseInterface{
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             if (DEBUG){System.out.println("Query: " + query);}
-            //while(!result.isBeforeFirst())
             while(result.next()== true){
                 temp.add(result.getString("symbol") + ": " + result.getString("name"));
             }
@@ -737,7 +734,6 @@ public class ConnectToDatabase implements DatabaseInterface{
             PreparedStatement preparedStmt = this.con.prepareStatement(query);
             ResultSet result = preparedStmt.executeQuery(query);
             if (DEBUG){System.out.println("Query: " + query);}
-            //while(!result.isBeforeFirst())
             while(result.next()== true){
                 return true;
             }
