@@ -25,7 +25,7 @@ public class ConnectToApi implements ApiInterface{
     public ConnectToApi(String _url, String _endpoint, String _key) {
         HttpResponse<JsonNode> resp;
         try {
-            resp = Unirest.get(_url) // "https://coinranking1.p.rapidapi.com/stats"
+            resp = Unirest.get(_url) 
                     .header("x-rapidapi-host", _endpoint)
                     .header("x-rapidapi-key", _key)
                     .asJson();

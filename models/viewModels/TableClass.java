@@ -283,7 +283,7 @@ public class TableClass<T> implements TableInterface{
      */
     @Override
     public void createTableCells(String _username, ListView _savedCoinsList, LinkedList<UserCoin> _savedCoins) {
-        
+
         if (this.myClass.equals(SingleCoin.class)) {
             ContextMenu cm2 = new ContextMenu();
             MenuItem mi1 = new MenuItem("Save Coin");

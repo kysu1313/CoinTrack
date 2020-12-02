@@ -164,7 +164,7 @@ public class AlphaVantage implements DailyWeeklyInterface{
         }
         System.out.println("===================================");
 
-        for (int i = 0; i < dataMap.size()-1; i++) { // Loop over dates list   
+        for (int i = 0; i < dataMap.size()-1; i++) { // Loop over dates list
             for (int j = 0; j < dataMap.size()-1; j++) { // loop over dataMap list
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                 Date tempDate = formatter.parse(dataMap.get(j).get("date"));

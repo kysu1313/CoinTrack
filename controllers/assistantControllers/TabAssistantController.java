@@ -185,21 +185,6 @@ public class TabAssistantController<T> {
     }
 
     /**
-     * Change a users online status. i.e. when they log on/off .
-     *
-     * @param _uname
-     * @param _status
-     */
-//    public void setOnlineStatus(String _uname, int _status) {
-//        if (DEBUG) {
-//            System.out.println("Update " + _uname + "'s online status");
-//        }
-//        ConnectToDatabase conn = new ConnectToDatabase();
-//        conn.setUserOnlineStatus(_uname, _status);
-//        conn.close();
-//    }
-
-    /**
      * Testing this method using piechart class.
      *
      * @param coinList
@@ -330,6 +315,11 @@ public class TabAssistantController<T> {
         tas.coinTableFriendsCoin(_tableDash);
     }
 
+    /**
+     * Adds friends to list.
+     * @param friendsListT2
+     * @param _code
+     */
     public void createFriendList(ListView friendsListT2, int _code) {
         ListClass lc = new ListClass(UNAME);
         if (_code == 0) {
