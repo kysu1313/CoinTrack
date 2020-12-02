@@ -99,9 +99,6 @@ public final class CoinRankApi<T> implements Runnable, interfaces.CoinDataInterf
      */
     @Override
     public void updateDatabaseCoins(LinkedList<SingleCoin> _coinList) {
-//        Timestamp ts = new Timestamp(System.currentTimeMillis());
-//        Date date = new Date ();
-//        date.setTime((long)ts*1000);
         ConnectToDatabase conn = new ConnectToDatabase();
         _coinList.forEach((coin) -> {
             conn.addCoinToDatabase(coin.getId(), coin.getUuid(), coin.getSlug(),
