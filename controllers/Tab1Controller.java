@@ -370,8 +370,8 @@ public class Tab1Controller implements Initializable{
 
     /**
      * Save coin using coinID and username.
-     * @param userName
-     * @param coinID
+     * @param _userName
+     * @param _coinID
      */
     private void saveCoin(String _userName, int _coinID) {
         this.USER.saveCoin(_coinID);
