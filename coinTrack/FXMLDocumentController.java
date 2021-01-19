@@ -9,10 +9,11 @@ package coinTrack;
  */
 
 import models.CoinRankApi;
-import models.ConnectToDatabase;
 import models.Email;
 import models.SaveToDisk;
 import models.SingleCoin;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -50,14 +51,10 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import controllers.AlertMessages;
 import controllers.Tab1Controller;
-import static controllers.Tab1Controller.DEBUG;
-import static controllers.Tab1Controller.tas;
 import controllers.assistantControllers.TabAssistantController;
 import controllers.assistantControllers.Theme;
-import java.awt.Desktop;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,6 +62,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser.ExtensionFilter;
 import models.EmailValidation;
 import models.User;
+
+import javax.swing.*;
 
 /**
  *
@@ -194,7 +193,7 @@ public class FXMLDocumentController implements Initializable {
                             getCurrentStage().close();
                     }
                 });
-                coinTrack.CoinTrack.newStage.close();
+                CoinTrack.newStage.close();
 
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
@@ -714,8 +713,8 @@ public class FXMLDocumentController implements Initializable {
         if (getCurrentStage() != null) {
             getCurrentStage().close();
         }
-        if (coinTrack.CoinTrack.newStage != null) {
-            coinTrack.CoinTrack.newStage.close();
+        if (CoinTrack.newStage != null) {
+            CoinTrack.newStage.close();
         }
         if (coinTrack.FXMLDocumentController.getCurrentStage() != null) {
             coinTrack.FXMLDocumentController.getCurrentStage().close();
@@ -783,6 +782,69 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    @FXML
+    private java.awt.MenuItem minimizeToTrayBtn;
+
+    @FXML
+    private void handleMinimizeToTray(java.awt.event.ActionEvent event) {
+        sendToTray();
+    }
+
+    public void sendToTray() {
+        //Check the SystemTray is supported
+        if (!SystemTray.isSupported()) {
+            System.out.println("SystemTray is not supported");
+            return;
+        }
+        final PopupMenu popup = new PopupMenu();
+        final TrayIcon trayIcon =
+                new TrayIcon(createImage("images/bulb.gif", "tray icon"));
+        final SystemTray tray = SystemTray.getSystemTray();
+
+        // Create a pop-up menu components
+        java.awt.MenuItem aboutItem = new java.awt.MenuItem("About");
+        CheckboxMenuItem cb1 = new CheckboxMenuItem("Set auto size");
+        CheckboxMenuItem cb2 = new CheckboxMenuItem("Set tooltip");
+        Menu displayMenu = new Menu("Display");
+        java.awt.MenuItem errorItem = new java.awt.MenuItem("Error");
+        java.awt.MenuItem warningItem = new java.awt.MenuItem("Warning");
+        java.awt.MenuItem infoItem = new java.awt.MenuItem("Info");
+        java.awt.MenuItem noneItem = new java.awt.MenuItem("None");
+        java.awt.MenuItem exitItem = new java.awt.MenuItem("Exit");
+
+        //Add components to pop-up menu
+        popup.add(aboutItem);
+        popup.addSeparator();
+        popup.add(cb1);
+        popup.add(cb2);
+        popup.addSeparator();
+        popup.add(displayMenu);
+        displayMenu.add(errorItem);
+        displayMenu.add(warningItem);
+        displayMenu.add(infoItem);
+        displayMenu.add(noneItem);
+        popup.add(exitItem);
+
+        trayIcon.setPopupMenu(popup);
+
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            System.out.println("TrayIcon could not be added.");
+        }
+    }
+
+    protected static java.awt.Image createImage(String path, String description) {
+        URL imageURL = CoinTrack.class.getResource(path);
+
+        if (imageURL == null) {
+            System.err.println("Resource not found: " + path);
+            return null;
+        } else {
+            return (new ImageIcon(imageURL, description)).getImage();
+        }
+    }
+
     /**
      * Return current user.
      * @return
@@ -793,7 +855,7 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        FXMLDocumentController.currentStage = coinTrack.CoinTrack.newStage;
+        FXMLDocumentController.currentStage = CoinTrack.newStage;
         profilePicture();
         if (this.lblWelcomeMessage != null) {
             this.lblWelcomeMessage.setText("Hello " + uname);

@@ -5,7 +5,7 @@ package models;
  * @author Kyle
  */
 
-import static com.sun.deploy.config.OSType.isMac;
+//import static com.sun.deploy.config.OSType.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
 import interfaces.SaveFileInterface;
 import java.io.BufferedWriter;
@@ -51,11 +51,11 @@ public class SaveToDisk implements SaveFileInterface{
         if (isWindows()) {
             this.system = "windows";
             this.dir = new File(this.DEFAULT_WINDOWS_LOCATION);
-        } else if (isMac()) {
-            this.system = "mac";
-            this.dir = new File(this.DEFAULT_MAC_LOCATION);
-            this.path = Paths.get(DEFAULT_MAC_LOCATION);
-            Files.createDirectories(this.path);
+//        } else if (isMac()) {
+//            this.system = "mac";
+//            this.dir = new File(this.DEFAULT_MAC_LOCATION);
+//            this.path = Paths.get(DEFAULT_MAC_LOCATION);
+//            Files.createDirectories(this.path);
         }
     }
 
@@ -70,12 +70,13 @@ public class SaveToDisk implements SaveFileInterface{
         if (isWindows()) {
             this.system = "windows";
             this.dir = _dir;
-        } else if (isMac()) {
-            this.system = "mac";
-            this.dir = _dir;
-            this.path = Paths.get(DEFAULT_MAC_LOCATION);
-            Files.createDirectories(this.path);
         }
+//        } else if (isMac()) {
+//            this.system = "mac";
+//            this.dir = _dir;
+//            this.path = Paths.get(DEFAULT_MAC_LOCATION);
+//            Files.createDirectories(this.path);
+//        }
     }
 
     /**
