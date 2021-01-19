@@ -1,4 +1,4 @@
-package models;
+package interfaces;
 
 public interface DaemonThreadInterface extends Runnable {
     void start();
